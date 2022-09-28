@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{client-layout}">
+<th:block layout:fragment="content">
+    <section class="header" id="header">
+        <th:block layout:insert="~{fragments/client/header}"/>
+    </section>
+</th:block>
+</html>
