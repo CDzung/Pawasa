@@ -1,19 +1,23 @@
+
+
+/* ======================= [HEADER] ======================= */
 .header {
     padding: 3vh 8vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-footer {
-    padding: 3vh 8vw;
-    background-color: rgb(168, 175, 175);
-}
+
 .right {
     display: flex;
     justify-content: space-between;
     width: 20%;
     text-align: center;
     margin-right: 40px;
+}
+.right a{
+    color: #646464;
+    text-decoration: none;
 }
 input {
     width: 45%;
@@ -38,22 +42,58 @@ input {
     margin: 0 10px;
     width: 40px;
 }
+.btn-group
 li {
     width: 50px !important;
 }
-.foot {
-    display: flex;
+
+.language{
+    margin-left: 20%;
 }
-.foot_left {
-    width: 32%;
+/* ======================= [FOOTER] ======================= */
+footer {
+    font-size: 13px;
+    margin-top: 10px;
 }
-.foot_right {
-    width: 62%;
+
+footer img {
+    max-width:100%;
+    height:auto;
 }
-.foot {
-    text-align: center;
+footer .container-1 {
+    max-width: 1240px;
+    padding: 0;
+    margin: 0 auto;
 }
-.form_footer {
-    padding: 0vh 8vw;
-    padding-bottom: 20px;
+
+.footer-logo {
+    margin-bottom: 8px;
+    padding: 10px 15px
+}
+
+.footer-static-title {
+    padding-bottom: 0px;
+    padding-left: 10px;
+    border-color: gray;
+    color: black;
+    font-size: 13px;
+}
+
+.footer-static-content ul li {
+    padding: 5px;
+}
+
+footer .footer-info{
+    margin: 10px;
+}
+
+footer .footer-info a{
+    color: black;
+}
+
+footer .footer-info a:hover{
+    background-position: 0px -40px;
+    padding-left: 25px;
+    color: #ea7696;
+    text-decoration: none;
 }
