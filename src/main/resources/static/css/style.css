@@ -54,6 +54,7 @@ li {
 footer {
     font-size: 13px;
     margin-top: 10px;
+    font-family: nunito-sans, sans-serif, Helvetica, Arial;
 }
 
 footer img {
@@ -90,10 +91,20 @@ footer .footer-info{
 footer .footer-info a{
     color: black;
 }
+footer .address-footer{
+    margin-left: 10px;
+}
 
+footer .bct-active img{
+    margin: 10px;
+}
 footer .footer-info a:hover{
     background-position: 0px -40px;
     padding-left: 25px;
     color: #ea7696;
     text-decoration: none;
+}
+
+footer .store-app div img:first-child{
+    margin-left: -60px;
 }
