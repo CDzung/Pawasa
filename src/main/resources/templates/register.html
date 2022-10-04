@@ -15,36 +15,44 @@
         <div class="card-body register-card-body">
             <p class="login-box-msg">Register a new account</p>
 
-            <form action="#" th:action="@{/register}" th:object="${user}" method="post">
-<!--                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">-->
-<!--                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>-->
-<!--                </div>-->
+            <form action="#" th:action="@{/signup/otp}" th:object="${user}" method="post">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control"  th:field="*{email}" placeholder="Email" th:errorclass="is-invalid">
-
+                    <input type="text" class="form-control"  th:field="*{email}" placeholder="Email" th:errorclass="is-invalid" name="email">
                     <div th:if="${#fields.hasErrors('email')}" class="error">
                         <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
                     </div>
                 </div>
+<!--                <div class="input-group mb-3">-->
+<!--                    <input type="number" class="form-control"  th:field="*{otp}" placeholder="OTP" th:errorclass="is-invalid">-->
 
-                <div class="row">
-                    <div class="col-8">
-                        <div class="icheck-primary">
-                            <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-                            <label for="agreeTerms">
-                                I agree to the <a href="#">terms</a>
-                            </label>
-                        </div>
+<!--                    <div th:if="${#fields.hasErrors('otp')}" class="error">-->
+<!--                        <p th:each="err : ${#fields.errors('otp')}" th:text="${err}"></p>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control"  th:field="*{password}" placeholder="Password" th:errorclass="is-invalid">
+
+                    <div class="error pass_err">
+                        <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
                     </div>
-                    <!-- /.col -->
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control"  placeholder="Retype Password" name="cf_password">
+                    <div class="cfpass error">
+                        <p th:text="${cf_password}"></p>
+                    </div>
+                </div>
+
+
                     <div class="col-4">
                         <button type="submit" class="btn btn-primary btn-block">Register</button>
                     </div>
-                    <!-- /.col -->
-        </div>
             </form>
         </div>
 </div>
 </div>
+    <script>
+    </script>
 </body>
 </html>

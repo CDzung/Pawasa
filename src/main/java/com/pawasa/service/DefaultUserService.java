@@ -13,6 +13,7 @@ public class DefaultUserService implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final static String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
 
     private PasswordEncoder passwordEncoder = new PasswordEncoder() {
         @Override
@@ -31,6 +32,9 @@ public class DefaultUserService implements UserService {
         User existingUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
         if(existingUser != null) {
             throw new UserAlreadyExistsException("User already exists with username: " + user.getUsername());
+        }
+        if(!user.getPassword().matches(passwordRegex)) {
+            throw new IllegalArgumentException("Password must contain at least one digit, one lowercase, one uppercase, one special character and must be at least 8 characters long.");
         }
         encodePassword(user);
         userRepository.save(user);

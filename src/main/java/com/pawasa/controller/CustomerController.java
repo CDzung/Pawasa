@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import java.util.Date;
 import java.util.Random;
 
 @Controller
 public class CustomerController{
-
+    private final static String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
     @Autowired
     private UserRepository userRepository;
 
@@ -27,38 +28,61 @@ public class CustomerController{
     @Autowired
     private DefaultUserService userService;
 
-    @GetMapping("/register")
+    @GetMapping("/signup")
     public String register(Model model) {
         model.addAttribute("user", new User());
+        model.addAttribute("form", "signup");
         return "register";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/signup")
     public String register(@Valid User user, BindingResult result, Model model) {
-        if (result.hasFieldErrors("email")) {
-            model.addAttribute("user", user);
+        if (result.hasFieldErrors("email") || result.hasFieldErrors("password") || result.hasFieldErrors("otp")) {
+//            model.addAttribute("user", user);
             return "register";
         }
+
         try {
             userService.addUser(user);
         } catch (UserAlreadyExistsException e) {
-            result.rejectValue("email", "user.email","An account already exists for this email.");
-            model.addAttribute("user", user);
+            result.rejectValue("email", "user.email", e.getMessage());
+//            model.addAttribute("user", user);
+            return "register";
+        } catch (IllegalArgumentException e) {
+            result.rejectValue("password", "user.password", e.getMessage());
             return "register";
         }
+
         return "redirect:/";
     }
 
-    @GetMapping("/otp")
-    public String sendOtp(@Valid  User user, BindingResult result, Model model) {
-        //validation
-        if (result.hasErrors()) {
-            model.addAttribute("user", user);
+    @PostMapping("/signup/otp")
+    public String sendOtp(@Valid  User user, BindingResult result, Model model, @RequestParam("cf_password") String cfPassword) {
+
+        if(user.getPassword()!="" && !user.getPassword().matches(passwordRegex)) {
+            result.rejectValue("password", "user.password", "Password must contain at least one digit, one lowercase, one uppercase, one special character and must be at least 8 characters long.");
+        }
+
+        if (result.hasFieldErrors("email") || result.hasFieldErrors("password")) {
+            if(cfPassword.isEmpty())
+                model.addAttribute("cf_password", "Confirm password is required");
+            else
+                if(!cfPassword.equals(user.getPassword()))
+                    model.addAttribute("cf_password", "Confirm password is not match");
+             return "register";
+        }
+
+        if(cfPassword.isEmpty()){
+            model.addAttribute("cf_password", "Confirm password is required");
             return "register";
         }
+        else if(!cfPassword.equals(user.getPassword())) {
+            model.addAttribute("cf_password", "Confirm password is not match");
+            return "register";
+        }
+
         if(userRepository.findByEmail(user.getEmail()) != null){
             result.rejectValue("email", "user.email","An account already exists for this email.");
-            model.addAttribute("user", user);
             return "register";
         }
 
@@ -89,8 +113,9 @@ public class CustomerController{
                     "  </div>\n" +
                     "</div>";
 
-            emailService.sendEmail(user.getEmail(), "Pawasa - Email Verification", message);
-            model.addAttribute("user", user);
+            //emailService.sendEmail(user.getEmail(), "Pawasa - Email Verification", message);
+            user.setOtp(otp);
+            user.setOtpRequestedTime(new Date());
             return "register";
         } catch (Exception e) {
             return "error";
