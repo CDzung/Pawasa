@@ -1,0 +1,110 @@
+
+
+/* ======================= [HEADER] ======================= */
+.header {
+    padding: 3vh 8vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.right {
+    display: flex;
+    justify-content: space-between;
+    width: 20%;
+    text-align: center;
+    margin-right: 40px;
+}
+.right a{
+    color: #646464;
+    text-decoration: none;
+}
+input {
+    width: 45%;
+    height: 40px;
+    border: 1px solid #cdcfd0;
+    padding: 0 80px 0 24px;
+}
+.search {
+    background-color: red;
+    padding: 4px 30px;
+    border-radius: 10px;
+    position: absolute;
+    right: 35%;
+    margin-left: 20px;
+}
+.btn-group {
+    background-color: aliceblue;
+    height: 40px;
+    border: 1px solid #cdcfd0;
+}
+.menu {
+    margin: 0 10px;
+    width: 40px;
+}
+.btn-group
+li {
+    width: 50px !important;
+}
+
+.language{
+    margin-left: 20%;
+}
+/* ======================= [FOOTER] ======================= */
+footer {
+    font-size: 13px;
+    margin-top: 10px;
+    font-family: nunito-sans, sans-serif, Helvetica, Arial;
+}
+
+footer img {
+    max-width:100%;
+    height:auto;
+}
+footer .container-1 {
+    max-width: 1240px;
+    padding: 0;
+    margin: 0 auto;
+}
+
+.footer-logo {
+    margin-bottom: 8px;
+    padding: 10px 15px
+}
+
+.footer-static-title {
+    padding-bottom: 0px;
+    padding-left: 10px;
+    border-color: gray;
+    color: black;
+    font-size: 13px;
+}
+
+.footer-static-content ul li {
+    padding: 5px;
+}
+
+footer .footer-info{
+    margin: 10px;
+}
+
+footer .footer-info a{
+    color: black;
+}
+footer .address-footer{
+    margin-left: 10px;
+}
+
+footer .bct-active img{
+    margin: 10px;
+}
+footer .footer-info a:hover{
+    background-position: 0px -40px;
+    padding-left: 25px;
+    color: #ea7696;
+    text-decoration: none;
+}
+
+footer .store-app div img:first-child{
+    margin-left: -60px;
+}

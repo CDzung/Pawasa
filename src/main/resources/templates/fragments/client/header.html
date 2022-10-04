@@ -1,0 +1,57 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+    <img
+            width="210px"
+            height="36px"
+            th:src="@{/image/fahasa.png}"
+            alt=""
+    />
+    <div class="menu">
+        <a href="#" style="color: black"><i style="font-size: 2.5rem" class="fa-solid fa-bars"></i></a>
+    </div>
+    <input placeholder="Tìm kiếm sản phẩm mong muốn..."/>
+    <a class="search" href="#">
+        <div>
+            <i style="color: darkgoldenrod" class="fa-sharp fa-solid fa-magnifying-glass"></i>
+        </div>
+    </a>
+    <div class="right">
+        <div>
+            <a href="#">
+                <div><i class="fa-regular fa-bell"></i></div>
+                <div>Thông Báo</div>
+            </a>
+        </div>
+        <div>
+            <a href="#">
+                <div><i class="fa-regular fa-bell"></i></div>
+                <div>Giỏ hàng</div>
+            </a>
+        </div>
+        <div>
+            <a href="#">
+                <div><i class="fa-regular fa-user"></i></div>
+                <div>Tài Khoản</div>
+            </a>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                ria-haspopup="true">
+            <img width="37px" height="24px" th:src="@{/image/anh.jpg}" alt=""/>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="width: 40px">
+            <a class="dropdown-item" href="#">
+                <div style="text-align: center">
+                    <img width="37px" height="24px" th:src="@{/image/anh.jpg}" alt=""
+                    /><span class="language">VN</span>
+                </div>
+            </a>
+            <a class="dropdown-item" href="#">
+                <div style="text-align: center">
+                    <img width="37px" height="24px" th:src="@{/image/EN.png}" alt=""
+                    /><span class="language">EN</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</th:block>
