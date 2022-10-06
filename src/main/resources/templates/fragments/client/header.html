@@ -1,57 +1,1145 @@
 <th:block xmlns:th="http://www.thymeleaf.org">
-    <img
-            width="210px"
-            height="36px"
-            th:src="@{/image/fahasa.png}"
-            alt=""
-    />
-    <div class="menu">
-        <a href="#" style="color: black"><i style="font-size: 2.5rem" class="fa-solid fa-bars"></i></a>
-    </div>
-    <input placeholder="Tìm kiếm sản phẩm mong muốn..."/>
-    <a class="search" href="#">
-        <div>
-            <i style="color: darkgoldenrod" class="fa-sharp fa-solid fa-magnifying-glass"></i>
-        </div>
-    </a>
-    <div class="right">
-        <div>
-            <a href="#">
-                <div><i class="fa-regular fa-bell"></i></div>
-                <div>Thông Báo</div>
-            </a>
-        </div>
-        <div>
-            <a href="#">
-                <div><i class="fa-regular fa-bell"></i></div>
-                <div>Giỏ hàng</div>
-            </a>
-        </div>
-        <div>
-            <a href="#">
-                <div><i class="fa-regular fa-user"></i></div>
-                <div>Tài Khoản</div>
-            </a>
-        </div>
-    </div>
-    <div class="btn-group">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-                ria-haspopup="true">
-            <img width="37px" height="24px" th:src="@{/image/anh.jpg}" alt=""/>
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="width: 40px">
-            <a class="dropdown-item" href="#">
-                <div style="text-align: center">
-                    <img width="37px" height="24px" th:src="@{/image/anh.jpg}" alt=""
-                    /><span class="language">VN</span>
+    <section id="header" class="header">
+        <div class="container">
+            <div class="fhs-header-top-second-bar" style="position: relative;">
+                <div class="icon_fahasa_logo fhs_mouse_point" onclick="location.href='/'" title="FAHASA.com"></div>
+                <div th:onmouseover="|open_noti(1,'.catalog_menu_dropdown')|"
+                     th:onmouseout="|open_noti(0,'.catalog_menu_dropdown')|"
+                     class="fhs_center_right fhs_mouse_point fhs_dropdown_hover fhs_dropdown_click"
+                     style="cursor: pointer;">
+                    <span class="icon_menu"></span>
+                    <span class="icon_seemore"></span>
+                    <div class="catalog_menu_dropdown fhs_dropdown" style="display: none;">
+                        <div class="fhs_stretch_stretch">
+                            <div>
+                                <div
+                                        style="font-weight: bold;font-size: 1.7em;color: #7A7E7F; text-align: left;padding: 0 12px;margin-bottom: 16px;">
+                                    Danh mục sản phẩm
+                                </div>
+                                <ul class="nav navbar-nav verticalmenu">
+                                    <li class="parent dropdown aligned-left active"><span
+                                            class="open-child hidden-md hidden-lg">(open)</span><a
+                                            href="https://www.fahasa.com/sach-trong-nuoc.html" class=""
+                                            title="Sách Trong Nước" data-clickable="1"><i
+                                            class="ico_sachtrongnuoc"></i><span class="menu-title">Sách Trong
+                                                Nước</span><b class="caret"></b></a>
+                                        <div class="dropdown-menu" style="width:840px">
+                                            <div class="dropdown-menu-inner">
+                                                <div class="row">
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-98"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-98">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="#"><span
+                                                                                style="color: #333333;">VĂN
+                                                                                            HỌC</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="#">Tiểu
+                                                                                Thuyết</a></li>
+                                                                            <li><a
+                                                                                    href="#">Truyện
+                                                                                Ngắn - Tản Văn</a></li>
+                                                                            <li><a
+                                                                                    href="#">Light
+                                                                                Novel</a></li>
+                                                                            <li><a
+                                                                                    href="#">Ngôn
+                                                                                Tình</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-11"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-11">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-kinh-te-mua-manh-giam-bao"><span
+                                                                                style="color: #333333;">KINH
+                                                                                            TẾ</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/nhan-vat-bai-hoc-kinh-doanh.html">Nhân
+                                                                                Vật - Bài Học Kinh Doanh</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/quan-tri-lanh-dao.html">Quản
+                                                                                Trị - Lãnh Đạo</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/marketing-ban-hang.html">Marketing
+                                                                                - Bán Hàng</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/phan-tich-kinh-te.html">Phân
+                                                                                Tích Kinh Tế</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-14"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-14">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song.html"><span
+                                                                                style="color: #333333;">TÂM
+                                                                                            LÝ - KĨ NĂNG
+                                                                                            SỐNG</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/ky-nang-song.html">Kỹ
+                                                                                Năng Sống</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/ren-luyen-nhan-cach.html">Rèn
+                                                                                Luyện Nhân Cách</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/tam-ly.html">Tâm
+                                                                                Lý</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/sach-cho-tuoi-moi-lon.html">Sách
+                                                                                Cho Tuổi Mới Lớn</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-13"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-13">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con.html"><span
+                                                                                style="color: #333333;">NUÔI
+                                                                                            DẠY
+                                                                                            CON</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con/cam-nang-lam-cha-me.html">Cẩm
+                                                                                Nang Làm Cha Mẹ</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con/phuong-phap-giao-duc-cac-nuoc.html">Phương
+                                                                                Pháp Giáo Dục Trẻ Các Nước</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con/phat-trien-tri-tue-cho-tre.html">Phát
+                                                                                Triển Trí Tuệ Cho Trẻ</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con/dinh-duong-suc-khoe-cho-tre.html">Phát
+                                                                                Triển Kỹ Năng Cho Trẻ</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-18"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-18">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi.html"><span
+                                                                                style="color: #333333;">SÁCH
+                                                                                            THIẾU
+                                                                                            NHI</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/manga-comic.html?order=num_orders&amp;limit=24&amp;p=1">Manga
+                                                                                - Comic</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi/kien-thuc-bach-khoa.html">Kiến
+                                                                                Thức Bách Khoa</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi/kien-thuc-ky-nang-song-cho-tre/sach-tranh-ky-nang-song-cho-tre.html">Sách
+                                                                                Tranh Kỹ Năng Sống Cho Trẻ</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi/kien-thuc-ky-nang-song-cho-tre/vua-hoc-vua-choi-voi-tre.html">Vừa
+                                                                                Học - Vừa Học Vừa Chơi Với Trẻ</a>
+                                                                            </li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-99"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-99">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky.html"><span
+                                                                                style="color: #333333;">TIỂU
+                                                                                            SỬ - HỒI
+                                                                                            KÝ</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky/cau-chuyen-cuoc-doi.html">Câu
+                                                                                Chuyện Cuộc Đời</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky/chinh-tri.html">Chính
+                                                                                Trị</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky/kinh-te.html">Kinh
+                                                                                Tế</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky/nghe-thua-giai-tri.html">Nghệ
+                                                                                Thuật - Giải Trí</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-100"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-100">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao.html"><span
+                                                                                style="color: #333333;">GIÁO
+                                                                                            KHOA - THAM
+                                                                                            KHẢO</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao/sach-giao-khoa.html">Sách
+                                                                                Giáo Khoa</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao/lop-2.html">Sách
+                                                                                Tham Khảo</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao/lop-2/tham-khao-lop-12/luyen-thi-thpt-quoc-gia.html?order=num_orders&amp;limit=24&amp;p=1">Luyện
+                                                                                Thi THPT Quốc Gia</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao/mau-giao.html">Mẫu
+                                                                                Giáo</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-101"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-101">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu.html"><span
+                                                                                style="color: #333333;">SÁCH
+                                                                                            HỌC NGOẠI
+                                                                                            NGỮ</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu/tieng-anh.html">Tiếng
+                                                                                Anh</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu/tieng-nhat.html">Tiếng
+                                                                                Nhật</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu/tieng-hoa.html">Tiếng
+                                                                                Hoa</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu/tieng-han.html">Tiếng
+                                                                                Hàn</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-103"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-103">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-trong-nuoc.html?order=created_at&amp;limit=24&amp;p=1"><span
+                                                                                style="color: #333333;">SÁCH
+                                                                                        MỚI</span></a></span><span
+                                                                                style="color: #ff0000;">&nbsp;♥</span>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-104"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-104">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/sach-trong-nuoc.html?order=num_orders&amp;limit=24&amp;p=1"><span
+                                                                                style="color: #333333;">SÁCH BÁN
+                                                                                        CHẠY</span></a></span><span
+                                                                                style="color: #ff0000;">&nbsp;♥</span>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class=" parent dropdown aligned-left  "><span
+                                            class="open-child hidden-md hidden-lg">(open)</span><a
+                                            href="https://www.fahasa.com/foreigncategory.html" class=""
+                                            title="FOREIGN BOOKS" data-clickable="1"><i
+                                            class="ico_foreignbooks"></i><span class="menu-title">FOREIGN
+                                                BOOKS</span><b class="caret"></b></a>
+                                        <div class="dropdown-menu" style="width:1100px">
+                                            <div class="dropdown-menu-inner">
+                                                <div class="row">
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-102"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-102">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory/fiction.html"><span
+                                                                                style="color: #333333;">FICTION</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/fiction/contemporary-fiction.html">Contemporary
+                                                                                Fiction</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/fiction/romance.html">Romance</a>
+                                                                            </li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/fiction/fantasy.html">Fantasy</a>
+                                                                            </li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/fiction/classics.html">Classics</a>
+                                                                            </li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/fiction.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-105"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-105">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory/business-finance-law.html"><span
+                                                                                style="color: #333333;">BUSINESS
+                                                                                            &amp;
+                                                                                            MANAGEMENT</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/business-finance-law/business-management.html">Business
+                                                                                &amp; Management</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/business-finance-law/economics.html">Economics</a>
+                                                                            </li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/business-finance-law/finance-accounting.html">Finance
+                                                                                &amp; Accounting</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/business-finance-law.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-106"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-106">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory/personal-development.html"><span
+                                                                                style="color: #333333;">PERSONAL
+                                                                                            DEVELOPMENT</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/personal-development/popular-psychology.html">Popular
+                                                                                Psychology</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/personal-development/advice-on-careers-achieving-success.html">Advice
+                                                                                On Careers &amp; Achieving
+                                                                                Success</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/personal-development/personal-finance.html">Personal
+                                                                                Finance</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/personal-development.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-107"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-107">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory/children-s-books.html"><span
+                                                                                style="color: #333333;">CHILDREN'S
+                                                                                            BOOKS</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/children-s-books/picture-activity-books.html">Picture
+                                                                                &amp; Activity Books</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/children-s-books/fiction.html">Fiction
+                                                                                (For Kids &amp; Teen)</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/children-s-books/education.html">Education</a>
+                                                                            </li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/children-s-books/non-fiction.html">Non-Fiction</a>
+                                                                            </li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/children-s-books.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-108"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-108">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory/dictionaries-languages.html"><span
+                                                                                style="color: #333333;">DICTIONARIES
+                                                                                            &amp;
+                                                                                            LANGUAGES</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/dictionaries-languages/elt-learning-material-coursework.html">ELT:
+                                                                                Learning Material &amp;
+                                                                                Coursework</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/dictionaries-languages/elt-english-for-specific-purposes.html">ELT:
+                                                                                English For Specific Purposes</a>
+                                                                            </li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/dictionaries-languages/dictionaries.html">Dictionaries</a>
+                                                                            </li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/dictionaries-languages.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-110"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-110">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory/other-languages.html"><span
+                                                                                style="color: #333333;">OTHER
+                                                                                            LANGUAGES</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/other-languages/sach-tieng-nhat.html">Japanese
+                                                                                Books</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/other-languages/german-books.html">German
+                                                                                Books</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/other-languages/french-books.html">French
+                                                                                Books</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-111"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-111">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><strong><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory.html"><span
+                                                                                style="color: #333333;">OTHER
+                                                                                            CATEGORIES</span></a></strong></span>
+                                                                        </h3>
+                                                                        <ul class="nav-links">
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/biography.html">Biography</a>
+                                                                            </li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/society-social-sciences.html">Society
+                                                                                &amp; Social Sciences</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/science-geography.html">Science
+                                                                                &amp; Geography</a></li>
+                                                                            <li><a
+                                                                                    href="https://www.fahasa.com/foreigncategory/food-drink.html">Food
+                                                                                &amp; Drink</a></li>
+                                                                            <li style="color: #2489f4;"><span
+                                                                                    style="color: #2489f4;"><a
+                                                                                    href="https://www.fahasa.com/foreigncategory.html"><span
+                                                                                    style="color: #2489f4;">Xem
+                                                                                            tất cả</span></a></span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-112"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-112">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory.html?order=created_at&amp;limit=24&amp;p=1"><span
+                                                                                style="color: #333333;">NEW
+                                                                                        ARRIVALS</span></a></span><span
+                                                                                style="color: #ff0000;">&nbsp;♥</span>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-114"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-114">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreign-books-coming-soon"><span
+                                                                                style="color: #333333;">COMING
+                                                                                        SOON</span></a></span><span
+                                                                                style="color: #ff0000;">&nbsp;♥</span>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-113"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-113">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/foreigncategory.html?order=num_orders&amp;limit=24&amp;p=1"><span
+                                                                                style="color: #333333;">BEST
+                                                                                        SELLERS</span></a></span><span
+                                                                                style="color: #ff0000;">&nbsp;♥</span>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mega-col col-sm-3 " data-widgets="wid-115"
+                                                         data-colwidth="3">
+                                                        <div class="mega-col-inner">
+                                                            <div class="ves-widget" data-id="wid-115">
+                                                                <div class="widget-html">
+                                                                    <div class="widget-inner">
+                                                                        <h3><span style="color: #333333;"><a
+                                                                                style="font-weight: bold; font-size: 13px;"
+                                                                                href="https://www.fahasa.com/new-york-times-bestsellers"><span
+                                                                                style="color: #333333;">NYT
+                                                                                        BESTSELLERS</span></a></span><span
+                                                                                style="color: #ff0000;">&nbsp;♥</span>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div></div>
+                            <div class="fhs_column_stretch" style="padding-right: 12px;">
+                                <div class="fhs_menu_title fhs_center_left" style="padding-left: 24px;"><i
+                                        class="ico_sachtrongnuoc"></i><span class="menu-title">Sách Trong Nước</span><b
+                                        class="caret"></b></div>
+                                <div class="fhs_menu_content fhs_column_left">
+                                    <div class="row">
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-98" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-98">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><strong><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc.html"><span
+                                                                    style="color: #333333;">VĂN
+                                                                                HỌC</span></a></strong></span></h3>
+                                                            <ul class="nav-links">
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc/tieu-thuyet.html">Tiểu
+                                                                    Thuyết</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc/truyen-ngan-tan-van.html">Truyện
+                                                                    Ngắn - Tản Văn</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc/light-novel.html">Light
+                                                                    Novel</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc/ngon-tinh.html">Ngôn
+                                                                    Tình</a></li>
+                                                                <li style="color: #2489f4;"><span
+                                                                        style="color: #2489f4;"><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc.html"><span
+                                                                        style="color: #2489f4;">Xem tất
+                                                                                cả</span></a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-11" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-11">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><strong><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-kinh-te-mua-manh-giam-bao"><span
+                                                                    style="color: #333333;">KINH
+                                                                                TẾ</span></a></strong></span></h3>
+                                                            <ul class="nav-links">
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/nhan-vat-bai-hoc-kinh-doanh.html">Nhân
+                                                                    Vật - Bài Học Kinh Doanh</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/quan-tri-lanh-dao.html">Quản
+                                                                    Trị - Lãnh Đạo</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/marketing-ban-hang.html">Marketing
+                                                                    - Bán Hàng</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/phan-tich-kinh-te.html">Phân
+                                                                    Tích Kinh Tế</a></li>
+                                                                <li style="color: #2489f4;"><span
+                                                                        style="color: #2489f4;"><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly.html"><span
+                                                                        style="color: #2489f4;">Xem tất
+                                                                                cả</span></a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-14" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-14">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><strong><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song.html"><span
+                                                                    style="color: #333333;">TÂM LÝ - KĨ NĂNG
+                                                                                SỐNG</span></a></strong></span></h3>
+                                                            <ul class="nav-links">
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/ky-nang-song.html">Kỹ
+                                                                    Năng Sống</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/ren-luyen-nhan-cach.html">Rèn
+                                                                    Luyện Nhân Cách</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/tam-ly.html">Tâm
+                                                                    Lý</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/sach-cho-tuoi-moi-lon.html">Sách
+                                                                    Cho Tuổi Mới Lớn</a></li>
+                                                                <li style="color: #2489f4;"><span
+                                                                        style="color: #2489f4;"><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song.html"><span
+                                                                        style="color: #2489f4;">Xem tất
+                                                                                cả</span></a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-13" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-13">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><strong><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con.html"><span
+                                                                    style="color: #333333;">NUÔI DẠY
+                                                                                CON</span></a></strong></span></h3>
+                                                            <ul class="nav-links">
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con/cam-nang-lam-cha-me.html">Cẩm
+                                                                    Nang Làm Cha Mẹ</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con/phuong-phap-giao-duc-cac-nuoc.html">Phương
+                                                                    Pháp Giáo Dục Trẻ Các Nước</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con/phat-trien-tri-tue-cho-tre.html">Phát
+                                                                    Triển Trí Tuệ Cho Trẻ</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con/dinh-duong-suc-khoe-cho-tre.html">Phát
+                                                                    Triển Kỹ Năng Cho Trẻ</a></li>
+                                                                <li style="color: #2489f4;"><span
+                                                                        style="color: #2489f4;"><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/nuoi-day-con.html"><span
+                                                                        style="color: #2489f4;">Xem tất
+                                                                                cả</span></a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-18" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-18">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><strong><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi.html"><span
+                                                                    style="color: #333333;">SÁCH THIẾU
+                                                                                NHI</span></a></strong></span></h3>
+                                                            <ul class="nav-links">
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/manga-comic.html?order=num_orders&amp;limit=24&amp;p=1">Manga
+                                                                    - Comic</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi/kien-thuc-bach-khoa.html">Kiến
+                                                                    Thức Bách Khoa</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi/kien-thuc-ky-nang-song-cho-tre/sach-tranh-ky-nang-song-cho-tre.html">Sách
+                                                                    Tranh Kỹ Năng Sống Cho Trẻ</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi/kien-thuc-ky-nang-song-cho-tre/vua-hoc-vua-choi-voi-tre.html">Vừa
+                                                                    Học - Vừa Học Vừa Chơi Với Trẻ</a></li>
+                                                                <li style="color: #2489f4;"><span
+                                                                        style="color: #2489f4;"><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/thieu-nhi.html"><span
+                                                                        style="color: #2489f4;">Xem tất
+                                                                                cả</span></a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-99" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-99">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><strong><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky.html"><span
+                                                                    style="color: #333333;">TIỂU SỬ - HỒI
+                                                                                KÝ</span></a></strong></span></h3>
+                                                            <ul class="nav-links">
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky/cau-chuyen-cuoc-doi.html">Câu
+                                                                    Chuyện Cuộc Đời</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky/chinh-tri.html">Chính
+                                                                    Trị</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky/kinh-te.html">Kinh
+                                                                    Tế</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky/nghe-thua-giai-tri.html">Nghệ
+                                                                    Thuật - Giải Trí</a></li>
+                                                                <li style="color: #2489f4;"><span
+                                                                        style="color: #2489f4;"><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/tieu-su-hoi-ky.html"><span
+                                                                        style="color: #2489f4;">Xem tất
+                                                                                cả</span></a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-100" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-100">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><strong><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao.html"><span
+                                                                    style="color: #333333;">GIÁO KHOA - THAM
+                                                                                KHẢO</span></a></strong></span></h3>
+                                                            <ul class="nav-links">
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao/sach-giao-khoa.html">Sách
+                                                                    Giáo Khoa</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao/lop-2.html">Sách
+                                                                    Tham Khảo</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao/lop-2/tham-khao-lop-12/luyen-thi-thpt-quoc-gia.html?order=num_orders&amp;limit=24&amp;p=1">Luyện
+                                                                    Thi THPT Quốc Gia</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao/mau-giao.html">Mẫu
+                                                                    Giáo</a></li>
+                                                                <li style="color: #2489f4;"><span
+                                                                        style="color: #2489f4;"><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/giao-khoa-tham-khao.html"><span
+                                                                        style="color: #2489f4;">Xem tất
+                                                                                cả</span></a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-101" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-101">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><strong><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu.html"><span
+                                                                    style="color: #333333;">SÁCH HỌC NGOẠI
+                                                                                NGỮ</span></a></strong></span></h3>
+                                                            <ul class="nav-links">
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu/tieng-anh.html">Tiếng
+                                                                    Anh</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu/tieng-nhat.html">Tiếng
+                                                                    Nhật</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu/tieng-hoa.html">Tiếng
+                                                                    Hoa</a></li>
+                                                                <li><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu/tieng-han.html">Tiếng
+                                                                    Hàn</a></li>
+                                                                <li style="color: #2489f4;"><span
+                                                                        style="color: #2489f4;"><a
+                                                                        href="https://www.fahasa.com/sach-trong-nuoc/sach-hoc-ngoai-ngu.html"><span
+                                                                        style="color: #2489f4;">Xem tất
+                                                                                cả</span></a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-103" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-103">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc.html?order=created_at&amp;limit=24&amp;p=1"><span
+                                                                    style="color: #333333;">SÁCH
+                                                                            MỚI</span></a></span><span
+                                                                    style="color: #ff0000;">&nbsp;♥</span></h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mega-col col-sm-3 " data-widgets="wid-104" data-colwidth="3">
+                                            <div class="mega-col-inner">
+                                                <div class="ves-widget" data-id="wid-104">
+                                                    <div class="widget-html">
+                                                        <div class="widget-inner">
+                                                            <h3><span style="color: #333333;"><a
+                                                                    style="font-weight: bold; font-size: 13px;"
+                                                                    href="https://www.fahasa.com/sach-trong-nuoc.html?order=num_orders&amp;limit=24&amp;p=1"><span
+                                                                    style="color: #333333;">SÁCH BÁN
+                                                                            CHẠY</span></a></span><span
+                                                                    style="color: #ff0000;">&nbsp;♥</span></h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </a>
-            <a class="dropdown-item" href="#">
-                <div style="text-align: center">
-                    <img width="37px" height="24px" th:src="@{/image/EN.png}" alt=""
-                    /><span class="language">EN</span>
+                <div class="fhs_center_left">
+                    <div class="box search_box">
+                        <form id="search_mini_form_desktop">
+                            <div class="search pull-left">
+                                <div class="form-search fhs_dropdown_hover_out">
+                                    <input type="text" id="search_desktop" autocomplete="off"
+                                           placeholder="Tìm kiếm sản phẩm mong muốn...">
+                                    <span class="fhs_btn_default active button-search">
+                                        <span class="ico_search_white"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </a>
+                <div class="fhs_center_space" style="padding-left: 24px;">
+                    <div class="noti-top fhs_dropdown_hover no_cover">
+                        <div th:onmouseover="|open_noti(1,'.top-notification-menu')|"
+                             th:onmouseout="|open_noti(0,'.top-notification-menu')|"
+                             class="top-notification-button fhs_mouse_point">
+                            <a style="cursor:pointer;display:flex;flex-direction: column;">
+                                <div class="fhs_center_center" style="margin-bottom:3px;">
+                                    <div class="icon_nofi_gray">
+                                        <div class="top-notification-button-unseen top_menu_unseen fhs_center_center"
+                                             style="display: none;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fhs_top_center">
+                                    <div class="top_menu_label">Thông Báo</div>
+                                </div>
+                            </a>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div id="top-notification-menu-render">
+                            <div class="top-notification-menu fhs_top_noti_dropdown fhs_dropdown "
+                                 style="display: none;">
+                                <div style="padding:16px;border-bottom: 1px solid #F2F4F5; font-weight: bold;" class="">
+                                    <div class="fhs_center_left" style="font-size: 1.23em; color: #0D0E0F;">
+                                        <span class="icon_nofi_black"
+                                              style="width:16px;height:16px;margin-right: 8px;"></span>
+                                        <span>Thông báo</span>
+                                        <span class="fhs_notification_unseen" style="margin-left:4px;"></span>
+                                    </div>
+                                </div>
+                                <div class="fhs_center_center" style="padding: 24px;"><span class="ico_notlogin"></span>
+                                </div>
+                                <div class="fhs_center_center" style="color: #0D0E0F; font-size: 1.23em;">Vui lòng đăng
+                                    nhập để
+                                </div>
+                                <div class="fhs_center_center"
+                                     style="color: #0D0E0F; padding-bottom:24px; font-size: 1.23em;">xem thông báo
+                                </div>
+                                <div style="padding:0 16px 8px 16px; ">
+                                    <button type="button" title="Đăng nhập"
+                                            class="fhs_btn_default active" style="height: 40px;"><span>Đăng
+                                            nhập</span></button>
+                                </div>
+                                <div style="padding:0 16px 16px 16px;">
+                                    <button type="button" title="Đăng ký"
+                                            class="fhs_btn_default" style="height: 40px;"><span>Đăng ký</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cart-top no_cover fhs_dropdown_hover">
+                        <div class="fhs_top_cart">
+                            <a href="#">
+                                <div class="heading heading-custom">
+                                    <div class="fhs_center_center" style="margin-bottom: 3px;">
+                                        <div class="icon_cart_gray">
+                                            <div class="top_menu_unseen fhs_center_center" style="visibility: hidden;">
+                                                <span class="cartmini_qty"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="top-cart-button-label fhs_top_center">
+                                        <div class="top_menu_label">Giỏ Hàng</div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div id="cartmini_page_content" class="fhs_top_cart_dropdown fhs_dropdown center"
+                                 style="visibility: hidden; display: none;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fhs_top_account no_cover fhs_dropdown_hover" id="fhs_top_account_hover">
+                        <a href="#" th:onmouseover="|open_noti(1,'.fhs_top_account_dropdown')|"
+                           th:onmouseout="|open_noti(0,'.fhs_top_account_dropdown')|">
+                            <div class="fhs_top_account_button">
+                                <div class="icon_account_gray" style="margin-bottom:3px;"></div>
+                                <div class="top_menu_label fhs_top_center fhs_nowrap_one" id="fhs_top_account_title">Tài
+                                    khoản
+                                </div>
+                            </div>
+                        </a>
+                        <div class="fhs_top_account_dropdown fhs_dropdown right guest" style="display: none;">
+                            <div>
+                                <button type="button" title="Đăng nhập" class="fhs_btn_default active"
+                                        style="height: 40px;"><span>Đăng nhập</span></button>
+                            </div>
+                            <div>
+                                <button type="button" title="Đăng ký" class="fhs_btn_default"
+                                        style="height: 40px;"><span>Đăng ký</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 </th:block>
