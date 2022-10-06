@@ -39,6 +39,7 @@ public class DefaultUserService implements UserService {
     }
 
     public String encodePassword(String password) {
+
         return passwordEncoder.encode(password);
     }
 }
