@@ -1,11 +1,726 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="~{client-layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client-layout}">
 <th:block layout:fragment="content">
-    <section class="header" id="header">
-        <th:block layout:insert="~{fragments/client/header}"/>
-    </section>
-    <th:block layout:insert="~{fragments/client/footer}" />
+    <th:block layout:insert="~{fragments/client/header}"/>
+    <th:block layout:insert="~{pages/client/header-breadcrumbs}"/>
+    <th:block>
+        <div class="container">
+            <div class="std">
+                <div class="row cms-icon-menu">
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/flashsale?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_FlashSale_Hot_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Flash Sale</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/ma-giam-gia?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_MaGiamGia_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Mã Giảm Giá</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/deal-hot-pages?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_Trending_Hot_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Xu hướng</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/phien-cho-do-cu?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_PhienChoCu_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Phiên Chợ <br>Sách Cũ</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/new-product?category=all&amp;sort=created_at&amp;fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_SanPhamMoi_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Sản Phẩm <br>Mới</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/tu-sach-tham-khao?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_VanHoc_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Tủ Sách <br> Tham Khảo</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/back-to-school-trang-chinh?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_VanPhongPham_Hot_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">SGK &amp;<br> VPP</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/sach-thieu-nhi-nuoi-duong-tuong-lai?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_ThieuNhi_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Thiếu Nhi</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/nhap-hoi-manga-comic?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_MangaCommic_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Manga - Comic</div>
+                    </div>
+                    <div class="col-sms-3 col-sm-3 col-md-3">
+                        <div>
+                            <a href="/sach-kinh-te-mua-manh-giam-bao?fhs_campaign=homepageicon"><img
+                                    src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/Icon_KinhTe_8px_1.png"
+                                    class="center"></a>
+                        </div>
+                        <div class="cms-icon-menu-item-name">Kinh Tế</div>
+                    </div>
+                </div>
+                <!-- end menu icon -->
+                <!--start icon_menu-->
+                <div class="desktop_only" style="width: 100%;">
+                    <div class="fhs_block" style="margin-top: 24px;">
+                        <div class="fhs_block_head fhs_center_left"><span class="ico_menu_red"
+                                                                          style="margin-right: 8px;"></span><span
+                                class="fhs_block_head_title">Danh mục sản
+                            phẩm</span></div>
+                        <div class="fhs_block_line">
+                            <div></div>
+                        </div>
+                        <div class="fhs_block_head">
+                            <div class="menu_category_block_content_list"
+                                 style="display: grid;grid-template-columns: repeat(6, 1fr);">
+                                <a href="/sach-trong-nuoc/giao-khoa-tham-khao/lop-2.html?fhs_campaign=categoryicon"
+                                   class="fhs_column_center">
+                                    <img class=" lazyloaded"
+                                         src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Sach-tham-khao.jpg"
+                                         data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Sach-tham-khao.jpg">
+                                    <div class="fhs_nowrap_two fhs_center_center"
+                                         style="margin-top: 16px; font-size: 1.23em;">Sách tham khảo
+                                    </div>
+                                </a>
+                                <a href="/sach-trong-nuoc/sach-hoc-ngoai-ngu.html?fhs_campaign=categoryicon"
+                                   class="fhs_column_center">
+                                    <img class=" lazyloaded"
+                                         src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Sach-hoc-ngoai-ngu.jpg"
+                                         data-src="https://cdn0.fahasa.com/media/wysiwyg/Duy-VHDT/Sach-hoc-ngoai-ngu.jpg">
+                                    <div class="fhs_nowrap_two fhs_center_center"
+                                         style="margin-top: 16px; font-size: 1.23em;">Sách học <br>ngoại ngữ
+                                    </div>
+                                </a>
+                                <a href="/sach-trong-nuoc/van-hoc-trong-nuoc.html?fhs_campaign=categoryicon"
+                                   class="fhs_column_center">
+                                    <img class=" lazyloaded"
+                                         src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/category/van-hoc.png"
+                                         data-src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/category/van-hoc.png">
+                                    <div class="fhs_nowrap_two fhs_center_center"
+                                         style="margin-top: 16px; font-size: 1.23em;">Văn học
+                                    </div>
+                                </a>
+                                <a href="/sach-trong-nuoc/tam-ly-ky-nang-song.html?fhs_campaign=categoryicon"
+                                   class="fhs_column_center">
+                                    <img class=" lazyloaded"
+                                         src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/category/tam-ly-ky-nang.png"
+                                         data-src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/category/tam-ly-ky-nang.png">
+                                    <div class="fhs_nowrap_two fhs_center_center"
+                                         style="margin-top: 16px; font-size: 1.23em;">Tâm lý<br>kỹ năng
+                                    </div>
+                                </a>
+                                <a href="/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly.html?fhs_campaign=categoryicon"
+                                   class="fhs_column_center">
+                                    <img class=" lazyloaded"
+                                         src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/category/kinh-te.png"
+                                         data-src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/category/kinh-te.png">
+                                    <div class="fhs_nowrap_two fhs_center_center"
+                                         style="margin-top: 16px; font-size: 1.23em;">Kinh tế
+                                    </div>
+                                </a>
+                                <a href="/foreigncategory.html?fhs_campaign=categoryicon" class="fhs_column_center">
+                                    <img class=" lazyloaded"
+                                         src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/category/foreign-books.png"
+                                         data-src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/category/foreign-books.png">
+                                    <div class="fhs_nowrap_two fhs_center_center"
+                                         style="margin-top: 16px; font-size: 1.23em;">Foreign<br>Books
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--end icon_menu-->
+
+
+                <div id="categorytab-gia-noi-bat" class="categorytab-slider fhs-grid">
+                    <div>
+                        <div class="tabslider-header">
+                            <div class="tabslider-title girdslider-title-aaa"
+                                 style="background-color: #FCDDEF;padding-bottom: 12px;">
+                                <div class="header-icon-gridslider">
+                                    <img src="https://cdn0.fahasa.com/skin/frontend/base/default/images/ico_dealhot.png"
+                                         class="center">
+                                </div>
+                                <span>
+                                Xu Hướng Mua Sắm </span>
+                            </div>
+                            <div class="tab-title ma-title">
+                                <div class="tabslider-tabs tabslider-tabs-gird">
+                                    <ul class="tabs tabs-gia-noi-bat  tab_categorys girdslider-header-menu-aaa">
+                                        <div class="ts-header">
+                                            <li class="active girdslider-menu-item-aaa" rel="deal">
+                                                Xu Hướng Theo Ngày
+                                            </li>
+                                            <li class=" girdslider-menu-item-aaa" rel="km">
+                                                Sách HOT - Giảm Sốc
+                                            </li>
+                                            <li class=" girdslider-menu-item-aaa" rel="kmnv">
+                                                Bestseller Ngoại Văn
+                                            </li>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tabslider-top-content" style="margin-bottom: 10px;">
+                        </div>
+                        <div class="tab_container">
+                            <div class="col-lg-12 col-md-12 col-sm-12 fhs-full-p">
+
+
+                                <div id="tabdeal-gia-noi-bat" class="tab_content_gia-noi-bat"
+                                     style="min-height: 400px;">
+                                    <ul class="bxslider">
+                                        <li class="item items-sl-width">
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">27%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/hop-but-bi-thien-long-tl-079-treeden-muc-xanh-20-cay-hop.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Hộp 20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh"
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_46052.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_46052.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Hộp 20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh">
+                                                            </div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/hop-but-bi-thien-long-tl-079-treeden-muc-xanh-20-cay-hop.html"
+                                                            title="Hộp 20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh">Hộp
+                                                        20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh</a>
+                                                    </h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-298231"
+                                                                              class="price m-price-font">80.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-298231"
+                                                                     class="price m-price-font">110.000đ</span></p>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating"></div>
+                                                            </div>
+                                                            <div class="amount">(0)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 298231-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 0%;"></div>
+                                                    <div class="text-progress-bar"><span class="298231-bar">Đã bán
+                                                        0</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">13%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/tieng-nhat-cho-moi-nguoi-so-cap-1-ban-dich-va-giai-thich-ngu-phap-tieng-viet-ban-moi.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Tiếng Nhật Cho Mọi Người - Sơ Cấp 1 - Bản Dịch Và Giải Thích Ngữ Pháp - Tiếng Việt (Bản Mới)"
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_176631.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_176631.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Tiếng Nhật Cho Mọi Người - Sơ Cấp 1 - Bản Dịch Và Giải Thích Ngữ Pháp - Tiếng Việt (Bản Mới)">
+                                                            </div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/tieng-nhat-cho-moi-nguoi-so-cap-1-ban-dich-va-giai-thich-ngu-phap-tieng-viet-ban-moi.html"
+                                                            title="Tiếng Nhật Cho Mọi Người - Sơ Cấp 1 - Bản Dịch Và Giải Thích Ngữ Pháp - Tiếng Việt (Bản Mới)">Tiếng
+                                                        Nhật Cho Mọi Người - Sơ Cấp 1 - Bản Dịch Và Giải Thích Ngữ
+                                                        Pháp - Tiếng Việt (Bản Mới)</a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-220231"
+                                                                              class="price m-price-font">65.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-220231"
+                                                                     class="price m-price-font">75.000đ</span></p>
+                                                        <div class="episode-label">Tập 1</div>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating" style="width:96%"></div>
+                                                            </div>
+                                                            <div class="amount">(10)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 220231-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 0%;"></div>
+                                                    <div class="text-progress-bar"><span class="220231-bar">Đã bán
+                                                        0</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">37%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/hop-but-bi-tl-027-muc-xanh.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Hộp 20 Bút Bi 0.5 mm Thiên Long TL-027 - Mực Xanh"
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_17519.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_17519.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Hộp 20 Bút Bi 0.5 mm Thiên Long TL-027 - Mực Xanh">
+                                                            </div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/hop-but-bi-tl-027-muc-xanh.html"
+                                                            title="Hộp 20 Bút Bi 0.5 mm Thiên Long TL-027 - Mực Xanh">Hộp
+                                                        20 Bút Bi 0.5 mm Thiên Long TL-027 - Mực Xanh</a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-271056"
+                                                                              class="price m-price-font">69.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-271056"
+                                                                     class="price m-price-font">110.000đ</span></p>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating" style="width:100%"></div>
+                                                            </div>
+                                                            <div class="amount">(3)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 271056-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 2%;"></div>
+                                                    <div class="text-progress-bar"><span class="271056-bar">Đã bán
+                                                        4</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">20%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/ngay-xua-co-mot-con-bo-tai-ban-2019.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Ngày Xưa Có Một Con Bò (Tái Bản 2019)"
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_27254.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_27254.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Ngày Xưa Có Một Con Bò (Tái Bản 2019)">
+                                                            </div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/ngay-xua-co-mot-con-bo-tai-ban-2019.html"
+                                                            title="Ngày Xưa Có Một Con Bò (Tái Bản 2019)">Ngày Xưa Có
+                                                        Một Con Bò (Tái Bản 2019)</a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-275609"
+                                                                              class="price m-price-font">56.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-275609"
+                                                                     class="price m-price-font">70.000đ</span></p>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating" style="width:95%"></div>
+                                                            </div>
+                                                            <div class="amount">(22)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 275609-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 0%;"></div>
+                                                    <div class="text-progress-bar"><span class="275609-bar">Đã bán
+                                                        0</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">19%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/tu-tot-den-vi-dai-jim-collins-tai-ban-2021.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Từ Tốt Đến Vĩ Đại - Jim Collins (Tái Bản 2021)"
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/n/x/nxbtre_full_09462021_024609.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/n/x/nxbtre_full_09462021_024609.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Từ Tốt Đến Vĩ Đại - Jim Collins (Tái Bản 2021)">
+                                                            </div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/tu-tot-den-vi-dai-jim-collins-tai-ban-2021.html"
+                                                            title="Từ Tốt Đến Vĩ Đại - Jim Collins (Tái Bản 2021)">Từ
+                                                        Tốt Đến Vĩ Đại - Jim Collins (Tái Bản 2021)</a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-351531"
+                                                                              class="price m-price-font">105.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-351531"
+                                                                     class="price m-price-font">130.000đ</span></p>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating"></div>
+                                                            </div>
+                                                            <div class="amount">(0)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 351531-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 0%;"></div>
+                                                    <div class="text-progress-bar"><span class="351531-bar">Đã bán
+                                                        0</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">23%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/suoi-nguon-tai-ban-2018.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Suối Nguồn (Tái Bản 2018)" class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_180164_1_43_1_57_1_4_1_2_1_210_1_29_1_98_1_25_1_21_1_5_1_3_1_18_1_18_1_45_1_26_1_32_1_14_1_2215.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_180164_1_43_1_57_1_4_1_2_1_210_1_29_1_98_1_25_1_21_1_5_1_3_1_18_1_18_1_45_1_26_1_32_1_14_1_2215.jpg"
+                                                                    class=" lazyloaded" alt="Suối Nguồn (Tái Bản 2018)">
+                                                            </div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/suoi-nguon-tai-ban-2018.html"
+                                                            title="Suối Nguồn (Tái Bản 2018)">Suối Nguồn (Tái Bản
+                                                        2018)</a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-230817"
+                                                                              class="price m-price-font">275.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-230817"
+                                                                     class="price m-price-font">355.000đ</span></p>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating" style="width:98%"></div>
+                                                            </div>
+                                                            <div class="amount">(32)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 230817-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 0%;"></div>
+                                                    <div class="text-progress-bar"><span class="230817-bar">Đã bán
+                                                        0</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">20%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/harry-potter-va-phong-chua-bi-mat-tap-2-tai-ban-2017.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Harry Potter Và Phòng Chứa Bí Mật - Tập 2 (Tái Bản 2017) "
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/8/9/8934974145615.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/8/9/8934974145615.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Harry Potter Và Phòng Chứa Bí Mật - Tập 2 (Tái Bản 2017) ">
+                                                            </div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/harry-potter-va-phong-chua-bi-mat-tap-2-tai-ban-2017.html"
+                                                            title="Harry Potter Và Phòng Chứa Bí Mật - Tập 2 (Tái Bản 2017) ">Harry
+                                                        Potter Và Phòng Chứa Bí Mật - Tập 2 (Tái Bản 2017) </a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-158158"
+                                                                              class="price m-price-font">120.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-158158"
+                                                                     class="price m-price-font">150.000đ</span></p>
+                                                        <div class="episode-label">Tập 2</div>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating" style="width:97%"></div>
+                                                            </div>
+                                                            <div class="amount">(90)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 158158-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 2%;"></div>
+                                                    <div class="text-progress-bar"><span class="158158-bar">Đã bán
+                                                        4</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">31%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/bo-sach-little-stories-bo-10-cuon.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Bộ Sách Little Stories (Bộ 10 Cuốn)"
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_225533.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_225533.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Bộ Sách Little Stories (Bộ 10 Cuốn)"></div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/bo-sach-little-stories-bo-10-cuon.html"
+                                                            title="Bộ Sách Little Stories (Bộ 10 Cuốn)">Bộ Sách Little
+                                                        Stories (Bộ 10 Cuốn)</a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-351826"
+                                                                              class="price m-price-font">450.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-351826"
+                                                                     class="price m-price-font">650.000đ</span></p>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating" ></div>
+                                                            </div>
+                                                            <div class="amount">(0)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 351826-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 0%;"></div>
+                                                    <div class="text-progress-bar"><span class="351826-bar">Đã bán
+                                                        0</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">23%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/mot-doi-quan-tri-tai-ban-2019.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Một Đời Quản Trị (Tái Bản 2019)"
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_27259.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_27259.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Một Đời Quản Trị (Tái Bản 2019)"></div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/mot-doi-quan-tri-tai-ban-2019.html"
+                                                            title="Một Đời Quản Trị (Tái Bản 2019)">Một Đời Quản Trị
+                                                        (Tái Bản 2019)</a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-275614"
+                                                                              class="price m-price-font">155.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-275614"
+                                                                     class="price m-price-font">200.000đ</span></p>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating" style="width:87%"></div>
+                                                            </div>
+                                                            <div class="amount">(3)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 275614-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 0%;"></div>
+                                                    <div class="text-progress-bar"><span class="275614-bar">Đã bán
+                                                        0</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="item-inner" style="position: relative">
+                                                <div class="label-pro-sale m-label-pro-sale"><span
+                                                        class="p-sale-label discount-l-fs">22%</span></div>
+                                                <div class="ma-box-content">
+                                                    <div class="products clearfix">
+                                                        <div class="product images-container"><a
+                                                                href="https://www.fahasa.com/ga-nghien-giay-tu-truyen-cua-nha-sang-lap-nike.html?fhs_campaign=DEAL_HOT_PAGES_HOME"
+                                                                title="Gã Nghiện Giày - Tự Truyện Của Nhà Sáng Lập Nike"
+                                                                class="product-image">
+                                                            <div class="product-image"><img
+                                                                    src="https://cdn0.fahasa.com/media/catalog/product/8/9/8934974150961.jpg"
+                                                                    data-src="https://cdn0.fahasa.com/media/catalog/product/8/9/8934974150961.jpg"
+                                                                    class=" lazyloaded"
+                                                                    alt="Gã Nghiện Giày - Tự Truyện Của Nhà Sáng Lập Nike">
+                                                            </div>
+                                                        </a></div>
+                                                    </div>
+                                                    <h2 class="product-name-no-ellipsis"><a
+                                                            href="https://www.fahasa.com/ga-nghien-giay-tu-truyen-cua-nha-sang-lap-nike.html"
+                                                            title="Gã Nghiện Giày - Tự Truyện Của Nhà Sáng Lập Nike">Gã
+                                                        Nghiện Giày - Tự Truyện Của Nhà Sáng Lập Nike</a></h2>
+                                                    <div class="price-label">
+                                                        <p class="special-price"><span class="price-label">Special
+                                                            Price</span><span id="product-price-175522"
+                                                                              class="price m-price-font">125.000đ</span>
+                                                        </p>
+                                                        <p class="old-price bg-white"><span class="price-label">Giá bìa:
+                                                        </span><span id="old-price-175522"
+                                                                     class="price m-price-font">160.000đ</span></p>
+                                                    </div>
+                                                    <div class="fhs-rating-container" style="height:20px">
+                                                        <div class="ratings fhs-no-mobile-block">
+                                                            <div class="rating-box">
+                                                                <div class="rating" style="width:100%"></div>
+                                                            </div>
+                                                            <div class="amount">(82160)</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="progress position-bar-gridslider color-progress-grid">
+                                                    <div class="progress-bar color-bar-grid 175522-bar"
+                                                         role="progressbar"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                                         style="width: 0%;"></div>
+                                                    <div class="text-progress-bar"><span class="175522-bar">Đã bán
+                                                        0</span></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tabs-xem-them fhs_bar_bottom mobile_link" style="">
+                                        <a href="https://www.fahasa.com/deal-hot-pages">Xem Thêm</a>
+                                    </div>
+                                </div><!-- #tab1 -->
+                                <div id="tabkm-gia-noi-bat" class="tab_content_gia-noi-bat"
+                                     style="display:none; min-height: 400px;">
+                                    <ul class="bxslider">
+                                    </ul>
+
+                                    <div class="tabs-xem-them fhs_bar_bottom mobile_link" style="display:none">
+                                        <a
+                                                href="https://www.fahasa.com/sach-trong-nuoc/sort-by/num_orders/sort-direction/asc.html">Xem
+                                            Thêm</a>
+                                    </div>
+                                </div><!-- #tab1 -->
+                                <div id="tabkmnv-gia-noi-bat" class="tab_content_gia-noi-bat"
+                                     style="display:none; min-height: 400px;">
+                                    <ul class="bxslider">
+                                    </ul>
+
+                                    <div class="tabs-xem-them fhs_bar_bottom mobile_link" style="display:none">
+                                        <a
+                                                href="https://www.fahasa.com/foreigncategory/sort-by/num_orders_month/sort-direction/asc.html">Xem
+                                            Thêm</a>
+                                    </div>
+                                </div><!-- #tab1 -->
+                            </div>
+                        </div> <!-- .tab_container -->
+                    </div>
+                </div> <!-- end div -->
+            </div>
+        </div>
+    </th:block>
+    <th:block layout:insert="~{fragments/client/footer}"/>
 </th:block>
 </html>
