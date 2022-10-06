@@ -1,4 +1,4 @@
-package com.pawasa.controller;
+package com.pawasa.controller.client;
 
 import com.pawasa.exception.UserAlreadyExistsException;
 import com.pawasa.model.User;
