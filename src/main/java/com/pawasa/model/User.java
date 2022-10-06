@@ -18,7 +18,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @NotEmpty(message = "Username is required.")
+//    @NotEmpty(message = "Username is required.")
     private String username;
 
     @NotEmpty(message = "Password is required.")
@@ -28,29 +28,30 @@ public class User {
     @Email(message = "Email should be valid.")
     private String email;
 
-    @NotEmpty(message = "First Name is required.")
+//    @NotEmpty(message = "First Name is required.")
     @Column(name = "first_name")
     private String firstName;
-    @NotEmpty(message = "Last Name is required.")
+//    @NotEmpty(message = "Last Name is required.")
     @Column(name = "last_name")
     private String lastName;
 
-    @NotEmpty(message = "Phone Number is required.")
+//    @NotEmpty(message = "Phone Number is required.")
     @Column(name = "phone")
     private String phoneNumber;
 
-    @NotEmpty(message = "Address is required.")
+//    @NotEmpty(message = "Address is required.")
     private String address;
 
     @Column(name = "dob")
     private Date dob;
 
+    @Column(name = "image")
     private String image;
 
     @Column(name = "role_id")
     private Long roleID;
 
-    @NotEmpty(message = "OTP cannot be empty.")
+//    @NotEmpty(message = "OTP cannot be empty.")
     @Column(name = "otp")
     private String otp;
 

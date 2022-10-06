@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import java.util.Date;
@@ -32,58 +33,74 @@ public class CustomerController{
     public String register(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("form", "signup");
-        return "register";
+        return "pages/client/login";
     }
 
     @PostMapping("/signup")
-    public String register(@Valid User user, BindingResult result, Model model) {
-        if (result.hasFieldErrors("email") || result.hasFieldErrors("password") || result.hasFieldErrors("otp")) {
-//            model.addAttribute("user", user);
-            return "register";
+    public String register(@RequestParam("otp") String otp, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("register_user");
+        if(otp.equals("")) {
+            model.addAttribute("otp_message", "OTP is required.");
+            model.addAttribute("form", "check");
+            return "pages/client/login";
         }
-
+        if(!otp.equals(user.getOtp())) {
+            model.addAttribute("otp_message", "OTP is incorrect.");
+            model.addAttribute("form", "check");
+            return "pages/client/login";
+        }
+        if(new Date().getTime() - user.getOtpRequestedTime().getTime() > 300000) {
+            model.addAttribute("otp_message", "OTP is expired.");
+            model.addAttribute("form", "resent");
+            return "pages/client/login";
+        }
         try {
+            session.removeAttribute("register_user");
+            user.setRoleID(1L);
             userService.addUser(user);
-        } catch (UserAlreadyExistsException e) {
-            result.rejectValue("email", "user.email", e.getMessage());
-//            model.addAttribute("user", user);
-            return "register";
-        } catch (IllegalArgumentException e) {
-            result.rejectValue("password", "user.password", e.getMessage());
-            return "register";
+        } catch (Exception e) {
         }
-
         return "redirect:/";
     }
 
     @PostMapping("/signup/otp")
-    public String sendOtp(@Valid  User user, BindingResult result, Model model, @RequestParam("cf_password") String cfPassword) {
+    public String sendOtp(@Valid  User user, BindingResult result, Model model, @RequestParam("cf_password") String cfPassword, HttpSession session) {
 
         if(user.getPassword()!="" && !user.getPassword().matches(passwordRegex)) {
+            model.addAttribute("form", "signup");
             result.rejectValue("password", "user.password", "Password must contain at least one digit, one lowercase, one uppercase, one special character and must be at least 8 characters long.");
         }
 
         if (result.hasFieldErrors("email") || result.hasFieldErrors("password")) {
+
+            model.addAttribute("form", "signup");
+
             if(cfPassword.isEmpty())
                 model.addAttribute("cf_password", "Confirm password is required");
             else
                 if(!cfPassword.equals(user.getPassword()))
                     model.addAttribute("cf_password", "Confirm password is not match");
-             return "register";
+             return "pages/client/login";
         }
 
         if(cfPassword.isEmpty()){
             model.addAttribute("cf_password", "Confirm password is required");
-            return "register";
+            model.addAttribute("form", "signup");
+
+            return "pages/client/login";
         }
         else if(!cfPassword.equals(user.getPassword())) {
             model.addAttribute("cf_password", "Confirm password is not match");
-            return "register";
+            model.addAttribute("form", "signup");
+
+            return "pages/client/login";
         }
 
         if(userRepository.findByEmail(user.getEmail()) != null){
             result.rejectValue("email", "user.email","An account already exists for this email.");
-            return "register";
+            model.addAttribute("form", "signup");
+
+            return "pages/client/login";
         }
 
         //send otp
@@ -113,12 +130,38 @@ public class CustomerController{
                     "  </div>\n" +
                     "</div>";
 
-            //emailService.sendEmail(user.getEmail(), "Pawasa - Email Verification", message);
+            emailService.sendEmail(user.getEmail(), "Pawasa - Email Verification", message);
             user.setOtp(otp);
             user.setOtpRequestedTime(new Date());
-            return "register";
+            session.setAttribute("register_user", user);
+            model.addAttribute("form", "check");
+            return "pages/client/login";
         } catch (Exception e) {
             return "error";
         }
     }
+
+        @GetMapping("/pawasa/login")
+    public String login(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("form", "login");
+        return "pages/client/login";
+    }
+
+    @PostMapping("/pawasa/login")
+    public String login(@Valid User user, BindingResult result,  Model model, HttpSession session) {
+        if (result.hasFieldErrors("email") || result.hasFieldErrors("password")) {
+            model.addAttribute("form", "login");
+            return "pages/client/login";
+        }
+        User existUser = userRepository.findByEmail(user.getEmail());
+        if(existUser == null || !existUser.getPassword().equalsIgnoreCase(userService.encodePassword(user.getPassword()))) {
+            model.addAttribute("form", "login");
+            model.addAttribute("message", "Email hoặc Mật khẩu sai!");
+            return "pages/client/login";
+        }
+        session.setAttribute("user", existUser);
+        return "redirect:/";
+    }
+
 }

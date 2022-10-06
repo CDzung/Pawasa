@@ -1,4 +1,4 @@
-package com.pawasa.Controller.client;
+package com.pawasa.controller.client;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
