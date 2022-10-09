@@ -1,3 +1,4 @@
+/* CSS COMMON*/
 * {
     margin: 0;
     padding: 0;
@@ -11,6 +12,90 @@ div {
 ul li,
 ol li {
     list-style: none;
+}
+
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-xs-1,
+.col-sm-1,
+.col-md-1,
+.col-lg-1,
+.col-xs-2,
+.col-sm-2,
+.col-md-2,
+.col-lg-2,
+.col-xs-3,
+.col-sm-3,
+.col-md-3,
+.col-lg-3,
+.col-xs-4,
+.col-sm-4,
+.col-md-4,
+.col-lg-4,
+.col-xs-5,
+.col-sm-5,
+.col-md-5,
+.col-lg-5,
+.col-xs-6,
+.col-sm-6,
+.col-md-6,
+.col-lg-6,
+.col-xs-7,
+.col-sm-7,
+.col-md-7,
+.col-lg-7,
+.col-xs-8,
+.col-sm-8,
+.col-md-8,
+.col-lg-8,
+.col-xs-9,
+.col-sm-9,
+.col-md-9,
+.col-lg-9,
+.col-xs-10,
+.col-sm-10,
+.col-md-10,
+.col-lg-10,
+.col-xs-11,
+.col-sm-11,
+.col-md-11,
+.col-lg-11,
+.col-xs-12,
+.col-sm-12,
+.col-md-12,
+.col-lg-12 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (min-width: 992px) {
+    .col-md-6 {
+        width: 50%;
+    }
+}
+
+@media (min-width: 992px) {
+
+    .col-md-1,
+    .col-md-2,
+    .col-md-3,
+    .col-md-4,
+    .col-md-5,
+    .col-md-6,
+    .col-md-7,
+    .col-md-8,
+    .col-md-9,
+    .col-md-10,
+    .col-md-11,
+    .col-md-12 {
+        float: left;
+    }
+
 }
 
 ul,
@@ -108,6 +193,12 @@ textarea {
     margin: 0;
     font: inherit;
     color: inherit;
+}
+
+@media (min-width: 1200px) {
+    .col-lg-12 {
+        width: 100%;
+    }
 }
 
 /* ======================= [HEADER] ======================= */
@@ -860,6 +951,10 @@ strong {
     padding-top: 0;
 }
 
+.tab_container {
+    clear: both;
+}
+
 .cms-icon-menu {
     margin: 15px 0px 0px 0px;
     background-color: #fff;
@@ -1156,6 +1251,7 @@ ul.bxslider {
     max-height: 2.8em;
     font-size: 0.78em;
     color: #333333;
+    display: block;
 }
 
 
@@ -1185,12 +1281,10 @@ ul.bxslider {
 }
 
 .special-price .price {
-    font-size: 14px;
     min-height: 25px;
 }
 
 .price {
-    font-size: 15px;
     font-family: "Poppins", sans-serif;
 }
 
@@ -1230,7 +1324,8 @@ h2 {
     margin-top: 4px;
 }
 
-.fhs-rating-container, .rating-container {
+.fhs-rating-container,
+.rating-container {
     min-height: 15px;
     margin-top: 4px;
 }
@@ -1249,6 +1344,7 @@ h2 {
     margin-right: 3px;
     margin-left: 0px;
 }
+
 .rating-box {
     background: url("/image/ico_star_gray.png") repeat-x;
     background-size: 16px 16px;
@@ -1270,15 +1366,20 @@ h2 {
     position: absolute;
     top: 0;
 }
+
 .rating-box .rating {
     float: left;
 }
 
-.review-position span, .review-position > .rating-links > a, .ratings > .amount, .review-position > .rating-links {
+.review-position span,
+.review-position>.rating-links>a,
+.ratings>.amount,
+.review-position>.rating-links {
     color: #F6A500 !important;
     font-size: 14px;
     font-weight: 500;
 }
+
 .ratings .amount {
     display: inline-block;
 }
@@ -1289,11 +1390,13 @@ h2 {
     margin-left: 10px;
     margin-right: 10px;
 }
+
 .color-progress-grid {
     box-shadow: none;
     background-color: #F1B1B0;
     background-image: none;
 }
+
 .position-bar-gridslider {
     position: relative;
     border-radius: 15px;
@@ -1309,6 +1412,7 @@ h2 {
 .color-bar-grid {
     background-image: linear-gradient(to bottom, #D22121 0%, #D22121 100%);
 }
+
 .progress-bar {
     background-repeat: repeat-x;
     float: left;
@@ -1329,4 +1433,75 @@ h2 {
     text-align: center;
     color: white;
     font-size: 12px;
+}
+
+/*/*FOOTER*/
+.ma-footer-static .footer-static .container {
+    background: white;
+}
+
+div.footer-static .container {
+    background: white !important;
+}
+
+.ma-footer-static .footer-static .container .container-inner {
+    padding-bottom: 25px;
+    padding: 40px 0 50px;
+}
+
+.ma-footer-static .footer-static .footer-static-title,
+.footer-static-content ul li {
+    border-color: gray;
+    color: black;
+}
+
+.ma-footer-static .footer-static .footer-static-title {
+    padding-bottom: 0px;
+}
+
+.footer-static-title {
+    padding-left: 10px;
+}
+
+.ma-footer-static .footer-static .footer-static-title h3 {
+    text-transform: uppercase;
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
+}
+
+.ma-footer-static .footer-static .footer-static-title,
+.footer-static-content ul li {
+    border-color: gray;
+    color: black;
+}
+
+.footer-static-content ul li a {
+    line-height: 35px;
+    padding-left: 10px;
+    background: url("/image/icon-footer.png") no-repeat 0 9px;
+    color: black;
+}
+
+.zmdi,
+.fa {
+    font-style: normal !important;
+}
+
+.fa {
+    display: inline-block;
+    font-family: FontAwesome;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+}
+
+.footer-image-container {
+    margin: auto;
+}
+
+.footer-static-content ul li a:hover {
+    background-position: 0px -40px;
+    padding-left: 25px;
+    color: #ea7696;
 }

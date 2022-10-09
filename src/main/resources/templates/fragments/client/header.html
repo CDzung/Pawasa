@@ -1046,10 +1046,11 @@
                     </div>
                 </div>
                 <div class="fhs_center_space" style="padding-left: 24px;">
-                    <div class="noti-top fhs_dropdown_hover no_cover">
-                        <div th:onmouseover="|open_noti(1,'.top-notification-menu')|"
-                             th:onmouseout="|open_noti(0,'.top-notification-menu')|"
-                             class="top-notification-button fhs_mouse_point">
+                    <div class="noti-top fhs_dropdown_hover no_cover"
+                         th:onmouseover="|open_noti(1,'.top-notification-menu')|"
+                         th:onmouseout="|open_noti(0,'.top-notification-menu')|">
+                        <div
+                                class="top-notification-button fhs_mouse_point">
                             <a style="cursor:pointer;display:flex;flex-direction: column;">
                                 <div class="fhs_center_center" style="margin-bottom:3px;">
                                     <div class="icon_nofi_gray">
@@ -1117,9 +1118,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="fhs_top_account no_cover fhs_dropdown_hover" id="fhs_top_account_hover">
-                        <a href="#" th:onmouseover="|open_noti(1,'.fhs_top_account_dropdown')|"
-                           th:onmouseout="|open_noti(0,'.fhs_top_account_dropdown')|">
+                    <div class="fhs_top_account no_cover fhs_dropdown_hover" id="fhs_top_account_hover"
+                         th:onmouseover="|open_noti(1,'.fhs_top_account_dropdown')|"
+                         th:onmouseout="|open_noti(0,'.fhs_top_account_dropdown')|">
+                        <a href="#">
                             <div class="fhs_top_account_button">
                                 <div class="icon_account_gray" style="margin-bottom:3px;"></div>
                                 <div class="top_menu_label fhs_top_center fhs_nowrap_one" id="fhs_top_account_title">Tài
