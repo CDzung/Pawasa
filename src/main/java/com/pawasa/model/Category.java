@@ -1,13 +1,18 @@
 package com.pawasa.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
     @Id
     @Column(name = "category_id")
@@ -17,15 +22,11 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @Column(name = "parent_id")
-    private Long parentID;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id", referencedColumnName = "category_id")
+    private Category parentCategory;
 
-    public Category() {
-    }
+    @OneToMany(mappedBy = "category")
+    private Set<Product> products;
 
-    public Category(Long id, String categoryName, Long parentID) {
-        this.id = id;
-        this.categoryName = categoryName;
-        this.parentID = parentID;
-    }
 }

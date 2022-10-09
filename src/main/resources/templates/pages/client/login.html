@@ -25,10 +25,12 @@
                         <div class="fhs_login_form_content">
                             <div class="youama-login-window">
                                 <div>
-                                    <ul id="popup-login-tab_list" class="popup-login-tab">
+                                    <ul th:if="${!form.equals('forgot')}" id="popup-login-tab_list" class="popup-login-tab">
                                         <li class="popup-login-tab-item popup-login-tab-login"><a th:href="@{/pawasa/login}">Đăng nhập</a><hr></li>
                                         <li class="popup-login-tab-item popup-login-tab-register"><a th:href="@{/signup}">Đăng ký</a><hr></li>
                                     </ul>
+                                    <div th:if="${form.equals('forgot')}" class="popup-change-title popup-login-title" style="">
+                                        Khôi phục mật khẩu	    </div>
                                 </div>
                                 <div th:if="${form.equals('signup')}">
                                     <div class="popup-register-content" style="display: block;">
@@ -146,6 +148,29 @@
                                             <div class="fhs-popup-msg fhs-login-msg">
                                                 <p th:text="${message}"></p>
                                             </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div th:if="${form.equals('forgot')}">
+                                    <div class="popup-recovery-content">
+                                        <form th:action="@{/forgot-password}" th:object="${user}" method="post">
+                                            <div class="fhs-input-box">
+                                                <label>Email</label>
+                                                <div class="fhs-input-group">
+                                                    <input th:field="*{email}" class="fhs-textbox" type="email" placeholder="Nhập địa chỉ email">
+                                                    <span class="fhs-input-icon fhs-textbox-alert"></span>
+                                                </div>
+                                                <div class="fhs-input-alert">
+                                                    <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
+                                                </div>
+                                            </div>
+                                            <div class="fhs-input-box">
+                                                <div class="fhs-btn-box">
+                                                    <button type="submit" title="Gửi" class="fhs-btn-login"><span>Gửi OTP</span></button>
+                                                    <button type="button" title="Bỏ qua " class="fhs-btn-cancel lg-close" style="display: none;"><span>Bỏ qua </span></button>
+                                                </div>
+                                            </div>
+                                            <div class="fhs-popup-msg fhs-forgot-msg"></div>
                                         </form>
                                     </div>
                                 </div>

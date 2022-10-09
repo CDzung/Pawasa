@@ -1,6 +1,8 @@
 package com.pawasa.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -8,27 +10,23 @@ import javax.persistence.*;
 @Entity
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "cartdetail")
 public class CartDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "cart_id")
-    private Long cartId;
-
-    @Column(name = "product_id")
-    private Long productId;
-
     @Column(name = "quantity")
     private Long quantity;
 
-    public CartDetail() {
-    }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id", referencedColumnName = "cart_id")
+    private Cart cart;
 
-    public CartDetail(Long id, Long cartId, Long productId, Long quantity) {
-        this.id = id;
-        this.cartId = cartId;
-        this.productId = productId;
-        this.quantity = quantity;
-    }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    private Product product;
+
 }

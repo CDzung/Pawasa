@@ -1,14 +1,17 @@
 package com.pawasa.model;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
     @Id
     @Column(name = "order_id")
@@ -18,23 +21,22 @@ public class Order {
     @Column(name = "order_date")
     private Date orderDate;
 
-    @Column(name = "payment_id")
-    private Long paymentId;
-
     @Column(name = "user_id")
     private Long userId;
 
     @Column(name = "total_price")
     private Double totalPrice;
 
-    public Order() {
-    }
+    @ManyToMany(mappedBy = "orders")
+    private Set<Product> products;
 
-    public Order(Long orderId, Date orderDate, Long paymentId, Long userId, Double totalPrice) {
-        this.orderId = orderId;
-        this.orderDate = orderDate;
-        this.paymentId = paymentId;
-        this.userId = userId;
-        this.totalPrice = totalPrice;
-    }
+    @OneToMany(mappedBy = "order")
+    private Set<OrderDetail> orderDetails;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_id", referencedColumnName = "payment_id")
+    private Payment payment;
+
+    @OneToMany(mappedBy = "order")
+    private Set<OrderStatus> orderStatuses;
 }
