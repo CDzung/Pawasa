@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -17,11 +18,6 @@ public class Payment {
     @Column(name = "payment_method")
     private String paymentMethod;
 
-    public Payment() {
-    }
-
-    public Payment(Long id, String paymentMethod) {
-        this.id = id;
-        this.paymentMethod = paymentMethod;
-    }
+    @OneToMany(mappedBy = "payment")
+    private Set<Order> orders;
 }

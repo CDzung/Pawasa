@@ -1,13 +1,18 @@
 package com.pawasa.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     @Id
     @Column(name = "product_id")
@@ -22,9 +27,6 @@ public class Product {
 
     @Column(name = "price")
     private Double price;
-
-    @Column(name = "category_id")
-    private Long categoryID;
 
     @Column(name = "image")
     private String image;
@@ -51,23 +53,26 @@ public class Product {
 
     private String supplier;
 
-    public Product() {
-    }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    private Category category;
 
-    public Product(Long id, String productName, String description, Double price, Long categoryID, String image, Long quantity, int discount, String isbn, String author, String publisher, String publishYear, String language, String supplier) {
-        this.id = id;
-        this.productName = productName;
-        this.description = description;
-        this.price = price;
-        this.categoryID = categoryID;
-        this.image = image;
-        this.quantity = quantity;
-        this.discount = discount;
-        this.isbn = isbn;
-        this.author = author;
-        this.publisher = publisher;
-        this.publishYear = publishYear;
-        this.language = language;
-        this.supplier = supplier;
-    }
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "cartdetail",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "cart_id"))
+    private Set<Cart> carts;
+
+    @OneToMany(mappedBy = "product")
+    private Set<CartDetail> cartDetails;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "orderdetail",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id"))
+    private Set<Order> orders;
+
+    @OneToMany(mappedBy = "product")
+    private Set<OrderDetail> orderDetails;
+
 }

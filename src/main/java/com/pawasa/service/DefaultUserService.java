@@ -22,7 +22,8 @@ public class DefaultUserService implements UserService {
 
 
     @Override
-    public void addUser(User user) throws UserAlreadyExistsException {
+    public void
+    addUser(User user) throws UserAlreadyExistsException {
         User existingUser = userRepository.findByEmail(user.getEmail());
         if(existingUser != null) {
             throw new UserAlreadyExistsException("User already exists with email: " + user.getEmail());

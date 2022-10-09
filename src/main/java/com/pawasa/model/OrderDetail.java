@@ -1,7 +1,9 @@
 package com.pawasa.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -9,16 +11,13 @@ import javax.persistence.*;
 @Entity
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "orderdetail")
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(name = "order_id")
-    private Long orderId;
-
-    @Column(name = "product_id")
-    private Long productId;
 
     @Column(name = "quantity")
     private int quantity;
@@ -27,15 +26,11 @@ public class OrderDetail {
 
     private String feedback;
 
-    public OrderDetail() {
-    }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    private Product product;
 
-    public OrderDetail(Long id, Long orderId, Long productId, int quantity, int rate, String feedback) {
-        this.id = id;
-        this.orderId = orderId;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.rate = rate;
-        this.feedback = feedback;
-    }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    private Order order;
 }

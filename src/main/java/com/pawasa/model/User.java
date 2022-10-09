@@ -11,6 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -48,32 +49,18 @@ public class User {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "role_id")
-    private Long roleID;
-
-//    @NotEmpty(message = "OTP cannot be empty.")
     @Column(name = "otp")
     private String otp;
 
     @Column(name = "otp_requested_time")
     private Date otpRequestedTime;
 
-    public User(Long id, String username, String password, String email, String firstName, String lastName, String phoneNumber, String address, Date dob, String image, Long roleID, String otp, Date otpRequestedTime) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.dob = dob;
-        this.image = image;
-        this.roleID = roleID;
-        this.otp = otp;
-        this.otpRequestedTime = otpRequestedTime;
-    }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    private Role role;
 
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
     public boolean isOTPRequired() {
         if (this.otp == null || this.otp.equals("")) {
             return false;

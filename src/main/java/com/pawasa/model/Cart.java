@@ -1,31 +1,35 @@
 package com.pawasa.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cart {
     @Id
     @Column(name = "cart_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 
     @Column(name = "total_price")
     private Double totalPrice;
 
-    public Cart() {
-    }
+    @ManyToMany(mappedBy = "carts")
+    private Set<Product> products;
 
-    public Cart(Long id, Long userId, Double totalPrice) {
-        this.id = id;
-        this.userId = userId;
-        this.totalPrice = totalPrice;
-    }
+    @OneToMany(mappedBy = "cart")
+    private Set<CartDetail> cartDetails;
+
 }
