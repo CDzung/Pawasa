@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -61,6 +62,9 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Cart cart;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders;
     public boolean isOTPRequired() {
         if (this.otp == null || this.otp.equals("")) {
             return false;
