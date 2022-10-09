@@ -21,9 +21,6 @@ public class Order {
     @Column(name = "order_date")
     private Date orderDate;
 
-    @Column(name = "user_id")
-    private Long userId;
-
     @Column(name = "total_price")
     private Double totalPrice;
 
@@ -39,4 +36,8 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private Set<OrderStatus> orderStatuses;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 }
