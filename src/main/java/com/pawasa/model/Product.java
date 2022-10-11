@@ -53,6 +53,9 @@ public class Product {
 
     private String supplier;
 
+    @Column(name = "book_layout")
+    private String bookLayout;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Category category;
