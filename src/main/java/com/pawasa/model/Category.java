@@ -22,11 +22,13 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id", referencedColumnName = "category_id")
     private Category parentCategory;
 
+    @OneToMany(mappedBy = "parentCategory")
+    private Set<Category> childCategories;
+
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
-
 }

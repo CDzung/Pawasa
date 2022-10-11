@@ -31,5 +31,4 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart")
     private Set<CartDetail> cartDetails;
-
 }
