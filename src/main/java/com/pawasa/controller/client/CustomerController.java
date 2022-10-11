@@ -60,6 +60,7 @@ public class CustomerController {
         }
         try {
             session.removeAttribute("register_user");
+
             userService.addUser(user);
         } catch (Exception e) {
         }
