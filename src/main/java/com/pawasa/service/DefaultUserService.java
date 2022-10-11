@@ -35,6 +35,16 @@ public class DefaultUserService implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void changePassword(User user, String newPassword) {
+        if(!newPassword.matches(passwordRegex)) {
+            throw new IllegalArgumentException("Password must contain at least one digit, one lowercase, one uppercase, one special character and must be at least 8 characters long.");
+        }
+        user.setPassword(newPassword);
+        encodePassword(user);
+        userRepository.save(user);
+    }
+
     private void encodePassword(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
@@ -43,5 +53,7 @@ public class DefaultUserService implements UserService {
 
         return passwordEncoder.encode(password);
     }
+
+
 }
 

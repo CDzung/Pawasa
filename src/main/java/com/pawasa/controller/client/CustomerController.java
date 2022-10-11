@@ -175,8 +175,8 @@ public class CustomerController {
         return "pages/client/login";
     }
 
-    @PostMapping("/forgot-password")
-    public String forgotPassword(@Valid User user, BindingResult result, Model model, HttpSession session) {
+    @PostMapping("/forgot-password/otp")
+    public String sendOtp(@Valid User user, BindingResult result, Model model, HttpSession session) {
         if (result.hasFieldErrors("email")) {
             model.addAttribute("form", "forgot");
             return "pages/client/login";
@@ -200,7 +200,7 @@ public class CustomerController {
                     "      <a href=\"\" style=\"font-size:1.4em;color: #C92127;text-decoration:none;font-weight:600\">Pawasa</a>\n" +
                     "    </div>\n" +
                     "    <p style=\"font-size:1.1em\">Hi,</p>\n" +
-                    "    <p>Thank you for choosing Pawasa. Use the following OTP to complete your Sign Up procedures. OTP is valid for 5 minutes</p>\n" +
+                    "    <p>Thank you for choosing Pawasa. Use the following OTP to confirm your Reset Password procedures. OTP is valid for 5 minutes</p>\n" +
                     "    <h2 style=\"background: #C92127;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;\">" +
                     otp +
                     "</h2>\n" +
@@ -209,14 +209,52 @@ public class CustomerController {
                     "    <div style=\"float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300\">\n" +
                     "      <p>Pawasa Inc</p>\n" +
                     "      <p>1600 Amphitheatre Parkway</p>\n";
-            emailService.sendEmail(user.getEmail(), "Pawasa - Email Verification", message);
+            emailService.sendEmail(user.getEmail(), "Pawasa - Reset Password", message);
             user.setOtp(otp);
             user.setOtpRequestedTime(new Date());
             session.setAttribute("forgot_user", user);
-            model.addAttribute("form", "check");
+            model.addAttribute("form", "forget_check");
             return "pages/client/login";
         } catch (Exception e) {
             return "error";
         }
+    }
+
+    @PostMapping("/forgot-password")
+    public  String forgetPassword(@RequestParam("otp") String otp, @Valid User user, BindingResult result, Model model, HttpSession session, @RequestParam("cf_password") String cfPassword) {
+        boolean check = false;
+        if (user.getPassword() == "" || !user.getPassword().matches(passwordRegex)) {
+            check = true;
+            if(user.getPassword() != "")
+                result.rejectValue("password", "user.password", "Password must contain at least one digit, one lowercase, one uppercase, one special character and must be at least 8 characters long.");
+        }
+        if (cfPassword.isEmpty()) {
+            model.addAttribute("cf_password", "Confirm password is required");
+            check = true;
+        } else if (!cfPassword.equals(user.getPassword())) {
+            model.addAttribute("cf_password", "Confirm password is not match");
+            check = true;
+        }
+        User forgotUser = (User) session.getAttribute("forget_user");
+        if (otp.equals("")) {
+            model.addAttribute("otp_message", "OTP is required.");
+            check = true;
+        }
+        if (!otp.equals(forgotUser.getOtp())) {
+            model.addAttribute("otp_message", "OTP is incorrect.");
+            check = true;
+        }
+        if (new Date().getTime() - user.getOtpRequestedTime().getTime() > 300000) {
+            model.addAttribute("otp_message", "OTP is expired.");
+            check = true;
+        }
+        if(check) {
+            model.addAttribute("form", "forget");
+            return "pages/client/login";
+        }
+        User existUser = userRepository.findByEmail(forgotUser.getEmail());
+        userService.changePassword(existUser, user.getPassword());
+        model.addAttribute("form", "login");
+        return "pages/client/login";
     }
 }
