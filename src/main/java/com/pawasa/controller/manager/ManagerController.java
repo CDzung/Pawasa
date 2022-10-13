@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
+
 @Controller
 public class ManagerController {
 
@@ -28,10 +30,13 @@ public class ManagerController {
     }
 
     @PostMapping("/manager/add-product")
-    public String addProduct(Product product, @RequestParam(name="cate") String categoryName) {
+    public String addProduct(@Valid Product product, @RequestParam(name="cate") String categoryName, Model model) {
         Category category = categoryRepository.findByCategoryName(categoryName);
-        product.setCategory(category);
-        defaultProductService.addProduct(product);
+        if(category!=null) {
+            product.setCategory(category);
+            defaultProductService.addProduct(product);
+        }
+        model.addAttribute("product", new Product());
         return "pages/manager/addproduct";
     }
 }
