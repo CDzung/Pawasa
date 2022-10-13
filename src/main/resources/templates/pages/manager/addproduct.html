@@ -32,14 +32,7 @@
                         <input type="text" class="form-control" id="price" th:field="*{price}">
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" th:field="*{description}">
-                        </textarea>
 
-                    </div>
-                </div>
                 <div class="col-12">
                     <div class="form-group">
                         <label for="image">Image</label>
@@ -107,6 +100,14 @@
                     </div>
                 </div>
 
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" th:field="*{description}" style="height: 200px;">
+                        </textarea>
+
+                    </div>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
