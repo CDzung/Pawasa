@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
+@Table(name = "user")
 public class User {
 
     @Id
@@ -65,6 +66,10 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Notification> notifications;
+
     public boolean isOTPRequired() {
         if (this.otp == null || this.otp.equals("")) {
             return false;
