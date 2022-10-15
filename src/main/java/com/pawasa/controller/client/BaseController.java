@@ -1,24 +1,230 @@
 package com.pawasa.controller.client;
 
-import com.pawasa.repository.ProductRepository;
+import com.pawasa.model.*;
+import com.pawasa.repository.*;
+import com.pawasa.service.DefaultProductService;
+import com.pawasa.service.ProductService;
+import com.pawasa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class BaseController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private DefaultProductService productService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RoleRepository roleRepository;
     @GetMapping("/")
-    public String index() {
+    public String index(HttpServletRequest request, HttpServletResponse response, Model model) {
+        Cookie[] cookies = request.getCookies();
+        User u = null;
+        for (Cookie i : cookies) {
+            if (i.getName().equals("email")) {
+                String value = i.getValue();
+                i.setMaxAge(0);
+                i = new Cookie("email", value);
+                i.setMaxAge(60 * 60 * 24 * 30);
+                response.addCookie(i);
+                u = userRepository.findByEmail(value);
+                model.addAttribute("user_login", u);
+                break;
+            }
+        }
+        Set<Category> list_category = new HashSet<>(categoryRepository.findParentCategory());
+        HttpSession session = request.getSession();
+        session.setAttribute("list_cate", list_category);
         return "pages/client/home";
     }
 
+    @GetMapping("/loadMenu")
+    public void LoadMenu(@RequestParam(name = "id", defaultValue = "1") Long id, HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset = UTF-8");
+        Category Parent_cate = categoryRepository.findCategoryById(id);
+        Set<Category> list_subCategory = categoryRepository.findByParentCategory_Id(id);
+        response.getWriter().print("<div class=\"fhs_column_stretch\" style=\"padding-right: 12px;\">\n" +
+                "                                <div class=\"fhs_menu_title fhs_center_left\" style=\"padding-left: 24px;\"><i\n" +
+                "                                        class=\"ico_sachtrongnuoc\"></i><span class=\"menu-title\">" + Parent_cate.getCategoryName() + "</span><b\n" +
+                "                                        class=\"caret\"></b></div>\n" +
+                "                                <div class=\"fhs_menu_content fhs_column_left\">\n" +
+                "                                    <div class=\"row\">");
+        int sum = 0;
+        for (Category i : list_subCategory) {
+            sum++;
+            if (sum > 8) {
+                break;
+            }
+            response.getWriter().print("<div class=\"mega-col col-sm-3 \" data-widgets=\"wid-98\" data-colwidth=\"3\">\n" +
+                    "                                            <div class=\"mega-col-inner\">\n" +
+                    "                                                <div class=\"ves-widget\" data-id=\"wid-98\">\n" +
+                    "                                                    <div class=\"widget-html\">\n" +
+                    "                                                        <div class=\"widget-inner\">\n" +
+                    "                                                            <h3><span style=\"color: #333333;\"><strong><a\n" +
+                    "                                                                    style=\"font-weight: bold; font-size: 13px;\"\n" +
+                    "                                                                    href=\"https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc.html\"><span\n" +
+                    "                                                                    style=\"color: #333333;\">" + i.getCategoryName() +
+                    "                                                                                </span></a></strong></span></h3>\n" +
+                    "                                                            <ul class=\"nav-links\">");
+            int count = 0;
+            for (Category a : i.getChildCategories()) {
+                count++;
+                if (count == 5) {
+                    response.getWriter().print("<li style=\"color: #2489f4;\"><span\n" +
+                            "                                                                        style=\"color: #2489f4;\"><a\n" +
+                            "                                                                        href=\"https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc.html\"><span\n" +
+                            "                                                                        style=\"color: #2489f4;\">Xem tất\n" +
+                            "                                                                                cả</span></a></span></li>");
+                    break;
+                }
+                response.getWriter().print("                                                                <li><a\n" +
+                        "                                                                        href=\"https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc/tieu-thuyet.html\">" +
+                        a.getCategoryName() +
+                        "                                                                    </a></li>");
+            }
+            response.getWriter().print("                                                       </ul>\n" +
+                    "                                                        </div>\n" +
+                    "                                                    </div>\n" +
+                    "                                                </div>\n" +
+                    "                                            </div>\n" +
+                    "                                        </div>");
+        }
+    }
+
+    @GetMapping("/loadProduct")
+    public void LoadProduct(@RequestParam(name = "id") String id, HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset = UTF-8");
+        Set<Product> productSet = productRepository.findByOrderByDiscountDesc();
+        Set<Product> set;
+        if (id.equals("deal")) {
+            set = productRepository.findTopNewProduct();
+        } else if (id.equals("km")) {
+            set = productRepository.findTopDiscountProduct();
+        } else if (id.equals("kmnv")) {
+            set = productService.getProductsByCategory(2, productSet).stream().limit(10).collect(Collectors.toSet());
+        } else if (id.equals("mglnv")) {
+
+            set = productService.getProductsByCategory(7, productSet).stream().limit(10).collect(Collectors.toSet());
+        } else if (id.equals("topmanga")) {
+            set = productService.getProductsByCategory(92, productSet).stream().limit(10).collect(Collectors.toSet());
+        } else if (id.equals("lnvelmoi")) {
+            set = productService.getProductsByCategory(71, productSet).stream().limit(10).collect(Collectors.toSet());
+        } else {
+            set = productService.getProductsByCategory(71, productSet).stream().limit(10).collect(Collectors.toSet());
+        }
+        response.getWriter().print("<ul class=\"bxslider\">\n" +
+                "<li class=\"item items-sl-width\">");
+        for (Product i : set) {
+            Set<OrderDetail> orderDetails = i.getOrderDetails();
+            int sum = 0;
+            for (OrderDetail a : orderDetails) {
+                sum += a.getQuantity();
+            }
+            response.getWriter().print("<div class=\"item-inner\" style=\"position: relative\">\n" +
+                    "                                                <div class=\"label-pro-sale m-label-pro-sale\"><span\n" +
+                    "                                                        class=\"p-sale-label discount-l-fs\">" + i.getDiscount() + "%</span></div>\n" +
+                    "                                                <div class=\"ma-box-content\">\n" +
+                    "                                                    <div class=\"products clearfix\">\n" +
+                    "                                                        <div class=\"product images-container\"><a\n" +
+                    "                                                                href=\"https://www.fahasa.com/hop-but-bi-thien-long-tl-079-treeden-muc-xanh-20-cay-hop.html?fhs_campaign=DEAL_HOT_PAGES_HOME\"\n" +
+                    "                                                                title=\"" + i.getProductName() + "\"\n" +
+                    "                                                                class=\"product-image\">\n" +
+                    "                                                            <div class=\"product-image\"><img\n" +
+                    "                                                                    src=\"" + i.getImage() + "\"\n" +
+                    "                                                                    data-src=\"https://cdn0.fahasa.com/media/catalog/product/i/m/image_195509_1_46052.jpg\"\n" +
+                    "                                                                    class=\" lazyloaded\"\n" +
+                    "                                                                    alt=\"" + i.getProductName() + "\">\n" +
+                    "                                                            </div>\n" +
+                    "                                                        </a></div>\n" +
+                    "                                                    </div>\n" +
+                    "                                                    <h2 class=\"product-name-no-ellipsis\"><a\n" +
+                    "                                                            href=\"https://www.fahasa.com/hop-but-bi-thien-long-tl-079-treeden-muc-xanh-20-cay-hop.html\"\n" +
+                    "                                                            title=\"Hộp 20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh\">Hộp\n" + i.getProductName() +
+                    "                                                    </h2>\n" +
+                    "                                                    <div class=\"price-label\">\n" +
+                    "                                                        <p class=\"special-price\"><span class=\"price-label\">Special\n" +
+                    "                                                            Price</span><span id=\"product-price-298231\"\n" +
+                    "                                                                              class=\"price m-price-font\">" + i.getFormattedPriceString(i.getPrice() * (100 - i.getDiscount()) / 100) + "đ</span>\n" +
+                    "                                                        </p>\n" +
+                    "                                                        <p class=\"old-price bg-white\"><span class=\"price-label\">Giá bìa:\n" +
+                    "                                                        </span><span id=\"old-price-298231\"\n" +
+                    "                                                                     class=\"price m-price-font\">" + i.getFormattedPriceString(i.getPrice()) + "đ</span></p>\n" +
+                    "                                                    </div>\n" +
+                    "                                                    <div class=\"fhs-rating-container\" style=\"height:20px\">\n" +
+                    "                                                        <div class=\"ratings fhs-no-mobile-block\">\n" +
+                    "                                                            <div class=\"rating-box\">\n" +
+                    "                                                                <div class=\"rating\"></div>\n" +
+                    "                                                            </div>\n" +
+                    "                                                            <div class=\"amount\">(0)</div>\n" +
+                    "                                                        </div>\n" +
+                    "                                                    </div>\n" +
+                    "                                                </div>\n" +
+                    "                                                <div class=\"progress position-bar-gridslider color-progress-grid\">\n" +
+                    "                                                    <div class=\"progress-bar color-bar-grid 298231-bar\"\n" +
+                    "                                                         role=\"progressbar\"\n" +
+                    "                                                         aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"" + sum + "\"\n" +
+                    "                                                         style=\"width: 0%;\"></div>\n" +
+                    "                                                    <div class=\"text-progress-bar\"><span class=\"298231-bar\">Đã bán\n" +
+                    "                                                        0</span></div>\n" +
+                    "                                                </div>\n" +
+                    "                                            </div>");
+        }
+        response.getWriter().print("                                        </li>\n" +
+                "                                    </ul>\n" +
+                "                                        <a style=\"    display: flex;\n" +
+                "    align-items: center;\n" +
+                "    justify-content: center;\n" +
+                "    max-width: 100%;\n" +
+                "    max-height: 100%;\n" +
+                "    border-radius: 8px;\n" +
+                "    cursor: pointer;\n" +
+                "    user-select: none;\n" +
+                "    transition: all 0.5s;\n" +
+                "    color: #C92127;\n" +
+                "    background-color: #fff;\n" +
+                "    border: 2px solid #C92127;\n" +
+                "    font-size: 14px;\n" +
+                "    font-weight: 700;\n" +
+                "    width: 210px;\n" +
+                "    height: 40px;    margin: 0 auto;\"   href=\"flashsale\">Xem Thêm</a>\n");
+    }
+
     @GetMapping("/product")
-    public String product(Model model, @RequestParam(name="id") Long id) {
+    public String product(Model model, @RequestParam(name = "id") Long id) {
         model.addAttribute("product", productRepository.findById(id).get());
         return "pages/client/bookdetail";
     }

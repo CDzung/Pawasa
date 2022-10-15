@@ -1,8 +1,10 @@
 package com.pawasa.controller.client;
 
 import com.pawasa.exception.UserAlreadyExistsException;
+import com.pawasa.model.Category;
 import com.pawasa.model.User;
 import com.pawasa.repository.CartRepository;
+import com.pawasa.repository.CategoryRepository;
 import com.pawasa.repository.RoleRepository;
 import com.pawasa.repository.UserRepository;
 import com.pawasa.service.DefaultEmailService;
@@ -21,7 +23,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 @Controller
 public class CustomerController {
@@ -41,7 +45,8 @@ public class CustomerController {
     @Autowired
     private CartRepository cartRepository;
 
-
+    @Autowired
+    private CategoryRepository categoryRepository;
     @GetMapping("/signup")
     public String register(Model model) {
         model.addAttribute("user", new User());
@@ -79,7 +84,6 @@ public class CustomerController {
 
     @PostMapping("/signup/otp")
     public String sendOtp(@Valid User user, BindingResult result, Model model, @RequestParam("cf_password") String cfPassword, HttpSession session) {
-
         if (user.getPassword() != "" && !user.getPassword().matches(passwordRegex)) {
             model.addAttribute("form", "signup");
             result.rejectValue("password", "user.password", "Password must contain at least one digit, one lowercase, one uppercase, one special character and must be at least 8 characters long.");
@@ -274,7 +278,7 @@ public class CustomerController {
     }
 
     @GetMapping("/logout")
-    public String logout( HttpSession session, HttpServletResponse response) {
+    public String logout( HttpSession session, HttpServletResponse response,Model model) {
         session.removeAttribute("user");
         Cookie cookie = new Cookie("email", "");
         cookie.setMaxAge(0);

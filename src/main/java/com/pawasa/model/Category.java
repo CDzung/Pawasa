@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -22,7 +23,7 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", referencedColumnName = "category_id")
     private Category parentCategory;
 
@@ -31,4 +32,17 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category category)) return false;
+
+        return Objects.equals(id, category.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
