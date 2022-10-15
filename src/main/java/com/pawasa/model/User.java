@@ -73,9 +73,6 @@ public class User {
         long currentTimeInMillis = System.currentTimeMillis();
         long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
 
-        if (otpRequestedTimeInMillis + 5 * 60 * 1000 < currentTimeInMillis) {
-            return false;
-        }
-        return true;
+        return otpRequestedTimeInMillis + 5 * 60 * 1000 >= currentTimeInMillis;
     }
 }

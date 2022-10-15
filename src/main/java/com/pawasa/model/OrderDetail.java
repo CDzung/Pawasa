@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -25,6 +26,11 @@ public class OrderDetail {
     private int rate;
 
     private String feedback;
+
+    @Column(name = "price")
+    private BigDecimal price;
+
+    private int discount;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")

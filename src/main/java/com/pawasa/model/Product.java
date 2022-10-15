@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -69,6 +70,9 @@ public class Product {
     @NotEmpty
     @Column(name = "book_layout")
     private String bookLayout;
+
+    @Column(name = "available")
+    private boolean available;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
