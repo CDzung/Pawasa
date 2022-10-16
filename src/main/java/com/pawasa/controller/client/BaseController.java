@@ -20,6 +20,8 @@ public class BaseController {
     @GetMapping("/product")
     public String product(Model model, @RequestParam(name="id") Long id) {
         model.addAttribute("product", productRepository.findById(id).get());
-        return "pages/client/product";
+        return "pages/client/bookdetail";
     }
+
+
 }

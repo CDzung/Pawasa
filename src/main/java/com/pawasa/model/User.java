@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
+@Table(name = "user")
 public class User {
 
     @Id
@@ -65,6 +66,10 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Notification> notifications;
+
     public boolean isOTPRequired() {
         if (this.otp == null || this.otp.equals("")) {
             return false;
@@ -73,9 +78,6 @@ public class User {
         long currentTimeInMillis = System.currentTimeMillis();
         long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
 
-        if (otpRequestedTimeInMillis + 5 * 60 * 1000 < currentTimeInMillis) {
-            return false;
-        }
-        return true;
+        return otpRequestedTimeInMillis + 5 * 60 * 1000 >= currentTimeInMillis;
     }
 }
