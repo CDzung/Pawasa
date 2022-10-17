@@ -34,6 +34,7 @@ public class ManagerController {
         Category category = categoryRepository.findByCategoryName(categoryName);
         if(category!=null) {
             product.setCategory(category);
+            product.setAvailable(true);
             defaultProductService.addProduct(product);
         }
         model.addAttribute("product", new Product());

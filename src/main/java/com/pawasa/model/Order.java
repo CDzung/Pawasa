@@ -24,6 +24,9 @@ public class Order {
     @Column(name = "total_price")
     private Double totalPrice;
 
+    @Column(name = "address")
+    private String address;
+
     @ManyToMany(mappedBy = "orders")
     private Set<Product> products;
 

@@ -2,6 +2,8 @@ package com.pawasa.controller.client;
 
 import com.pawasa.exception.UserAlreadyExistsException;
 import com.pawasa.model.User;
+import com.pawasa.repository.CartRepository;
+import com.pawasa.repository.RoleRepository;
 import com.pawasa.repository.UserRepository;
 import com.pawasa.service.DefaultEmailService;
 import com.pawasa.service.DefaultUserService;
@@ -33,6 +35,13 @@ public class CustomerController {
     @Autowired
     private DefaultUserService userService;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+
     @GetMapping("/signup")
     public String register(Model model) {
         model.addAttribute("user", new User());
@@ -60,7 +69,8 @@ public class CustomerController {
         }
         try {
             session.removeAttribute("register_user");
-
+            //set role for user
+            user.setRole(roleRepository.findByRoleName("Customer"));
             userService.addUser(user);
         } catch (Exception e) {
         }
@@ -163,7 +173,7 @@ public class CustomerController {
             return "pages/client/login";
         }
         session.setAttribute("user", existUser);
-        Cookie cookie = new Cookie("user", existUser.getEmail());
+        Cookie cookie = new Cookie("email", existUser.getEmail());
         cookie.setMaxAge(60 * 60 * 24 * 30);
         response.addCookie(cookie);
         return "redirect:/";
@@ -187,6 +197,9 @@ public class CustomerController {
             model.addAttribute("form", "forgot");
             result.rejectValue("email", "user.email", "Email không tồn tại!");
             return "pages/client/login";
+        }
+        if(result.hasFieldErrors("password")) {
+            model.addAttribute("user", new User());
         }
         //send otp
         try {
@@ -214,7 +227,7 @@ public class CustomerController {
             user.setOtp(otp);
             user.setOtpRequestedTime(new Date());
             session.setAttribute("forgot_user", user);
-            model.addAttribute("form", "forget_check");
+            model.addAttribute("form", "forgot_check");
             return "pages/client/login";
         } catch (Exception e) {
             return "error";
@@ -236,26 +249,41 @@ public class CustomerController {
             model.addAttribute("cf_password", "Confirm password is not match");
             check = true;
         }
-        User forgotUser = (User) session.getAttribute("forget_user");
+        User forgotUser = (User) session.getAttribute("forgot_user");
         if (otp.equals("")) {
             model.addAttribute("otp_message", "OTP is required.");
             check = true;
         }
-        if (!otp.equals(forgotUser.getOtp())) {
+        else if (!otp.equals(forgotUser.getOtp())) {
             model.addAttribute("otp_message", "OTP is incorrect.");
             check = true;
         }
-        if (new Date().getTime() - user.getOtpRequestedTime().getTime() > 300000) {
+        if (new Date().getTime() - forgotUser.getOtpRequestedTime().getTime() > 300000) {
             model.addAttribute("otp_message", "OTP is expired.");
             check = true;
         }
         if(check) {
-            model.addAttribute("form", "forget");
+            model.addAttribute("form", "forgot_check");
             return "pages/client/login";
         }
         User existUser = userRepository.findByEmail(forgotUser.getEmail());
         userService.changePassword(existUser, user.getPassword());
+        model.addAttribute("user", new User());
         model.addAttribute("form", "login");
         return "pages/client/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout( HttpSession session, HttpServletResponse response) {
+        session.removeAttribute("user");
+        Cookie cookie = new Cookie("email", "");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
+    @GetMapping("/cart")
+    public String cart(Model model, @CookieValue(value = "email") String email) {
+        User user = userRepository.findByEmail(email);
+        return "pages/client/cart";
     }
 }
