@@ -29,11 +29,11 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-   //@NotNull
+    //@NotNull
     @Column(name = "price")
     private double price;
 
-   // @NotEmpty
+    //@NotEmpty
     @Column(name = "image")
     private String image;
 
