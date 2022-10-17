@@ -22,6 +22,4 @@ public class BaseController {
         model.addAttribute("product", productRepository.findById(id).get());
         return "pages/client/bookdetail";
     }
-
-
 }
