@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -13,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
+@Table(name = "user")
 public class User {
 
     @Id
@@ -56,6 +58,9 @@ public class User {
     @Column(name = "otp_requested_time")
     private Date otpRequestedTime;
 
+    @Column(name = "active")
+    private boolean active;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     private Role role;
@@ -65,6 +70,10 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Notification> notifications;
+
     public boolean isOTPRequired() {
         if (this.otp == null || this.otp.equals("")) {
             return false;
@@ -73,9 +82,21 @@ public class User {
         long currentTimeInMillis = System.currentTimeMillis();
         long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
 
-        if (otpRequestedTimeInMillis + 5 * 60 * 1000 < currentTimeInMillis) {
-            return false;
-        }
-        return true;
+        return otpRequestedTimeInMillis + 5 * 60 * 1000 >= currentTimeInMillis;
+    }
+
+    //equals method
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    //hashCode method
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

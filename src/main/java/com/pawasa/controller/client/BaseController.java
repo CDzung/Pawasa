@@ -7,19 +7,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @Controller
 public class BaseController {
 
     @Autowired
     private ProductRepository productRepository;
     @GetMapping("/")
-    public String index() {
+    public String index(Principal principal, Model model) {
+//        System.out.println("Principal: " + principal.getName());
         return "pages/client/home";
     }
 
     @GetMapping("/product")
     public String product(Model model, @RequestParam(name="id") Long id) {
         model.addAttribute("product", productRepository.findById(id).get());
-        return "pages/client/product";
+        return "pages/client/bookdetail";
     }
+
+
 }

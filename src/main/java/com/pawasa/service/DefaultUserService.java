@@ -8,15 +8,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("userService")
+@Transactional
 public class DefaultUserService implements UserService {
 
     @Autowired
     private UserRepository userRepository;
 
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final static String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
 
@@ -32,7 +34,7 @@ public class DefaultUserService implements UserService {
             throw new IllegalArgumentException("Password must contain at least one digit, one lowercase, one uppercase, one special character and must be at least 8 characters long.");
         }
         encodePassword(user);
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
     }
 
     @Override
