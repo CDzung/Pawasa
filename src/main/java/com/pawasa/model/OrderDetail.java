@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -39,4 +40,19 @@ public class OrderDetail {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id", referencedColumnName = "order_id")
     private Order order;
+
+    //equals method
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderDetail that = (OrderDetail) o;
+        return Objects.equals(id, that.id);
+    }
+
+    //hashCode method
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

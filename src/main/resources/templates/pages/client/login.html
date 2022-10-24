@@ -26,7 +26,7 @@
                             <div class="youama-login-window">
                                 <div>
                                     <ul th:if="${!form.contains('forgot')}" id="popup-login-tab_list" class="popup-login-tab">
-                                        <li class="popup-login-tab-item popup-login-tab-login"><a th:href="@{/pawasa/login}">Đăng nhập</a><hr></li>
+                                        <li class="popup-login-tab-item popup-login-tab-login"><a th:href="@{/login}">Đăng nhập</a><hr></li>
                                         <li class="popup-login-tab-item popup-login-tab-register"><a th:href="@{/signup}">Đăng ký</a><hr></li>
                                     </ul>
                                     <div th:if="${form.contains('forgot')}" class="popup-change-title popup-login-title" style="">
@@ -113,7 +113,7 @@
                                 </div>
                                 <div th:if="${form.equals('login')}">
                                     <div class="popup-login-content">
-                                        <form th:action="@{/pawasa/login}" th:object="${user}" method="post">
+                                        <form th:action="@{/login}" th:object="${user}" method="post">
                                             <div class="fhs-input-box">
                                                 <label>Email</label>
                                                 <div class="fhs-input-group">

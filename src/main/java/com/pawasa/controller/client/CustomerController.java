@@ -1,16 +1,23 @@
 package com.pawasa.controller.client;
 
 import com.pawasa.exception.UserAlreadyExistsException;
+import com.pawasa.model.Cart;
+import com.pawasa.model.CartDetail;
+import com.pawasa.model.Product;
 import com.pawasa.model.User;
-import com.pawasa.repository.CartRepository;
-import com.pawasa.repository.RoleRepository;
-import com.pawasa.repository.UserRepository;
+import com.pawasa.repository.*;
 import com.pawasa.service.DefaultEmailService;
+import com.pawasa.service.DefaultProductService;
 import com.pawasa.service.DefaultUserService;
+import org.apache.catalina.Authenticator;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpCookie;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +27,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Null;
+import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.Date;
 import java.util.Random;
 
 @Controller
+@Transactional
 public class CustomerController {
     private final static String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
     @Autowired
@@ -40,6 +51,12 @@ public class CustomerController {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CartDetailRepository cartDetailRepository;
 
 
     @GetMapping("/signup")
@@ -70,7 +87,12 @@ public class CustomerController {
         try {
             session.removeAttribute("register_user");
             //set role for user
+            user.setActive(true);
             user.setRole(roleRepository.findByRoleName("Customer"));
+            //save cart
+            Cart cart = new Cart();
+            cart.setTotalPrice(BigDecimal.valueOf(0));
+            user.setCart(cart);
             userService.addUser(user);
         } catch (Exception e) {
         }
@@ -153,15 +175,15 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/pawasa/login")
+    @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("form", "login");
         return "pages/client/login";
     }
 
-    @PostMapping("/pawasa/login")
-    public String login(@Valid User user, BindingResult result, Model model, HttpSession session, HttpServletResponse response) {
+    @PostMapping("/login")
+    public String login(@Valid User user, BindingResult result, Model model) {
         if (result.hasFieldErrors("email") || result.hasFieldErrors("password")) {
             model.addAttribute("form", "login");
             return "pages/client/login";
@@ -172,10 +194,12 @@ public class CustomerController {
             model.addAttribute("message", "Email hoặc Mật khẩu sai!");
             return "pages/client/login";
         }
-        session.setAttribute("user", existUser);
-        Cookie cookie = new Cookie("email", existUser.getEmail());
-        cookie.setMaxAge(60 * 60 * 24 * 30);
-        response.addCookie(cookie);
+        if (!existUser.isActive()) {
+            model.addAttribute("form", "login");
+            model.addAttribute("message", "Tài khoản chưa được kích hoạt!");
+            return "pages/client/login";
+        }
+        //authentication
         return "redirect:/";
     }
 
@@ -273,17 +297,55 @@ public class CustomerController {
         return "pages/client/login";
     }
 
-    @GetMapping("/logout")
-    public String logout( HttpSession session, HttpServletResponse response) {
-        session.removeAttribute("user");
-        Cookie cookie = new Cookie("email", "");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-        return "redirect:/";
-    }
-    @GetMapping("/cart")
-    public String cart(Model model, @CookieValue(value = "email") String email) {
-        User user = userRepository.findByEmail(email);
+//    @GetMapping("/logout")
+//    public String logout( HttpSession session, HttpServletResponse response) {
+//        session.removeAttribute("user");
+//        Cookie cookie = new Cookie("email", "");
+//        cookie.setMaxAge(0);
+//        response.addCookie(cookie);
+//        return "redirect:/";
+//    }
+    @GetMapping("/user/cart")
+    public String cart(Model model, Principal principal) {
+        if (principal != null) {
+            User user = userRepository.findByEmail(principal.getName());
+            model.addAttribute("user", user);
+            model.addAttribute("cart", user.getCart());
+        }
         return "pages/client/cart";
     }
+
+    @PostMapping("/user/cart/add")
+    public String addToCart(@RequestParam("id") String id, @RequestParam("quantity") String quantity, Principal principal) {
+        try{
+            User user = userRepository.findByEmail(principal.getName());
+            Product product = productRepository.findById(Integer.parseInt(id));
+            Cart cart = user.getCart();
+            CartDetail cartDetail = cartDetailRepository.findByCartAndProduct(cart, product);
+            if (cartDetail == null) {
+                cartDetail = new CartDetail();
+                cartDetail.setCart(cart);
+                cartDetail.setProduct(product);
+                cartDetail.setQuantity(Integer.parseInt(quantity));
+            } else {
+                cartDetail.setQuantity(cartDetail.getQuantity() + Integer.parseInt(quantity));
+            }
+            if(cartDetail.getQuantity() > product.getQuantity()) {
+                cartDetail.setQuantity(product.getQuantity());
+            }
+            if(cartDetail.getQuantity() < 1) {
+                product.getCartDetails().remove(cartDetail);
+                cart.getCartDetails().remove(cartDetail);
+                cartDetail.setCart(null);
+                cartDetail.setProduct(null);
+                cartDetailRepository.delete(cartDetail);
+            } else {
+                cartDetailRepository.save(cartDetail);
+            }
+            return "redirect:/user/cart";
+        } catch (Exception e) {
+            return "redirect:/user/cart";
+        }
+    }
+
 }

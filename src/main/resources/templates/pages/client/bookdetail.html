@@ -24,6 +24,8 @@
     <div class="container">
       <div class="container-inner">
         <form action method="post" id="product_addtocart_form">
+          <input type="hidden" name="id" th:value="${product.id}">
+          <input type="hidden" name="quantity" value="1">
           <div class="product-view all" th:object="${product}">
             <div class="product-essential">
               <!--Nửa bên hình ảnh sản phẩm-->

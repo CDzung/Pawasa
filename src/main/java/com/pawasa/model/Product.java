@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -16,10 +17,11 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "product", schema = "pawasa")
 public class Product {
     @Id
     @Column(name = "product_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty
@@ -40,7 +42,7 @@ public class Product {
 
     @NotNull
     @Column(name = "quantity")
-    private Long quantity;
+    private int quantity;
 
     @NotNull
     @Column(name = "discount")
@@ -97,7 +99,8 @@ public class Product {
     private Set<OrderDetail> orderDetails;
 
     public String getFormattedPriceString(double price) {
-        String s = (long) price + "";
+        long n = (long) price - (long) (price % 1000);
+        String s = n+ "";
         s=s.trim();
         String priceString = "";
         for(int i=s.length()-1;i>=0;i--) {
@@ -108,5 +111,32 @@ public class Product {
         return priceString;
     }
 
+    public String getFormattedPrice() {
+        return getFormattedPriceString(price);
+    }
+
+    public String getFormattedDiscountPrice() {
+        return getFormattedPriceString(price - (price * discount / 100));
+    }
+
+    public double getDiscountPrice() {
+        double discountPrice = price - (price * discount / 100);
+        return discountPrice - (discountPrice % 1000);
+    }
+
+    //equals
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    //hashCode
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
 }
