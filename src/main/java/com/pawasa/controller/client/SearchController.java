@@ -1,161 +1,204 @@
 package com.pawasa.controller.client;
+
+import com.pawasa.model.Category;
 import com.pawasa.model.Product;
+import com.pawasa.repository.CategoryRepository;
 import com.pawasa.repository.ProductRepository;
+import com.pawasa.service.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 public class SearchController {
     @Autowired
     private ProductRepository productRepository;
-    @GetMapping("/test")
-    public String list(){
-        return "pages/client/search";
+    @Autowired
+    private CategoryRepository categoryRepository;
+    Map<Integer, Boolean> pricesMap = new HashMap<>();
+
+    SearchController() {
+        for (int i = 0; i < 5; i++) {
+            pricesMap.put(i, false);
+        }
     }
 
     @GetMapping("list")
-    public String list(ModelMap model) {
-        Set<Product> products = productRepository.searchAll();
-//        int currentPage = 1;
-//        int pageSize = 10;
-//        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("productName"));
-//        Page<Product> products = productRepository.searchByNameContain("1", pageable);
-        model.addAttribute("products", products);
-        return "pages/client/search";
-    }
-//
-    @GetMapping("/search")
-    public String search(ModelMap model,
-                         @RequestParam("name") String name,
-                         @SortDefault(sort = "productName", direction = Sort.Direction.ASC) Sort sort) {
-        Set<Product> products1 = null;
-//        List<Product> products2 = null;
-//        List<Product> products3 = null;
-//        List<Product> result = null;
-        if (!name.trim().equals("")) {
-            products1 = productRepository.searchByProductName(name, sort);
-//            products2 = productRepository.searchByAuthor(name, sort);
-//            products3 = productRepository.searchByPublisher(name, sort);
-        } else {
-            model.addAttribute("message", "Không tìm thấy loại sách theo yêu cầu");
+    public String list(ModelMap model,
+                       @RequestParam(value = "page") Optional<Integer> page,
+                       @RequestParam(value = "size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(12);
+
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("productName"));
+
+        Page<Product> resultPage = null;
+
+        resultPage = productRepository.findAll(pageable);
+        int totalPages = resultPage.getTotalPages();
+        if (totalPages > 0) {
+            int start = Math.max(1, currentPage - 2);
+            int end = Math.min(currentPage + 2, totalPages);
+
+            if (totalPages > 5) {
+                if (end == totalPages) start = end - 5;
+                else if (start == 1) end = start + 5;
+            }
+            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
         }
-        model.addAttribute("products", products1);
-        return "pages/client/search";
+        model.addAttribute("products", resultPage);
+        return "/pages/client/test";
     }
 
-//    @GetMapping("searchByPrice")
-//    public String searchByPrice(ModelMap model,
-//                                @RequestParam Optional<String> message,
-//                                @RequestParam("priceRange") Optional<String> range,
-//                                @PageableDefault(size = 5, sort = "productName", direction = Sort.Direction.ASC) Pageable pageable) {
-////        Page<Product> pages = productRepository.searchByPrice(min.orElse(0d), max.orElse(Double.MAX_VALUE), pageable);
-//////        if (message.isPresent()) {
-//////            model.addAttribute("message", message.get());
-//////        }
-//////        List<Sort.Order> sortOrders = pages.getSort().stream().collect(Collectors.toList());
-//////        if (sortOrders.size() > 0) {
-//////            Sort.Order order = sortOrders.get(0);
-//////
-//////            model.addAttribute("sort", order.getProperty() + "," +
-//////                    (order.getDirection() == Sort.Direction.ASC ? "asc" : "desc"));
-//////        } else {
-//////            model.addAttribute("sort", pages);
-//////        }
-//////        model.addAttribute("pages", pages);
-//        List<Product> products1 = null;
-//        if (range.isPresent()) {
-//            switch (range.get()) {
-//                case "1":
-//                    products1 = productRepository.searchByPrice(0d, 1d);
-//                    break;
-//                case "2":
-//                    products1 = productRepository.searchByPrice(1d, 2d);
-//                    break;
-//                case "3":
-//                    products1 = productRepository.searchByPrice(2d, 3d);
-//                    break;
-//                case "4":
-//                    products1 = productRepository.searchByPrice(3d, 5d);
-//                    break;
-//                case "5":
-//                    products1 = productRepository.searchByPrice(5d, Double.MAX_VALUE);
-//                    break;
-//                default:
-//                    products1 = productRepository.searchByPrice(0d, Double.MAX_VALUE);
-//            }
-//        }
-//        model.addAttribute("products", products1);
-//        model.addAttribute("list1Qty", products1.size());
-////        model.addAttribute("ckbPrice", Integer.parseInt(range.get()));
-//        return "categories/search_product/list";
-//    }
-//
-//    @GetMapping("searchByLanguage")
-//    public String searchByLanguage(ModelMap model,
-//                                   @RequestParam("language") Optional<String> language,
-//                                   @SortDefault(sort = "productName", direction = Sort.Direction.ASC) Sort sort) {
-//        List<Product> products1 = null;
-//        if (language.isPresent()) {
-//            switch (language.get()) {
-//                case "vn":
-//                    products1 = productRepository.searchByLanguage("1", sort);
-//                    break;
-//                case "eng":
-//                    products1 = productRepository.searchByLanguage("2", sort);
-//                    break;
-//                case "both":
-//                    products1 = productRepository.searchByLanguage("3", sort);
-//                    break;
-//                case "other":
-//                    products1 = productRepository.searchByLanguage("6", sort);
-//                    break;
-//            }
-//        }
-//        model.addAttribute("products", products1);
-//        return "categories/search_product/list";
-//    }
-//
-//    @GetMapping("paginated")
-//    public String search2(ModelMap model,
-//                          @RequestParam(value = "name", required = false) String name,
-//                          @RequestParam("page") Optional<Integer> page,
-//                          @RequestParam("size") Optional<Integer> size) {
-//        int currentPage = page.orElse(1);
-//        int pageSize = size.orElse(10);
-//        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("productName"));
-//
-//        Page<Product> resultPage = null;
-//
-//        if (StringUtils.hasText(name)) {
-//            resultPage = productRepository.searchByNameContain(name, pageable);
-//            model.addAttribute("name", name);
-//        } else {
-//            resultPage = productRepository.findAll(pageable);
-//        }
-//        int totalPages = resultPage.getTotalPages();
-//        if(totalPages > 0){
-//            int start = Math.max(1, currentPage-2);
-//            int end = Math.min(currentPage+2, totalPages);
-//
-//            if(totalPages > 5){
-//                if(end == totalPages) start = end - 5;
-//                else if(start == 1)end = start + 5;
-//            }
-//            List<Integer> pageNumbers = IntStream.rangeClosed(start,end)
-//                    .boxed()
-//                    .collect(Collectors.toList());
-//
-//            model.addAttribute("pageNumbers", pageNumbers);
-//        }
-//        model.addAttribute("products", resultPage);
-//        return "categories/search_product/listPaginated";
-//    }
+    @GetMapping("search")
+    public String searchByName(ModelMap model,
+                               @RequestParam(value = "name", required = false) String name,
+                               @RequestParam("lang") Optional<Integer[]> languageIDs,
+                               @RequestParam("price") Optional<Integer[]> priceIDs,
+                               @RequestParam("book-layout") Optional<Integer[]> bookLayoutIDs,
+                               @RequestParam(value = "page") Optional<Integer> page,
+                               @RequestParam(value = "size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(12);
+
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("productName"));
+
+        Page<Product> resultPage = null;
+
+        if (StringUtils.hasText(name)) {
+            List<Product> tmp = productRepository.searchByProductName(name, Sort.by("productName"));
+            resultPage = new PageImpl<>(tmp, pageable, tmp.size());
+            //model.addAttribute("quantity", productRepository.searchByProductName(name, Sort.by("productName")).size());
+        } else {
+            resultPage = productRepository.findAll(pageable);
+        }
+        int totalPages = resultPage.getTotalPages();
+        if (totalPages > 0) {
+            int start = Math.max(1, currentPage - 2);
+            int end = Math.min(currentPage + 2, totalPages);
+
+            if (totalPages > 5) {
+                if (end == totalPages) start = end - 5;
+                else if (start == 1) end = start + 5;
+            }
+            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("products", resultPage);
+        return "/pages/client/searchByWord";
+    }
+
+    @GetMapping("category")
+    public String searchByCategory(ModelMap model,
+                                   @RequestParam(value = "id", required = false) Long categoryId,
+                                   @RequestParam("lang") Optional<Integer[]> languageIDs,
+                                   @RequestParam("price") Optional<Integer[]> priceIDs,
+                                   @RequestParam("book-layout") Optional<Integer[]> bookLayoutIDs,
+                                   @RequestParam("exists") Optional<Integer> quantity,
+                                   @RequestParam("page") Optional<Integer> page,
+                                   @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(12);
+        int qty = quantity.orElse(1);
+        boolean[] pricesArr = new boolean[6];
+        boolean[] langsArr = new boolean[6];
+        boolean[] bookLayoutsArr = new boolean[6];
+        Arrays.fill(pricesArr, false);
+        Arrays.fill(langsArr, false);
+        Arrays.fill(bookLayoutsArr, false);
+
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("productName"));
+        Page<Product> resultPage = null;
+        Category category = productRepository.findByCategoryID(categoryId);
+
+        if (category != null) {
+            List<Long> idLst = new ArrayList<>();
+            List<Product> lst = productRepository.findAll();
+            for (int i = 0; i < lst.size(); i++) {
+                if (lst.get(i).getCategory().getId() == categoryId ||
+                        lst.get(i).getCategory().getParentCategory().getId() == categoryId ||
+                        lst.get(i).getCategory().getParentCategory().getParentCategory().getId() == categoryId) {
+                    idLst.add(lst.get(i).getId());
+                }
+            }
+            Specification<Product> spe = Specification.where(ProductSpecification.hasProductId(idLst));
+
+            spe = spe.and(ProductSpecification.qtyGreaterThan0(qty));
+            if (priceIDs.isPresent()) {
+                Specification<Product> priceSpe = Specification.where(ProductSpecification.priceInRange(priceIDs.get()[0]));
+                if (priceIDs.get().length > 1) {
+                    for (int i = 1; i < priceIDs.get().length; i++) {
+                        priceSpe = priceSpe.or(ProductSpecification.priceInRange(priceIDs.get()[i]));
+                    }
+                }
+                spe = spe.and(priceSpe);
+                for (int i = 0; i < priceIDs.get().length; i++) {
+                    pricesArr[priceIDs.get()[i]] = true;
+                }
+            }
+            if (languageIDs.isPresent()) {
+                Specification<Product> langSpe = Specification.where(ProductSpecification.hasLanguage(languageIDs.get()[0]));
+                if (languageIDs.get().length > 1) {
+                    for (int i = 1; i < languageIDs.get().length; i++) {
+                        langSpe = langSpe.or(ProductSpecification.hasLanguage(languageIDs.get()[i]));
+                    }
+                }
+                spe = spe.and(langSpe);
+                for (int i = 0; i < languageIDs.get().length; i++) {
+                    langsArr[languageIDs.get()[i]] = true;
+                }
+            }
+            if (bookLayoutIDs.isPresent()) {
+                Specification<Product> bookLayoutSpe = Specification.where(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[0]));
+                if (bookLayoutIDs.get().length > 1) {
+                    for (int i = 1; i < bookLayoutIDs.get().length; i++) {
+                        bookLayoutSpe = bookLayoutSpe.or(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[i]));
+                    }
+                }
+                spe = spe.and(bookLayoutSpe);
+                for (int i = 0; i < bookLayoutIDs.get().length; i++) {
+                    bookLayoutsArr[bookLayoutIDs.get()[i]] = true;
+                }
+            }
+            resultPage = productRepository.findAll(spe, pageable);
+            model.addAttribute("category", category);
+        } else {
+            resultPage = productRepository.findAll(pageable);
+        }
+        int totalPages = resultPage.getTotalPages();
+        if (totalPages > 0) {
+            int start = Math.max(1, currentPage - 2);
+            int end = Math.min(currentPage + 2, totalPages);
+            if(totalPages >5){
+                if (end == totalPages) start = end - 4;
+                else if (start == 1) end = start + 4;
+            }
+            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("products", resultPage);
+        model.addAttribute("pricesArr", pricesArr);
+        model.addAttribute("bookLayoutsArr", bookLayoutsArr);
+        model.addAttribute("langsArr", langsArr);
+        model.addAttribute("size", pageSize);
+        model.addAttribute("exists", qty);
+
+        return "/pages/client/searchByCategory";
+    }
 }

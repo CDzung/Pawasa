@@ -5,7 +5,7 @@
 }
 
 html {
-    margin-top: 12px;
+    margin: 0;
 }
 
 body {
@@ -42,15 +42,38 @@ input[type=checkbox] {
     width: 8%;
     height: 12px;
 }
-
-
+div.row{
+    margin-left: 4px;
+}
+.colorText{
+    color: #F7941E;
+}
 /* toolbar */
+.container-inner .search-navigation{
+    margin-left: 8px;
+}
+.container-inner .search-navigation>li+li:before {
+    content: "\f105";
+    font-size: 12px;
+    font-family: "FontAwesome";
+    color: #999;
+}
+
+.search-navigation>li+li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/\00a0";
+}
+
+.search-navigation li {
+    margin-left: 0;
+}
 
 
 /* left */
 
 .left {
-    /*width: 25%;*/
+    width: 25%;
 }
 
 .left_title {
@@ -86,12 +109,32 @@ input.input-range {
     margin: 0 4px;
 }
 
+.search-more-less {
+    font-size: 14px;
+    /* text-align: center; */
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-show-less-action,
+.search-show-more-action {
+    color: #F7941E;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+    user-select: none;
+    padding-right: 20px;
+}
+
 
 /* right  */
 
 .right {
     margin-left: 32px;
-    /*width: 75%;*/
+    width: 71%;
 }
 
 .result-search-block {
@@ -141,9 +184,15 @@ input.input-range {
 
 .book img {
     margin-bottom: 8px;
+    height: 160px;
+    width: 160px;
 }
 
 .book-name {
+    height: 100px;
+}
+
+.book-name a {
     font-size: 14px;
 }
 
@@ -178,4 +227,37 @@ input.input-range {
 .rate ul li i {
     font-size: 12px;
     color: #f6a500;
+}
+
+
+/*pagination*/
+
+.pagination {
+justify-content: right;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+a.page-link {
+    border-radius: 4px;
+    border: none;
+}
+
+.active>.page-link,
+.page-link.active {
+    z-index: 3;
+    color: white;
+    background-color: red;
+    border: none;
+}
+
+.paginaging{
+    padding: 12px 16px;
+    background-color: white;
+    color: black;
+    font-weight: bold;
+}
+.active2{
+    background-color: #c92127;
+    color: white;
 }

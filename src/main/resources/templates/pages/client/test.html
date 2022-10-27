@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Search</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link rel="stylesheet" th:href="@{/css/hieu_search.css}">
+    </head>
+</head>
+<body>
+<div class="list_books">
+    <div class="books-grid" th:if="${products.hasContent()}">
+        <th:block th:each="book, iStat:${products.content}">
+            <div class="book">
+                <a th:href="@{#}">
+                    <img class="card-img img-book"
+                         th:src="${book.image}" alt="">
+                    <div class="book-name">
+                        <p th:text="${book.productName}"></p>
+                    </div>
+                </a>
+                <div class="price">
+                    <p class="sale-price" th:text="${book.price}">10.000 đ</p>
+                    <p class="origin-price">10.000</p>
+                </div>
+                <div class="rate">
+                    <ul class="list-group list-group-horizontal">
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                    </ul>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <div th:if="${!products.hasContent()}">
+        <h1>No Book Found</h1>
+    </div>
+</div>
+<div class="pagination">
+    <!--                    Using for /category...-->
+        <nav aria-label="Page navigation"
+             th:if="${products.totalPages > 0}">
+            <ul class="pagination justify-content-center">
+                <li th:class="${1 == products.number + 1} ? 'page-item active' : 'page-item'">
+                    <a th:href="@{/list(size=${products.size}, page=${products.number > 0?products.number:1})}"
+                       class="page-link">Last</a>
+                </li>
+
+                <li class="page-item active"
+                    th:each="pageNumber : ${pageNumbers}"
+                    th:if="${products.totalPages > 0}"
+                    th:class="${pageNumber == products.number + 1 ? 'page-item active' : 'page-item'}">
+                    <a th:href="@{/list(size=${products.size}, page=${pageNumber})}"
+                       class="page-link"
+                       th:text="${pageNumber}"></a>
+                </li>
+
+                <li th:class="${products.totalPages == products.number + 1} ? 'page-item active' : 'page-item'">
+                    <a th:href="@{/list(size=${products.size}, page=${products.number+2})}"
+                       class="page-link">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+</div>
+</body>
+</html>
