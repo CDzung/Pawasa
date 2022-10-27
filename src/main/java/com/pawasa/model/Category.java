@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -31,4 +32,19 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
+
+    //equals method
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(id, category.id);
+    }
+
+    //hashCode method
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

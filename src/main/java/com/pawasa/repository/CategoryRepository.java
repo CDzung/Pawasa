@@ -3,15 +3,24 @@ package com.pawasa.repository;
 import com.pawasa.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Set;
 
+import java.util.Set;
+
+@Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Category findByCategoryName(String categoryName);
-//    @Query(value = "select c from Category c where c.parentCategory.id = ?1")
-//    Set<Category> findChildListCategory(Long categoryId);
-    List<Category> findByParentCategory(Category parentCategory);
 
+    Set<Category> findByParentCategory_Id(Long id);
+
+    @Query(value = "SELECT * FROM category where category_id = parent_id",nativeQuery = true)
+    Set<Category> findParentCategory();
+
+    @Query(value = "SELECT * FROM category where category_id = ?1",nativeQuery = true)
+    Category findCategoryById(Long id);
 
 }

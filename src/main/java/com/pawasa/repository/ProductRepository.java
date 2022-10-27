@@ -12,11 +12,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>,
         JpaSpecificationExecutor<Product> {
     Product findByProductName(String productName);
+
+    @Query(value = "Select * from product order by product_id desc limit 10", nativeQuery = true)
+    Set<Product> findTopNewProduct();
+
+    @Query(value = "Select * from product order by discount desc limit 10 ", nativeQuery = true)
+    Set<Product> findTopDiscountProduct();
+
+    Set<Product> findByOrderByDiscountDesc();
+
+    Product findById(long id);
+
     @Query(value = "Select c from Category c WHERE c.id = ?1")
     Category findByCategoryID(Long id);
     @Query(value = "select p from Product p")
@@ -29,5 +41,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
     Page<Product> searchByCategory(Long categoryId, Pageable pageable);
 
     Page<Product> findAll(Specification<Product> var, Pageable pageable);
+
 
 }
