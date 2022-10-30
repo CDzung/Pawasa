@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -100,11 +99,11 @@ public class CustomerInfomationController {
     public String getHistoryOrder(@RequestParam(name = "status") Optional<String> sta, HttpServletRequest request, HttpServletResponse response, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        User u = userRepository.findByEmail("dungcqhe163037@fpt.edu.vn");
+        User u = userRepository.findByEmail(email);
         String status = sta.orElse(null);
-//        if (u == null) {
-//            return "redirect:/login";
-//        }
+        if (u == null) {
+            return "redirect:/login";
+        }
         Set<Order> list_order;
         int total = orderRepository.findByUser_Id(u.getId()).size();
         int pending = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 1L).size();
@@ -135,7 +134,7 @@ public class CustomerInfomationController {
     public String getNotification(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        User u = userRepository.findByEmail("dungcqhe163037@fpt.edu.vn");
+        User u = userRepository.findByEmail(email);
         if (u == null) {
             return "redirect:/login";
         }
@@ -146,7 +145,12 @@ public class CustomerInfomationController {
 
     @GetMapping("/user/account/otp")
     public void sendOTP(HttpServletResponse response, @RequestParam(name = "email") String email) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         try {
+            if (userRepository.findByEmail(email) != null) {
+                response.getWriter().print("Email existed!");
+                return;
+            }
             Random rand = new Random();
             String otp = rand.nextInt(999999) + "";
             while (otp.length() < 6) {
@@ -168,11 +172,11 @@ public class CustomerInfomationController {
                     "      <p>Pawasa Inc</p>\n" +
                     "      <p>1600 Amphitheatre Parkway</p>\n";
             emailService.sendEmail(email, "Pawasa - Change OTP", message);
-            User user = userRepository.findByEmail(email);
+            response.getWriter().print(otp);
+            User user = userRepository.findByEmail(auth.getName());
             user.setOtp(otp);
             user.setOtpRequestedTime(new Date());
             userService.addUser(user);
-            response.getWriter().print(otp);
         } catch (Exception e) {
 
         }
@@ -183,7 +187,7 @@ public class CustomerInfomationController {
         Long id = Order_id.get();
         Order order = orderRepository.findById(id).get();
         List<OrderStatus> orderStatus = orderStatusRepository.findByOrder_OrderIdOrderByIdDesc(id);
-        model.addAttribute("last_status",orderStatus);
+        model.addAttribute("last_status", orderStatus);
         model.addAttribute("order", order);
         return "pages/client/OrderDetail";
     }

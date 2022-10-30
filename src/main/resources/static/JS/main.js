@@ -180,30 +180,37 @@ function changeEmailwithOTP() {
             url: "/user/account/otp",
             data: "email=" + email,
             success: function (data) {
-                $("#alert").html("OTP đã được gửi");
-                $("#change_email_otp").removeAttr("readonly")
-                var count = 60;
-                setInterval(function (){
-                    count--;
-                    if(count == 0 && $("#change_email_otp").val().trim().length == 0){
-                        $("#change_email_otp").attr('readonly','readonly');
-                        $("#alert-otp").html("OTP đã hết hạn");
-                    }
-                    $("#change_email_otp").onchange = function (){
-                        var otp = $("#change_email_otp").val().trim();
-                        if(otp == data){
-                            $("#alert-otp").html("OTP hợp lệ");
-                            $("#change_email_otp").attr('readonly','readonly');
-                            $("#confirm").removeAttr('readonly');
-                            $("#confirm").onclick = function (){
-                                $("#email").val(email);
+                if (data === 'Email existed!') {
+                    $("#alert").html(data);
+                } else {
+                    $("#alert").html("OTP đã được gửi");
+                    $("#change_email_otp").removeAttr("disabled")
+                    var count = 300;
+                    setInterval(function () {
+                        count--;
+                        if (count == 0 && $("#change_email_otp").val().trim().length == 0) {
+                            $("#change_email_otp").attr('disabled', 'disabled');
+                            $("#alert-otp").html("OTP đã hết hạn");
+                        }
+                        $("#change_email_otp").change(function () {
+                            var otp = $("#change_email_otp").val();
+                            if (otp == data) {
+                                $("#alert-otp").html("OTP hợp lệ");
+                                $("#confirm").css('border', '1px solid #C92127');
+                                $("#change_email_otp").attr('disabled', 'disabled');
+                                $("#confirm").removeAttr('disabled');
+                                $("#confirm").click(function () {
+                                    $("#email").val(email);
+                                    console.log(email)
+                                    popup();
+                                    return;
+                                })
+                            } else {
+                                $("#alert-otp").html("OTP không hợp lệ");
                             }
-                        }
-                        else {
-                            $("#alert-otp").html("OTP không hợp lệ");
-                        }
-                    }
-                },1000);
+                        })
+                    }, 1000);
+                }
             }
 
         })
