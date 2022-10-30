@@ -22,13 +22,14 @@
                                 </div>
                                 <div class="block-content">
                                     <ul>
-                                        <li><a th:href="@{/pawasa/Account/profile}">Thông tin tài
+                                        <li><a th:href="@{/user/account/profile}">Thông tin tài
                                             khoản</a>
                                         </li>
-                                        <li class="current"><strong><a
-                                                th:href="@{/pawasa/Account/history}">Đơn hàng của
-                                            tôi</a></strong></li>
-                                        <li><a th:href="@{/pages/client/Notification}">Thông Báo</a></li>
+                                        <li class="current"><a th:href="@{/user/account/history}">Đơn hàng của tôi</a>
+                                        </li>
+                                        <li><a
+                                                th:href="@{/user/account/notify}">Thông
+                                            Báo</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -152,8 +153,8 @@
                                 <div class="tab-container-order-history-container">
                                     <div class="tab-container-order-history swiper-container swiper-container-horizontal">
                                         <div class="swiper-wrapper">
-                                            <div class="tab-history-item swiper-slide tab-history-item-active swiper-slide-active"
-                                                 onclick="location.href='http://localhost:8080/pawasa/Account/history?status=All';"
+                                            <div class="tab-history-item swiper-slide"
+                                                 onclick="location.href='http://localhost:8080/user/account/history?status=All';"
                                                  style="width: 166.6px;">
                                                 <div class="tab-history-item-border-left"></div>
                                                 <div class="tab-history-item-number" th:text="${total}"></div>
@@ -161,28 +162,28 @@
                                                 <div class="tab-history-item-border"></div>
                                             </div>
                                             <div class="tab-history-item swiper-slide"
-                                                 onclick="location.href='http://localhost:8080/pawasa/Account/history?status=pending';"
+                                                 onclick="location.href='http://localhost:8080/user/account/history?status=pending'"
                                                  style="width: 166.6px;">
                                                 <div class="tab-history-item-number" th:text="${pending}"></div>
                                                 <div class="tab-history-item-text">Chờ xác nhận</div>
                                                 <div class="tab-history-item-border"></div>
                                             </div>
                                             <div class="tab-history-item swiper-slide"
-                                                 onclick="location.href='http://localhost:8080/pawasa/Account/history?status=processing';"
+                                                 onclick="location.href='http://localhost:8080/user/account/history?status=processing'"
                                                  style="width: 166.6px;">
                                                 <div class="tab-history-item-number" th:text="${process}"></div>
                                                 <div class="tab-history-item-text">Đang xử lý</div>
                                                 <div class="tab-history-item-border"></div>
                                             </div>
                                             <div class="tab-history-item swiper-slide"
-                                                 onclick="location.href='http://localhost:8080/pawasa/Account/history?status=complete';"
+                                                 onclick="location.href='http://localhost:8080/user/account/history?status=complete'"
                                                  style="width: 166.6px;">
                                                 <div class="tab-history-item-number" th:text="${complete}"></div>
                                                 <div class="tab-history-item-text">Hoàn tất</div>
                                                 <div class="tab-history-item-border"></div>
                                             </div>
                                             <div class="tab-history-item swiper-slide"
-                                                 onclick="location.href='http://localhost:8080/pawasa/Account/history?status=canceled';"
+                                                 onclick="location.href='http://localhost:8080/user/account/history?status=canceled';"
                                                  style="width: 166.6px;">
                                                 <div class="tab-history-item-number" th:text="${cancel}"></div>
                                                 <div class="tab-history-item-text">Bị hủy</div>
@@ -465,7 +466,7 @@
                                         <div class="table-order-cell">Trạng thái</div>
                                         <div class="table-order-cell"></div>
                                     </div>
-                                    <th:block th:each="i : ${list}">
+                                    <th:block th:each="i : ${list}" th:if="${!list.isEmpty()}">
                                         <div class="table-order-row">
                                             <div class="table-order-cell">
                                                 <div class="table-order-cell-content table-order-cell-content-mobile">
@@ -494,14 +495,20 @@
                                             <div class="table-order-cell">
                                                 <div class="table-order-cell-content">
                                                     <div class="order-history-total-mobile">Tổng Tiền:</div>
-                                                    <div><span class="price" th:text="${i.totalPrice}"></span>&nbsp;đ</div>
+                                                    <div><span class="price" th:text="${i.totalPrice}"></span>&nbsp;đ
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="table-order-cell hidden-max-width-992 ">Bị hủy</div>
-                                            <div class="table-order-cell table-order-link-more hidden-max-width-992"
-                                                 onclick="location.href='https://www.fahasa.com/sales/order/view/order_id/6143863/';">
-                                                Xem chi tiết
+                                            <div class="table-order-cell table-order-link-more hidden-max-width-992">
+                                                <a th:href="@{/user/account/detailOrder(id = ${i.orderId})}">Xem chi
+                                                    tiết</a>
                                             </div>
+                                        </div>
+                                    </th:block>
+                                    <th:block th:unless="${!list.isEmpty()}">
+                                        <div class="table-order-row">
+                                            <div>Bạn không có đơn hàng nào</div>
                                         </div>
                                     </th:block>
                                 </div>
