@@ -23,15 +23,57 @@
                                 </div>
                                 <div class="block-content">
                                     <ul>
-                                        <li class="current"><strong><a
-                                                th:href="@{/user/account/profile}">Thông tin tài
-                                            khoản</a></strong></li>
+                                        <li class="current"><a th:href="@{/user/account/profile}">Thông tin tài
+                                            khoản</a>
+                                        </li>
                                         <li><a th:href="@{/user/account/history}">Đơn hàng của tôi</a>
                                         </li>
-                                        <li><a th:href="@{/pages/client/Notification}">Thông Báo</a></li>
-                                        </li>
+                                        <li><a
+                                                th:href="@{/user/account/notify}">Thông
+                                            Báo</a></li>
                                     </ul>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="youama-ajaxlogin-cover" id="loader" style="display: none;"></div>
+                        <div class="youama-change-window youama-changeEmail-window" id="changeEmailform"
+                             style="display: none;">
+                            <div class="popup-change-title">
+                                Thay đổi email
+                            </div>
+                            <div class="popup-change-content">
+                                <div class="fhs-input-box fhs-input-send">
+                                    <label>Email</label>
+                                    <div class="fhs-input-group">
+                                        <input class="fhs-textbox" type="text" placeholder="Enter Email"
+                                               id="change_email" name="youama-email" value="" maxlength="200"
+                                               autocomplete="off">
+                                        <span class="fhs-input-icon fhs-textbox-emailsend"
+                                              onclick="changeEmailwithOTP()">Gửi mã OTP</span>
+                                    </div>
+                                    <div class="fhs-input-alert" id="alert"></div>
+                                </div>
+                                <div class="fhs-input-box">
+                                    <label>Mã xác nhận OTP</label>
+                                    <div class="fhs-input-group">
+                                        <input class="fhs-textbox" type="text" placeholder="6 ký tự"
+                                               id="change_email_otp" name="otpvalue" value="" maxlength="6"
+                                               autocomplete="off" disabled="disabled" readonly="readonly">
+                                        <span class="fhs-input-icon fhs-textbox-alert" id="alert-otp"></span>
+                                    </div>
+                                    <div class="fhs-input-alert"></div>
+                                </div>
+                                <div class="fhs-input-box">
+                                    <div class="fhs-btn-box">
+                                        <button type="button" title="Xác nhận" id="confirm"
+                                                class="fhs-btn-confirm fhs-btn-changeemail" disabled="">
+                                            <span>Xác nhận</span></button>
+                                        <button type="button" title="Trở về"
+                                                class="fhs-btn-back lg-close fhs-btn-backemail" onclick="popup()"><span>Trở về</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="fhs-popup-msg fhs-changeemail-msg"></div>
                             </div>
                         </div>
                         <div class="col-main col-lg-9 col-md-9 col-sm-12 col-xs-12 col-fhs-main-body">
@@ -85,16 +127,17 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                    <form action="/user/account/profile" method="post"
+                                    <form action="pawasa/Account/profile" method="post"
                                           id="form-account-info" autocomplete="off">
                                         <div>
+                                            <input type="hidden" name="id" th:value="${user?.id}">
                                             <div class="fhs-input-box fhs-input-group-horizontal-account">
                                                 <label>Họ*</label>
                                                 <div class="fhs-input-item">
                                                     <div class="fhs-input-group">
                                                         <input class="fhs-textbox" type="text" placeholder="Nhập họ"
                                                                id="lastname" name="lastname"
-                                                               th:value="${session.user} ? ${session.user.lastName}"
+                                                               th:value="${user?.lastName}"
                                                                maxlength="200">
                                                         <span class="fhs-input-icon fhs-textbox-alert"></span>
                                                     </div>
@@ -107,7 +150,7 @@
                                                     <div class="fhs-input-group">
                                                         <input class="fhs-textbox" type="text" placeholder="Nhập tên"
                                                                id="firstname" name="firstname"
-                                                               th:value="${session.user} ? ${session.user.firstname}"
+                                                               th:value="${user?.firstName}"
                                                                maxlength="200">
                                                         <span class="fhs-input-icon fhs-textbox-alert"></span>
                                                     </div>
@@ -121,9 +164,7 @@
                                                     <div class="fhs-input-group">
                                                         <input class="fhs-textbox" type="text" id="telephone"
                                                                name="telephone" maxlength="11"
-                                                               th:value="${session.user} ? ${session.user.phoneNumber}"
-                                                               readonly="true">
-                                                        <span class="fhs-input-icon fhs-textbox-changephone">Thay đổi</span>
+                                                               th:value="${user?.phoneNumber}">
                                                     </div>
                                                 </div>
                                                 <div class="fhs-input-alert"></div>
@@ -136,8 +177,9 @@
                                                                placeholder="Chưa có email"
                                                                id="email" name="email"
                                                                maxlength="200" readonly="true"
-                                                               th:value="${session.user} ? ${session.user.email}">
-                                                        <span class="fhs-input-icon fhs-textbox-changeemail">Thay đổi</span>
+                                                               th:value="${#authentication.getName()}">
+                                                        <span class="fhs-input-icon fhs-textbox-changeemail"
+                                                              id="changeEmail" onclick="popup()">Thay đổi</span>
                                                     </div>
                                                 </div>
                                                 <div class="fhs-input-alert"></div>
@@ -178,26 +220,21 @@
                                                                     class="fhs_input_date_group_day account-input-birthday"
                                                                     name="day" type="text" style="text-align: center;"
                                                                     maxlength="2" placeholder="DD"
-                                                                    th:value="${session.user} ? ${day}">
+                                                                    th:value="${day}">
                                                         </div>
                                                         <div class="account-input-bod">
                                                             <input
                                                                     class="fhs_input_date_group_month account-input-birthday"
                                                                     name="month" type="text" style="text-align: center;"
                                                                     maxlength="2" placeholder="MM"
-                                                                    th:value="${session.user} ? ${month}">
+                                                                    th:value="${month}">
                                                         </div>
                                                         <div class="account-input-bod">
                                                             <input
                                                                     class="fhs_input_date_group_year account-input-birthday"
                                                                     name="year" type="text" style="text-align: center;"
                                                                     maxlength="4" placeholder="YYYY"
-                                                                    th:value="${session.user} ? ${year}">
-                                                        </div>
-                                                        <div class="dob-full" style="display:none;">
-                                                            <input type="hidden" id="dob"
-                                                                   class="fhs_input_date_group_full"
-                                                                   value="23/07/1995" name="dob">
+                                                                    th:value="${year}">
                                                         </div>
                                                     </div>
                                                 </div>
