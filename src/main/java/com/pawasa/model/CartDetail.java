@@ -30,6 +30,9 @@ public class CartDetail {
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Product product;
 
+    @Column(name = "selected")
+    private boolean selected;
+
     //equals method
     @Override
     public boolean equals(Object o) {
