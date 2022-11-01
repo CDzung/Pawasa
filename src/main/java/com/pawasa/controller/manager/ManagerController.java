@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,7 @@ public class ManagerController {
     @GetMapping("/manager")
     public String showdashboard(Model model) {
         List<Order> list = orderRepository.findAll();
-        HashMap<Integer, Double> numProductperMonth = new HashMap<>();
+        HashMap<Integer, BigDecimal> numProductperMonth = new HashMap<>();
         for (Order i : list) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(i.getOrderDate());
@@ -55,11 +56,11 @@ public class ManagerController {
                 if (numProductperMonth.containsKey(month)) {
                     numProductperMonth.put(month, i.getTotalPrice());
                 } else {
-                    numProductperMonth.put(month, numProductperMonth.get(month) + i.getTotalPrice());
+                    numProductperMonth.put(month, BigDecimal.valueOf(numProductperMonth.get(month).doubleValue() + i.getTotalPrice().doubleValue()));
                 }
             }
         }
-        double sum = list.stream().mapToDouble(value -> value.getTotalPrice()).sum();
+        double sum = list.stream().mapToDouble(value -> value.getTotalPrice().doubleValue()).sum();
         model.addAttribute("numProduct", productRepository.findAll().size());
         model.addAttribute("numCategory", categoryRepository.findAll().size());
         model.addAttribute("numOrder", orderRepository.findAll().size());
