@@ -3,6 +3,7 @@ package com.pawasa.repository;
 import com.pawasa.model.Category;
 import com.pawasa.model.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,6 +20,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
         JpaSpecificationExecutor<Product> {
     Product findByProductName(String productName);
 
+    Page<Product> findByProductNameLike(String productName,PageRequest pageRequest);
+
+
     @Query(value = "Select * from product order by product_id desc limit 10", nativeQuery = true)
     Set<Product> findTopNewProduct();
 
@@ -28,6 +32,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
     Set<Product> findByOrderByDiscountDesc();
 
     Product findById(long id);
+
+    Page<Product> findByAvailable(boolean available, PageRequest pageRequest);
+
 
     @Query(value = "Select c from Category c WHERE c.id = ?1")
     Category findByCategoryID(Long id);

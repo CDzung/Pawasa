@@ -1,10 +1,7 @@
 package com.pawasa.controller.client;
 
 import com.pawasa.exception.UserAlreadyExistsException;
-import com.pawasa.model.Cart;
-import com.pawasa.model.CartDetail;
-import com.pawasa.model.Product;
-import com.pawasa.model.User;
+import com.pawasa.model.*;
 import com.pawasa.repository.*;
 import com.pawasa.service.DefaultEmailService;
 import com.pawasa.service.DefaultProductService;
@@ -21,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.expression.Sets;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -30,8 +29,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.Date;
-import java.util.Random;
+import java.text.DecimalFormat;
+import java.util.*;
 
 @Controller
 @Transactional
@@ -58,7 +57,17 @@ public class CustomerController {
     @Autowired
     private CartDetailRepository cartDetailRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private OrderStatusRepository orderStatusRepository;
     @GetMapping("/signup")
     public String register(Model model) {
         model.addAttribute("user", new User());
@@ -94,9 +103,11 @@ public class CustomerController {
             cart.setTotalPrice(BigDecimal.valueOf(0));
             user.setCart(cart);
             userService.addUser(user);
+            cart.setUser(user);
+            cartRepository.save(cart);
         } catch (Exception e) {
         }
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @PostMapping("/signup/otp")
@@ -316,36 +327,181 @@ public class CustomerController {
     }
 
     @PostMapping("/user/cart/add")
-    public String addToCart(@RequestParam("id") String id, @RequestParam("quantity") String quantity, Principal principal) {
+    public String addToCart(@RequestParam("id") String id, @RequestParam("quantity") String quantity, Principal principal, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
         try{
             User user = userRepository.findByEmail(principal.getName());
             Product product = productRepository.findById(Integer.parseInt(id));
             Cart cart = user.getCart();
             CartDetail cartDetail = cartDetailRepository.findByCartAndProduct(cart, product);
+            int oldQuantity = 0;
             if (cartDetail == null) {
                 cartDetail = new CartDetail();
                 cartDetail.setCart(cart);
                 cartDetail.setProduct(product);
                 cartDetail.setQuantity(Integer.parseInt(quantity));
             } else {
+                oldQuantity = cartDetail.getQuantity();
                 cartDetail.setQuantity(cartDetail.getQuantity() + Integer.parseInt(quantity));
             }
             if(cartDetail.getQuantity() > product.getQuantity()) {
                 cartDetail.setQuantity(product.getQuantity());
             }
             if(cartDetail.getQuantity() < 1) {
-                product.getCartDetails().remove(cartDetail);
-                cart.getCartDetails().remove(cartDetail);
+//                product.getCartDetails().remove(cartDetail);
+//                cart.getCartDetails().remove(cartDetail);
                 cartDetail.setCart(null);
                 cartDetail.setProduct(null);
                 cartDetailRepository.delete(cartDetail);
+                if(cartDetail.isSelected()) {
+                    cart.setTotalPrice(BigDecimal.valueOf(cart.getTotalPrice().doubleValue() - oldQuantity * product.getDiscountPrice()));
+                    cartRepository.save(cart);
+                }
             } else {
                 cartDetailRepository.save(cartDetail);
+                if(cartDetail.isSelected()) {
+                    cart.setTotalPrice(BigDecimal.valueOf(cart.getTotalPrice().doubleValue() + (cartDetail.getQuantity() - oldQuantity) * product.getDiscountPrice()));
+                    cartRepository.save(cart);
+                }
             }
-            return "redirect:/user/cart";
+            return "redirect:"+ referer;
         } catch (Exception e) {
-            return "redirect:/user/cart";
+            return "redirect:"+ referer;
         }
     }
 
+
+
+    @PostMapping("/user/cart/select-all")
+    public  String select(Principal principal, Model model) {
+        User user = userRepository.findByEmail(principal.getName());
+        Cart cart = user.getCart();
+        Set<CartDetail> cartDetails = cart.getCartDetails();
+        double total = 0;
+        for (CartDetail cartDetail : cartDetails.stream().toList()) {
+            cartDetail.setSelected(true);
+            cartDetailRepository.save(cartDetail);
+            total += cartDetail.getProduct().getDiscountPrice() * cartDetail.getQuantity();
+        }
+        cart.setTotalPrice(BigDecimal.valueOf(total));
+        cartRepository.save(cart);
+        return "redirect:/user/cart";
+    }
+
+    @PostMapping("/user/cart/select")
+    public  String select(@RequestParam("id") String id, Principal principal, Model model) {
+        User user = userRepository.findByEmail(principal.getName());
+        Cart cart = user.getCart();
+        CartDetail cartDetail = cartDetailRepository.findById(Integer.parseInt(id));
+        double total = cart.getTotalPrice().doubleValue();
+        if(!cartDetail.isSelected()) {
+            total += cartDetail.getProduct().getDiscountPrice() * cartDetail.getQuantity();
+        } else {
+            model.addAttribute("selectAll", false);
+            total -= cartDetail.getProduct().getDiscountPrice() * cartDetail.getQuantity();
+            total = total < 0 ? 0 : total;
+        }
+        cartDetail.setSelected(!cartDetail.isSelected());
+        cartDetailRepository.save(cartDetail);
+        cart.setTotalPrice(BigDecimal.valueOf(total));
+        cartRepository.save(cart);
+        return "redirect:/user/cart";
+    }
+
+    @GetMapping("/user/order/checkout")
+    public String checkout(Model model, Principal principal) {
+        if (principal != null) {
+            User user = userRepository.findByEmail(principal.getName());
+            model.addAttribute("user", user);
+
+            model.addAttribute("cart", user.getCart());
+
+            String name = user.getFirstName() + " " + user.getLastName();
+            String address = user.getAddress();
+            String phone = user.getPhoneNumber();
+            model.addAttribute("name", name);
+            model.addAttribute("address", address);
+            model.addAttribute("phone", phone);
+        }
+        model.addAttribute("name_msg", "");
+        model.addAttribute("address_msg", "");
+        model.addAttribute("phone_msg", "");
+        model.addAttribute("df", new DecimalFormat("###,### đ"));
+        return "pages/client/checkout_order";
+    }
+
+    @PostMapping("/user/order/confirm")
+    public  String order(@RequestParam("name") String name, @RequestParam("address") String address, @RequestParam("phone") String phone, Principal principal, Model model) {
+        User user = userRepository.findByEmail(principal.getName());
+        Cart cart = user.getCart();
+        String name_msg = "";
+        String address_msg = "";
+        String phone_msg = "";
+        if(name.isEmpty()) {
+            name_msg = "Vui lòng nhập tên";
+        }
+        if(address.isEmpty()) {
+            address_msg = "Vui lòng nhập địa chỉ";
+        }
+        if(phone.isEmpty()) {
+            phone_msg = "Vui lòng nhập số điện thoại";
+        } else if(!phone.matches("^[0-9]{10}$")) {
+            phone_msg = "Số điện thoại không hợp lệ";
+        }
+        if(!name_msg.isEmpty() || !address_msg.isEmpty() || !phone_msg.isEmpty()) {
+            model.addAttribute("name", name);
+            model.addAttribute("address", address);
+            model.addAttribute("phone", phone);
+            model.addAttribute("user", user);
+            model.addAttribute("name_msg", name_msg);
+            model.addAttribute("address_msg", address_msg);
+            model.addAttribute("phone_msg", phone_msg);
+            model.addAttribute("cart", cart);
+            model.addAttribute("df", new DecimalFormat("###,### đ"));
+            return "pages/client/checkout_order";
+        }
+        Payment payment = paymentRepository.findById(1);
+        Order order = new Order();
+        order.setAddress(address);
+        order.setUser(user);
+        order.setPayment(payment);
+        order.setPhoneNumber(phone);
+        order.setName(name);
+        order.setTotalPrice(BigDecimal.valueOf(cart.getTotalPrice().doubleValue() + 30000));
+        order.setOrderDate(new Date());
+
+        OrderStatus orderStatus = new OrderStatus();
+        orderStatus.setStatusDate(new Date());
+        orderStatus.setOrderStatus("Chờ xác nhận");
+        if(order.getOrderStatuses() != null) {
+            order.getOrderStatuses().add(orderStatus);
+        } else {
+            order.setOrderStatuses(new HashSet<>(Arrays.asList(orderStatus)));
+        }
+        orderStatus.setOrder(order);
+        orderRepository.save(order);
+        orderStatusRepository.save(orderStatus);
+        //userRepository.save(user);
+
+
+        cart.setTotalPrice(BigDecimal.valueOf(0));
+        cartRepository.save(cart);
+        Set<CartDetail> cartDetails = cart.getCartDetails();
+        for (CartDetail cartDetail : cartDetails.stream().toList()) {
+            if(!cartDetail.isSelected()) continue;
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setProduct(cartDetail.getProduct());
+            orderDetail.setQuantity(cartDetail.getQuantity());
+            orderDetail.setPrice(BigDecimal.valueOf(cartDetail.getProduct().getPrice()));
+            orderDetail.setDiscount(cartDetail.getProduct().getDiscount());
+            orderDetailRepository.save(orderDetail);
+            cartDetail.setCart(null);
+            cartDetail.setProduct(null);
+            cartDetailRepository.delete(cartDetail);
+        }
+
+
+        return "redirect:/";
+    }
 }
