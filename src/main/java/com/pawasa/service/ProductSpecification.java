@@ -12,33 +12,24 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 public final class ProductSpecification {
-
-    public static Specification<Product> allTrue(Long id) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(Product_.ID), id));
+    public static Specification<Product> startWith(String word) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.PRODUCT_NAME), word + " %"));
     }
-
+    public static Specification<Product> endWith(String word) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.PRODUCT_NAME), "% " + word));
+    }
+    public static Specification<Product> hasPublisher(String name){
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.PUBLISHER), "%"+name+"%"));
+    }
+    public static Specification<Product> hasAuthor(String name){
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.AUTHOR), "%"+name+"%"));
+    }
     public static Specification<Product> hasProductId(List<Long> idLst) {
         return ((root, query, criteriaBuilder) -> root.get(Product_.ID).in(idLst));
     }
 
     public static Specification<Product> hasId(Category category) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(Product_.CATEGORY), category);
-    }
-
-    public static Specification<Product> startWith(String word) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.PRODUCT_NAME), word + " %"));
-    }
-
-    public static Specification<Product> endWith(String word) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.PRODUCT_NAME), "% " + word));
-    }
-
-    public static Specification<Product> hasAuthor(String authorName) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.AUTHOR), "%" + authorName + "%"));
-    }
-
-    public static Specification<Product> hasPublisher(String publisher) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.PUBLISHER), "%" + publisher + "%"));
     }
 
     /**

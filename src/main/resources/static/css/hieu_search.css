@@ -1,9 +1,8 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    box-sizing: border-box;
 }
-
 html {
     margin: 0;
 }
@@ -11,6 +10,7 @@ html {
 body {
     background-color: #f0f0f0;
     color: #565555;
+    font-family: nunito-sans, sans-serif, Helvetica, Arial;
 }
 
 ul {
@@ -48,9 +48,13 @@ div.row{
 .colorText{
     color: #F7941E;
 }
+.font-14{
+    font-size: 14px;
+}
 /* toolbar */
 .container-inner .search-navigation{
     margin-left: 8px;
+    margin-left: 16px;
 }
 .container-inner .search-navigation>li+li:before {
     content: "\f105";
@@ -75,7 +79,14 @@ div.row{
 .left {
     width: 25%;
 }
-
+.left dl dd ul li a,
+.left dl dd ul li label{
+    font-size: 16px;
+}
+.left dl dt h5{
+    font-size: 30px;
+    margin-bottom: 16px;
+}
 .left_title {
     padding: 18px 20px 0 20px;
     color: #c92127;
@@ -128,8 +139,13 @@ input.input-range {
     user-select: none;
     padding-right: 20px;
 }
-
-
+.main-category{
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+dt.left_filter{
+    margin-bottom: 8px;
+}
 /* right  */
 
 .right {
@@ -160,6 +176,7 @@ input.input-range {
 .right_result_search {
     font-weight: 300;
     font-size: 20px;
+    margin-top: 20px;
 }
 
 .form-select {
@@ -169,7 +186,7 @@ input.input-range {
 .books-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 8px;
+    grid-gap: 16px;
     padding: 0;
 }
 
@@ -189,19 +206,25 @@ input.input-range {
 }
 
 .book-name {
-    height: 100px;
+    height: 60px;
 }
 
-.book-name a {
+.book-name p {
     font-size: 14px;
 }
-
+.hideText{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .price {
     margin-top: 4px;
 }
 
 .sale-price {
-    font-size: 16px;
+    font-size: 25px;
     font-weight: bold;
     color: #c92127;
     margin-bottom: 0;
@@ -210,7 +233,7 @@ input.input-range {
 .origin-price {
     color: black;
     font-weight: 300;
-    font-size: 14px;
+    font-size: 16px;
     text-decoration: line-through;
     margin-bottom: 0;
 }
@@ -256,6 +279,12 @@ a.page-link {
     background-color: white;
     color: black;
     font-weight: bold;
+}
+.paginaging:hover{
+    background-color: #ee9e3c;
+}
+.disHover{
+    pointer-events: none;
 }
 .active2{
     background-color: #c92127;

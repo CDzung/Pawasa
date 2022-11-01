@@ -19,11 +19,21 @@
     <div class="container-inner">
         <ul class="list-group list-group-horizontal search-navigation">
             <li>
-                <a href="">TRANG CHỦ</a>
+                <a href="/">TRANG CHỦ</a>
             </li>
-            <li>
-                <a href="">Sách Tiếng Việt</a>
-            </li>
+            <th:block th:if="${category.parentCategory.parentCategory.getId() != category.parentCategory.getId()}">
+                <li>
+                    <a th:href="@{/category(id=${category.parentCategory.parentCategory.getId()})}"><span th:text="${category.parentCategory.parentCategory.categoryName}"></span></a>
+                </li>
+            </th:block>
+            <th:block th:if="${category.parentCategory.getId() != category.parentCategory.getId()}">
+                <li>
+                    <a th:href="@{/category(id=${category.parentCategory.getId()})}"><span th:text="${category.parentCategory.categoryName}"></span></a>
+                </li>
+            </th:block>
+                <li>
+                    <a th:href="@{/category(id=${category.getId()})}" class="colorText"><span th:text="${category.categoryName}"></span></a>
+                </li>
         </ul>
     </div>
     <form>
@@ -37,35 +47,30 @@
                         NHOM SAN PHAM
                     </dt>
                     <dd class="left_category" th:if="${category != null}">
-                        <ul class="list-group">
-                            <li class="">
-                                <a href="#" style="margin-left: 0">Tất cả nhóm sản phẩm</a>
-                            </li>
-                            <li style="margin-left: 10px"
-                                th:if="${category.parentCategory.parentCategory.getId() != category.parentCategory.getId()}">
-                                <a th:href="@{/category(id=${category.parentCategory.parentCategory.getId()})}">
-                                    <span th:text="${category.parentCategory.parentCategory.categoryName}"></span>
-                                </a>
-                            </li>
-                        </ul>
+                        <div class="main-category">
+                            <span href="#" style="margin-left: 0">Tất cả nhóm sản phẩm</span>
+                        </div>
+                        <div style="margin-left: 10px" class="main-category"
+                             th:if="${category.parentCategory.parentCategory.getId() != category.parentCategory.getId()}">
+                            <a th:href="@{/category(id=${category.parentCategory.parentCategory.getId()})}">
+                                <span th:text="${category.parentCategory.parentCategory.categoryName}"></span>
+                            </a>
+                        </div>
                         <th:block th:if="${category.parentCategory.getId() != category.getId()}">
-                            <div style="margin-left: 20px; margin-bottom: 10px">
+                            <div style="margin-left: 20px" class="main-category">
                                 <a th:href="@{/category(id=${category.parentCategory.getId()})}">
                                     <span th:text="${category.parentCategory.categoryName}"></span>
                                 </a>
                             </div>
                             <ul class="list-group">
-                                <li th:each="tmp : ${category.parentCategory.getChildCategories()}">
+                                <li th:each="tmp : ${category.parentCategory.getChildCategories()}"
+                                    th:if="${tmp.getId() != 1 && tmp.getId() != 2}">
                                     <a th:href="@{/category(id=${tmp.getId()})}"
-                                       th:class="${category.categoryName == tmp.categoryName}?colorText:xxx">
+                                       th:class="${category.categoryName == tmp.categoryName}?colorText">
                                         <span th:text="${tmp.categoryName}"></span>
                                     </a>
                                 </li>
                             </ul>
-<!--                            <div class="search-more-less" id="m-more-less-left_category">-->
-<!--                                <a class="search-show-less-action" style="display: none;">Rút Gọn</a>-->
-<!--                                <a class="search-show-more-action" style="">Xem Thêm</a>-->
-<!--                            </div>-->
                         </th:block>
                         <th:block th:if="${category.parentCategory.getId() == category.getId()}">
                             <div style="margin-left: 20px; margin-bottom: 10px">
@@ -87,7 +92,7 @@
                         </ul>
                     </dd>
                     <dt class="left_filter">
-                        <h5 class="left_filter_title">HÌNH THỨC BÌA</h5>
+                        HÌNH THỨC BÌA
                     </dt>
                     <dd class="left_filter">
                         <ul class="list-group">
@@ -105,7 +110,7 @@
                         </ul>
                     </dd>
                     <dt class="left_filter">
-                        <h5 class="left_filter_title">GIÁ</h5>
+                        GIÁ
                     </dt>
                     <dd class="left_filter">
                         <ul class="list-group">
@@ -143,7 +148,7 @@
                     </dd>
                     <dd></dd>
                     <dt class="left_filter">
-                        <h5 class="left_filter_title">NGÔN NGỮ</h5>
+                        NGÔN NGỮ
                     </dt>
                     <dd class="left_filter">
                         <ul class="list-group">
@@ -186,7 +191,8 @@
                                 </div>
                             </li>
                             <li>
-                                <select class="form-select" aria-label="Default select" name="exists" onchange="this.form.submit()">
+                                <select class="form-select" aria-label="Default select" name="exists"
+                                        onchange="this.form.submit()">
                                     <option value="1" th:selected="${exists == 1}">Tất cả</option>
                                     <option value="2" th:selected="${exists == 2}">Còn hàng</option>
                                 </select>
@@ -208,26 +214,26 @@
                         <div class="books-grid" th:if="${products.hasContent()}">
                             <th:block th:each="book, iStat:${products.content}">
                                 <div class="book">
-                                    <a th:href="@{#}">
+                                    <a th:href="@{/product(id=${book.id})}" th:title="${book.productName}">
                                         <img class="card-img img-book"
                                              th:src="${book.image}" alt="">
                                         <div class="book-name">
-                                            <p th:text="${book.productName}"></p>
+                                            <p class="hideText" th:text="${book.productName}"></p>
+                                        </div>
+                                        <div class="price">
+                                            <p class="sale-price currency" th:text="${book.getDiscountPrice()}">đ</p>
+                                            <p class="origin-price currency" th:text="${book.price}">đ</p>
+                                        </div>
+                                        <div class="rate">
+                                            <ul class="list-group list-group-horizontal">
+                                                <li><i class="fa-solid fa-star"></i></li>
+                                                <li><i class="fa-solid fa-star"></i></li>
+                                                <li><i class="fa-solid fa-star"></i></li>
+                                                <li><i class="fa-solid fa-star"></i></li>
+                                                <li><i class="fa-solid fa-star"></i></li>
+                                            </ul>
                                         </div>
                                     </a>
-                                    <div class="price">
-                                        <p class="sale-price" th:text="${book.price}">10.000 đ</p>
-                                        <p class="origin-price">10.000</p>
-                                    </div>
-                                    <div class="rate">
-                                        <ul class="list-group list-group-horizontal">
-                                            <li><i class="fa-solid fa-star"></i></li>
-                                            <li><i class="fa-solid fa-star"></i></li>
-                                            <li><i class="fa-solid fa-star"></i></li>
-                                            <li><i class="fa-solid fa-star"></i></li>
-                                            <li><i class="fa-solid fa-star"></i></li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </th:block>
                         </div>
@@ -251,10 +257,11 @@
                                     <li class="page-item"
                                         th:each="pageNumber, iStat : ${pageNumbers}"
                                         th:if="${products.totalPages > 0}">
-                                        <button class="paginaging" th:classappend="${pageNumber == products.number + 1 ? 'active2' : ''}">
-<!--                                            <i class="fa-solid" th:classappend="'fa-'+${pageNumber}"></i>-->
+                                        <button class="paginaging"
+                                                th:classappend="${pageNumber == products.number + 1 ? 'active2 disHover' : ''}">
                                             <span th:text="${pageNumber}"></span>
-                                            <input class="send-page" type="text" name="page" th:value="${pageNumber}" hidden>
+                                            <input class="send-page" type="text" name="page" th:value="${pageNumber}"
+                                                   hidden>
                                         </button>
                                     </li>
 
@@ -262,7 +269,8 @@
                                         <button class="paginaging">
                                             <i class="fa-solid fa-arrow-right"></i>
                                             <input class="send-page" type="text" name="page"
-                                                   th:value="${(products.number+1 >= products.totalPages)?products.totalPages:products.number+2}" hidden>
+                                                   th:value="${(products.number+1 >= products.totalPages)?products.totalPages:products.number+2}"
+                                                   hidden>
                                         </button>
                                     </li>
                                 </ul>
@@ -286,6 +294,12 @@
         parents[i].onclick = (e) => {
             childrent[i].removeAttribute('disabled');
         };
+    }
+    let x = document.querySelectorAll(".currency");
+    for (let i = 0, len = x.length; i < len; i++) {
+        let num = Number(x[i].innerHTML)
+            .toLocaleString('da-DK');
+        x[i].innerHTML = num;
     }
 </script>
 </body>

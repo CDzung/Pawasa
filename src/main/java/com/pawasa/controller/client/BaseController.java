@@ -50,20 +50,20 @@ public class BaseController {
     private RoleRepository roleRepository;
     @GetMapping("/")
     public String index(HttpServletRequest request, HttpServletResponse response, Model model) {
-        Cookie[] cookies = request.getCookies();
-        User u = null;
-        for (Cookie i : cookies) {
-            if (i.getName().equals("email")) {
-                String value = i.getValue();
-                i.setMaxAge(0);
-                i = new Cookie("email", value);
-                i.setMaxAge(60 * 60 * 24 * 30);
-                response.addCookie(i);
-                u = userRepository.findByEmail(value);
-                model.addAttribute("user_login", u);
-                break;
-            }
-        }
+//        Cookie[] cookies = request.getCookies();
+//        User u = null;
+//        for (Cookie i : cookies) {
+//            if (i.getName().equals("email")) {
+//                String value = i.getValue();
+//                i.setMaxAge(0);
+//                i = new Cookie("email", value);
+//                i.setMaxAge(60 * 60 * 24 * 30);
+//                response.addCookie(i);
+//                u = userRepository.findByEmail(value);
+//                model.addAttribute("user_login", u);
+//                break;
+//            }
+//        }
         Set<Category> list_category = new HashSet<>(categoryRepository.findParentCategory());
         HttpSession session = request.getSession();
         session.setAttribute("list_cate", list_category);
