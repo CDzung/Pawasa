@@ -49,24 +49,7 @@ public class BaseController {
     @Autowired
     private RoleRepository roleRepository;
     @GetMapping("/")
-    public String index(HttpServletRequest request, HttpServletResponse response, Model model) {
-//        Cookie[] cookies = request.getCookies();
-//        User u = null;
-//        for (Cookie i : cookies) {
-//            if (i.getName().equals("email")) {
-//                String value = i.getValue();
-//                i.setMaxAge(0);
-//                i = new Cookie("email", value);
-//                i.setMaxAge(60 * 60 * 24 * 30);
-//                response.addCookie(i);
-//                u = userRepository.findByEmail(value);
-//                model.addAttribute("user_login", u);
-//                break;
-//            }
-//        }
-        Set<Category> list_category = new HashSet<>(categoryRepository.findParentCategory());
-        HttpSession session = request.getSession();
-        session.setAttribute("list_cate", list_category);
+    public String index() {
         return "pages/client/home";
     }
 
@@ -135,9 +118,8 @@ public class BaseController {
         } else if (id.equals("km")) {
             set = productRepository.findTopDiscountProduct();
         } else if (id.equals("kmnv")) {
-            set = productService.getProductsByCategory(2, productSet).stream().limit(10).collect(Collectors.toSet());
+            set = productService.getProductsByCategory(2, new HashSet<>(productRepository.findAll())).stream().limit(10).collect(Collectors.toSet());
         } else if (id.equals("mglnv")) {
-
             set = productService.getProductsByCategory(7, productSet).stream().limit(10).collect(Collectors.toSet());
         } else if (id.equals("topmanga")) {
             set = productService.getProductsByCategory(92, productSet).stream().limit(10).collect(Collectors.toSet());
@@ -228,4 +210,6 @@ public class BaseController {
         model.addAttribute("product", productRepository.findById(id).get());
         return "pages/client/bookdetail";
     }
+
+
 }

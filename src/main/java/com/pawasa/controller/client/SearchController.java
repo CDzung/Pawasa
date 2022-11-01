@@ -1,6 +1,7 @@
 package com.pawasa.controller.client;
 
 import com.pawasa.model.Category;
+import com.pawasa.model.OrderDetail;
 import com.pawasa.model.Product;
 import com.pawasa.repository.CategoryRepository;
 import com.pawasa.repository.ProductRepository;
@@ -81,8 +82,9 @@ public class SearchController {
         Arrays.fill(langsArr, false);
         Arrays.fill(bookLayoutsArr, false);
 
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("productName"));
         Page<Product> resultPage = null;
+        List<Product> products = new ArrayList<Product>();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("productName"));
 
         if (StringUtils.hasText(name)) {
             Specification<Product> speName = Specification.where(ProductSpecification.startWith(name));
@@ -127,24 +129,27 @@ public class SearchController {
                     bookLayoutsArr[bookLayoutIDs.get()[i]] = true;
                 }
             }
-            resultPage = productRepository.findAll(spe, pageable);
+            //resultPage = productRepository.findAll(spe, pageable);
+            products = productRepository.findAll(spe);
         } else {
-            resultPage = productRepository.findAll(pageable);
+            //resultPage = productRepository.findAll(pageable);
+            products = productRepository.findAll();
         }
-        int totalPages = resultPage.getTotalPages();
-        if (totalPages > 0) {
-            int start = Math.max(1, currentPage - 2);
-            int end = Math.min(currentPage + 2, totalPages);
-            if(totalPages >5){
-                if (end == totalPages) start = end - 4;
-                else if (start == 1) end = start + 4;
-            }
-            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-        model.addAttribute("products", resultPage);
+//        int totalPages = resultPage.getTotalPages();
+//        if (totalPages > 0) {
+//            int start = Math.max(1, currentPage - 2);
+//            int end = Math.min(currentPage + 2, totalPages);
+//            if(totalPages >5){
+//                if (end == totalPages) start = end - 4;
+//                else if (start == 1) end = start + 4;
+//            }
+//            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
+        //model.addAttribute("products", resultPage);
+        model.addAttribute("products", products);
         model.addAttribute("pricesArr", pricesArr);
         model.addAttribute("bookLayoutsArr", bookLayoutsArr);
         model.addAttribute("langsArr", langsArr);
@@ -154,7 +159,6 @@ public class SearchController {
 
         return "/pages/client/searchByWord";
     }
-
     @GetMapping("category")
     public String searchByCategory(ModelMap model,
                                    @RequestParam(value = "id", required = false) Long categoryId,
@@ -174,8 +178,9 @@ public class SearchController {
         Arrays.fill(langsArr, false);
         Arrays.fill(bookLayoutsArr, false);
 
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("productName"));
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize,Sort.unsorted());
         Page<Product> resultPage = null;
+        List<Product> products = new ArrayList<>();
         Category category = productRepository.findByCategoryID(categoryId);
 
         if (category != null) {
@@ -226,25 +231,28 @@ public class SearchController {
                     bookLayoutsArr[bookLayoutIDs.get()[i]] = true;
                 }
             }
-            resultPage = productRepository.findAll(spe, pageable);
+            products = productRepository.findAll(spe);
+            //resultPage = productRepository.findAll(spe, pageable);
             model.addAttribute("category", category);
         } else {
-            resultPage = productRepository.findAll(pageable);
+            //resultPage = productRepository.findAll(pageable);
+            products = productRepository.findAll();
         }
-        int totalPages = resultPage.getTotalPages();
-        if (totalPages > 0) {
-            int start = Math.max(1, currentPage - 2);
-            int end = Math.min(currentPage + 2, totalPages);
-            if(totalPages >5){
-                if (end == totalPages) start = end - 4;
-                else if (start == 1) end = start + 4;
-            }
-            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-        model.addAttribute("products", resultPage);
+//        int totalPages = resultPage.getTotalPages();
+//        if (totalPages > 0) {
+//            int start = Math.max(1, currentPage - 2);
+//            int end = Math.min(currentPage + 2, totalPages);
+//            if(totalPages >5){
+//                if (end == totalPages) start = end - 4;
+//                else if (start == 1) end = start + 4;
+//            }
+//            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
+        model.addAttribute("products", products);
+        //model.addAttribute("products", resultPage);
         model.addAttribute("pricesArr", pricesArr);
         model.addAttribute("bookLayoutsArr", bookLayoutsArr);
         model.addAttribute("langsArr", langsArr);

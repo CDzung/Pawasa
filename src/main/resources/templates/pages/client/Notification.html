@@ -23,14 +23,14 @@
                                 </div>
                                 <div class="block-content">
                                     <ul>
-                                        <li><a th:href="@{/pawasa/Account/profile}">Thông tin tài
+                                        <li><a th:href="@{/user/account/profile}">Thông tin tài
                                             khoản</a>
                                         </li>
-                                        <li><a th:href="@{/pawasa/Account/history}">Đơn hàng của tôi</a>
+                                        <li><a th:href="@{/user/account/history}">Đơn hàng của tôi</a>
                                         </li>
-                                        <li class="current"><strong><a
-                                                th:href="@{/pages/client/Notification}">Thông
-                                            Báo</a></strong></li>
+                                        <li class="current"><a
+                                                th:href="@{/user/account/notify}">Thông
+                                            Báo</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -318,22 +318,15 @@
                                                 <div class="clearfix"></div>
                                             </a>
                                         </li>
-                                        <li data-id="order" class="notification-msg-tab">
-                                            <a href="#">
-                                                <div class="notification-msg-tab-unseen" style="opacity: 0;"></div>
-                                                <div class="notification-msg-tab-label">Đơn Hàng</div>
-                                                <div class="clearfix"></div>
-                                            </a>
-                                        </li>
                                     </ul>
                                     <div class="notification-msg-tab-underline"></div>
                                     <div>
                                         <div class="notification-body-loading" style="display: none;">Đang tải ...</div>
                                         <div class="notification-body">
-                                            <ul id="notification-body-list" style="display: block;" th:each="i : ${list_noti}">
+                                            <ul id="notification-body-list" style="display: block;"
+                                                th:each="i : ${list_noti}" th:unless="${list_noti.size() == 0}">
                                                 <li class="notification-item" id="notification-item-207304048"
-                                                    data-unseen="1" data-msg-id="207304048"
-                                                    data-url="/sales/order/view/order_id/6143863">
+                                                    data-unseen="1" data-msg-id="207304048">
                                                     <div class="notification-item-header">
                                                         <div class="notification-item-title" th:text="${i.title}">
                                                         </div>
@@ -352,395 +345,13 @@
                                                     <div style="clear:both;"></div>
                                                 </li>
                                             </ul>
-                                            <div id="notification-body-empty" style="display: none;" th:if="${list_noti.size() == 0}">Không có thông báo.
+                                            <div id="notification-body-empty" style="display: block;"
+                                                 th:if="${list_noti.size() == 0}">Không có thông báo.
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <script type="text/javascript">
-
-                                const NOTIFICATION_KEY = 'notification-item-';
-                                let $notification_loading = $jq(".notification-body-loading");
-                                let $notification_list = $jq("#notification-body-list");
-                                let $notification_menu_tabs = $jq("#notification-menu li");
-                                let $current_tab = $notification_menu_tabs.eq(0);
-                                let $notification_empty = $jq("#notification-body-empty");
-                                let current_popup_item;
-
-                                $notification_menu_tabs.click(function () {
-                                    let $li = $jq(this);
-                                    getMyNotifications($li.attr('data-id'));
-                                });
-
-                                let tab_param = Helper.getQueryParam('tab');
-                                if (tab_param) {
-                                    getMyNotifications(tab_param);
-                                } else {
-                                    getMyNotifications('all');
-                                }
-
-                                function getMyNotifications(type) {
-                                    $notification_list.empty();
-                                    $notification_list.hide();
-                                    $notification_empty.hide();
-                                    $notification_loading.show();
-
-                                    $jq.ajax({
-                                        url: "/customer/notification/list",
-                                        method: 'post',
-                                        data: {
-                                            type: type,
-                                        },
-                                        success: function (data) {
-                                            $notification_list.show();
-                                            $notification_loading.hide();
-                                            if (!data['result']) {
-                                                $notification_empty.show();
-                                                return;
-                                            }
-
-                                            if (data['notes'].length <= 0) {
-                                                $notification_empty.show();
-                                            }
-
-                                            for (let i = 0; i < data['notes'].length; i++) {
-                                                let note = data['notes'][i];
-                                                $item = addMyNotification(note);
-                                                $notification_list.append($item);
-
-                                                if (note['id'] == data['top_msg']['id']) {
-                                                    note['is_top_msg'] = true;
-                                                }
-                                            }
-
-                                            $notification_menu_tabs.each(function () {
-                                                let $li = $jq(this);
-                                                let item_type = $li.attr('data-id');
-
-                                                if (item_type == 'all') {
-                                                    if (Object.keys(data['unseens']).length > 0) {
-                                                        $li.find('.notification-msg-tab-unseen').css('opacity', 1);
-                                                    } else {
-                                                        $li.find('.notification-msg-tab-unseen').css('opacity', 0);
-                                                    }
-                                                } else {
-                                                    if (data['unseens'][item_type]) {
-                                                        $li.find('.notification-msg-tab-unseen').css('opacity', 1);
-                                                    } else {
-                                                        $li.find('.notification-msg-tab-unseen').css('opacity', 0);
-                                                    }
-                                                }
-
-                                                if (type == item_type) {
-                                                    if ($current_tab) {
-                                                        $current_tab.removeClass('active');
-                                                    }
-                                                    $current_tab = $li;
-                                                    $li.addClass('active');
-                                                }
-                                            });
-
-                                            clearUnseenMsgs();
-
-                                            /*
-                                            *  Top Notification Message
-                                            */
-                                            showTopNotification(data['top_msg']);
-                                        }
-                                    });
-                                }
-
-                                function addMyNotification(item) {
-                                    if (!item) {
-                                        return;
-                                    }
-
-                                    let item_icon_url = "";
-                                    if (item['page_type']) {
-                                        item_icon_url = "<img src='" + NOTIFICATION_URL + NOTIFICATION_ICONS[item['page_type']] + "'>";
-                                    }
-
-                                    let $item_html = $jq("<li class='notification-item'>"
-                                        + "<div class='notification-item-header'>"
-                                        + "<div class='notification-item-title'>" + item['title'] + "</div>"
-                                        + "<div class='notification-item-date'>" + item['formated_created_at'] + "</div>"
-                                        + "<br style='clear:both;'>"
-                                        + "</div><div class='notification-item-icon'>"
-                                        + item_icon_url
-                                        + "</div><div class='notification-item-text'>" + item['content'] + "</div>"
-                                        + "<div class='notification-item-msg-actions' style='float: right;clear: both;margin-top: 5px;'></div>"
-                                        + "<div class='notification-item-msg-result'></div>"
-                                        + "<div style='clear:both;'></div>"
-                                        + "</div></li>");
-
-                                    let div_id = NOTIFICATION_KEY + item['id'];
-                                    $item_html.attr('id', div_id);
-                                    $item_html.attr('data-unseen', item['seen_status']);
-                                    $item_html.attr('data-msg-id', item['id']);
-
-                                    if (item['seen_status'] == "0") {
-                                        $item_html.addClass('notification-item-unseen');
-                                    }
-
-                                    if (item['url']) {
-                                        $item_html.attr('data-url', item['url']);
-                                        $item_html.click(function () {
-                                            window.location.href = $jq(this).attr('data-url');
-                                            if ($item_html.attr('data-unseen') == "0") {
-                                                clearUnseenMsgs($item_html.attr('data-msg-id'));
-                                            }
-                                        });
-                                    }
-
-                                    $item_html.hover(function () {
-                                        $this = $jq(this);
-                                        if ($this.attr('data-url')) {
-                                            $this.addClass('notification-item-clickable');
-                                        }
-                                    }, function () {
-                                        $this = $jq(this);
-                                        if ($this.attr('data-url')) {
-                                            $this.removeClass('notification-item-clickable');
-                                        }
-                                    });
-
-                                    item['action_type'] = parseInt(item['action_type']);
-                                    item['action_result'] = parseInt(item['action_result']);
-                                    if (item['page_type'] == 'action') {
-                                        switch (item['action_type']) {
-                                            case 1:
-                                                break;
-                                            case 2:
-                                                if (item['action_result']) {
-                                                    $item_result = $item_html.find('.notification-item-msg-result');
-                                                    let label_result;
-                                                    switch (item['action_result']) {
-                                                        case 2:
-                                                            label_result = "Có";
-                                                            break;
-                                                        default:
-                                                            label_result = "Không";
-                                                    }
-                                                    $item_result.html("Bạn đã chọn" + ": " + label_result);
-                                                } else {
-                                                    $item_actions = $item_html.find('.notification-item-msg-actions');
-                                                    $item_actions.html(printActionMsgBlock(item));
-                                                }
-                                                break;
-                                            case 3:
-                                                $item_html.find('.notification-item-text').addClass('notification-item-msg-cutoff');
-
-                                                if (item['action_result']) {
-                                                    $item_result = $item_html.find('.notification-item-msg-result');
-                                                    let data;
-                                                    try {
-                                                        data = JSON.parse(item['action_data']);
-                                                    } catch (err) {
-                                                        return;
-                                                    }
-
-                                                    let label_result = data['options'][item['action_result'] - 1];
-                                                    if (!label_result) {
-                                                        return;
-                                                    }
-                                                    $item_result.html("Bạn đã chọn" + ": " + label_result);
-                                                } else {
-                                                    $item_actions = $item_html.find('.notification-item-msg-actions');
-                                                    $item_actions.html(printActionMsgBlock(item));
-                                                }
-                                                break;
-                                            default:
-                                        }
-                                    }
-
-                                    return $item_html;
-                                }
-
-                                function clearUnseenMsgs(msg_id) {
-                                    $jq.ajax({
-                                        url: "/customer/notification/clearunseen",
-                                        method: 'post',
-                                        data: {
-                                            type: $current_tab.attr('data-id'),
-                                            msg_id: msg_id,
-                                        },
-                                        success: function (data) {
-                                            /// log data
-                                        }
-                                    });
-                                }
-
-                                function responseToActionMessage(item, action_result) {
-
-                                    let div_id = NOTIFICATION_KEY + item['id'];
-                                    if (div_id) {
-                                        $jq("#" + div_id).hide();
-                                    }
-
-                                    if (item['is_top_msg']) {
-                                        $jq("#notification-top-msg").hide();
-                                    }
-
-                                    if (item['is_popup_msg']) {
-                                        $jq("#notification-popup").hide();
-                                    }
-
-                                    $jq.ajax({
-                                        url: "/customer/notification/responsetomsg",
-                                        method: 'post',
-                                        data: {
-                                            msg_id: item['id'],
-                                            action_result: action_result,
-                                        },
-                                        success: function (data) {
-                                            if (data.result) {
-                                                if (item['action_type'] == 2 || item['action_type'] == 3) {
-                                                    alert("Lựa chọn của bạn đã được lưu lại");
-                                                }
-                                            }
-                                            /// log data
-                                        }
-                                    });
-
-                                    item['action_type'] = parseInt(item['action_type']);
-                                    switch (item['action_type']) {
-                                        case 1:
-                                            if (item['url']) {
-                                                window.location.href = item['url'];
-                                            }
-                                            break;
-                                        case 2:
-                                            break;
-                                        default:
-                                    }
-                                }
-
-                                function printActionMsgBlock(item) {
-
-                                    $buttons = null;
-                                    item['action_type'] = parseInt(item['action_type']);
-                                    switch (item['action_type']) {
-                                        case 1:
-                                            let $button_1_html = $jq("<button title='Xem' class='button'><span>Xem</span></button>");
-                                            $button_1_html.click(function () {
-                                                responseToActionMessage(item, 1);
-                                            });
-                                            $buttons = $button_1_html;
-                                            break;
-                                        case 2:
-                                            let $button_2_yes_html = $jq("<button title='' class='button'><span>Có</span></button>");
-                                            $button_2_yes_html.click(function () {
-                                                responseToActionMessage(item, 2);
-                                            });
-
-                                            let $button_2_no_html = $jq("<button title='Không' class='button button-secondary' style='margin-left:10px'>"
-                                                + "<span>Không</span></button>");
-                                            $button_2_no_html.click(function () {
-                                                responseToActionMessage(item, 1);
-                                            });
-
-                                            let $button_2_actions_html = $jq("<div class='notification-top-msg-action-2'></div>");
-                                            $button_2_actions_html.append($button_2_yes_html).append($button_2_no_html);
-
-                                            $buttons = $button_2_actions_html;
-                                            break;
-                                        case 3:
-                                            let $button_3_html = $jq("<button title='Xem' class='button'><span>Xem Thêm</span></button>");
-                                            $button_3_html.click(function () {
-                                                showPoUpNotification(item);
-                                            });
-                                            $buttons = $button_3_html;
-
-                                            break;
-                                        default:
-                                    }
-
-                                    return $buttons;
-                                }
-
-                                function closeNotificationPopUp() {
-                                    $jq("#notification-popup").hide();
-                                }
-
-                                function showTopNotification(top_notification) {
-                                    if (!top_notification) {
-                                        return;
-                                    }
-
-                                    $jq("#notification-top-msg .notification-top-msg-header h3").text(top_notification['title']);
-                                    $jq("#notification-top-msg .notification-top-msg-header-date").text(top_notification['formated_created_at']);
-                                    $jq("#notification-top-msg .notification-top-msg-body").html(top_notification['content']);
-
-                                    let $top_msg_action = $jq("#notification-top-msg  .notification-top-msg-actions");
-
-                                    top_notification['is_top_msg'] = true;
-                                    $top_msg_action.html(printActionMsgBlock(top_notification));
-
-                                    $jq("#notification-top-msg").show();
-                                }
-
-                                function showPoUpNotification(item) {
-                                    current_popup_item = item;
-                                    $jq("#notification-popup").show();
-                                    $jq("#notification-popup .notification-popup-header h3").text(item['title']);
-                                    $jq("#notification-popup .notification-popup-date").text(item['formated_created_at']);
-                                    $jq("#notification-popup .notification-popup-content").html(item['content']);
-
-                                    let $data_html = printActionData(item['action_data']);
-                                    $jq("#notification-popup .notification-popup-data").html($data_html);
-                                }
-
-                                function clickSavePopupItem() {
-                                    if (!current_popup_item) {
-                                        closeNotificationPopUp();
-                                        return;
-                                    }
-
-                                    let selected_value = $jq('#notification-popup input[name=notification_popup_options]:checked').val();
-                                    if (selected_value) {
-                                    } else {
-                                        alert("Xin vui lòng chọn một lựa chọn");
-                                        return;
-                                    }
-
-                                    current_popup_item['is_popup_msg'] = true;
-                                    responseToActionMessage(current_popup_item, selected_value);
-                                }
-
-                                function printActionData(data) {
-                                    if (!data) return;
-
-                                    try {
-                                        data = JSON.parse(data);
-                                    } catch (e) {
-                                        return;
-                                    }
-
-                                    if (!data || !data['options']) {
-                                        return;
-                                    }
-
-                                    let all_options = '';
-                                    for (let i = 0; i < data['options'].length; i++) {
-                                        let option = data['options'][i];
-                                        all_options += "<div class='radio'><label><input type='radio' name='notification_popup_options' value='"
-                                            + (i + 1) + "'>"
-                                            + option + "</label></div>";
-                                    }
-
-                                    return $jq(all_options);
-                                }
-
-                                new Swiper('.swiper-notification-container', {
-                                    direction: 'horizontal',
-                                    slidesPerView: 'auto',
-                                    freeMode: true,
-                                });
-                            </script>
-
-
                         </div>
                     </div>
                 </div>

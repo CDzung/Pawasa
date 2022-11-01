@@ -21,75 +21,35 @@
             <li>
                 <a href="/">TRANG CHỦ</a>
             </li>
-            <th:block th:if="${category.parentCategory.parentCategory.getId() != category.parentCategory.getId()}">
-                <li>
-                    <a th:href="@{/category(id=${category.parentCategory.parentCategory.getId()})}"><span th:text="${category.parentCategory.parentCategory.categoryName}"></span></a>
-                </li>
-            </th:block>
-            <th:block th:if="${category.parentCategory.getId() != category.parentCategory.getId()}">
-                <li>
-                    <a th:href="@{/category(id=${category.parentCategory.getId()})}"><span th:text="${category.parentCategory.categoryName}"></span></a>
-                </li>
-            </th:block>
-                <li>
-                    <a th:href="@{/category(id=${category.getId()})}" class="colorText"><span th:text="${category.categoryName}"></span></a>
-                </li>
+            <li>
+                <span class="colorText" th:text="'Kết quả tìm kiếm với: ' + ${name}"></span>
+            </li>
         </ul>
     </div>
     <form>
         <div class="row">
             <div class="cold-md-3 col-ld-3 left">
-                <th:block th:if="${category != null}">
-                    <input type="text" name="id" th:value="${category.getId()}" hidden>
+                <th:block th:if="${name != null}">
+                    <input type="text" name="name" th:value="${name}" hidden>
                 </th:block>
                 <dl>
                     <dt class="left_category left_filter_title">
-                        NHOM SAN PHAM
+                        NHÓM SẢN PHẨM
                     </dt>
-                    <dd class="left_category" th:if="${category != null}">
+                    <dd class="left_category">
                         <div class="main-category">
                             <span href="#" style="margin-left: 0">Tất cả nhóm sản phẩm</span>
                         </div>
-                        <div style="margin-left: 10px" class="main-category"
-                             th:if="${category.parentCategory.parentCategory.getId() != category.parentCategory.getId()}">
-                            <a th:href="@{/category(id=${category.parentCategory.parentCategory.getId()})}">
-                                <span th:text="${category.parentCategory.parentCategory.categoryName}"></span>
+                        <div style="margin-left: 10px" class="main-category">
+                            <a th:href="@{/category(id=1)}" style="margin-left: 0">
+                                <span class="font-14">Sách trong nước</span>
                             </a>
                         </div>
-                        <th:block th:if="${category.parentCategory.getId() != category.getId()}">
-                            <div style="margin-left: 20px" class="main-category">
-                                <a th:href="@{/category(id=${category.parentCategory.getId()})}">
-                                    <span th:text="${category.parentCategory.categoryName}"></span>
-                                </a>
-                            </div>
-                            <ul class="list-group">
-                                <li th:each="tmp : ${category.parentCategory.getChildCategories()}"
-                                    th:if="${tmp.getId() != 1 && tmp.getId() != 2}">
-                                    <a th:href="@{/category(id=${tmp.getId()})}"
-                                       th:class="${category.categoryName == tmp.categoryName}?colorText">
-                                        <span th:text="${tmp.categoryName}"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </th:block>
-                        <th:block th:if="${category.parentCategory.getId() == category.getId()}">
-                            <div style="margin-left: 20px; margin-bottom: 10px">
-                                <a class="colorText"
-                                   th:href="@{/category(id=${category.getId()})}">
-                                    <span th:text="${category.categoryName}"></span>
-                                </a>
-                            </div>
-                        </th:block>
-                    </dd>
-                    <dd class="left_category" th:if="${category == null}">
-                        <ul class="list-group">
-                            <li class="">
-                                <a th:href="@{/category(id=1)}" style="margin-left: 0">Sách trong nước</a>
-                            </li>
-                            <li class="">
-                                <a th:href="@{/category(id=2)}" style="margin-left: 0">Foreign books</a>
-                            </li>
-                        </ul>
+                        <div style="margin-left: 10px" class="main-category">
+                            <a th:href="@{/category(id=2)}" style="margin-left: 0">
+                                <span class="font-14">Foreign books</span>
+                            </a>
+                        </div>
                     </dd>
                     <dt class="left_filter">
                         HÌNH THỨC BÌA
@@ -175,6 +135,8 @@
                 </dl>
             </div>
             <div class="col-md-8 col-lg-8 right">
+                <h4 class="right_result_search">KET QUA TIM KIEM VOI: <span style="color: red" th:text="${name}"></span>
+                </h4>
                 <div class="result-search-block">
                     <div class="right_filter">
                         <ul class="list-group list-group-horizontal">
@@ -242,7 +204,7 @@
                         </div>
                     </div>
 <!--                    <div class="pagination">-->
-<!--                        <th:block th:if="${category != null}">-->
+<!--                        <th:block th:if="${name != null}">-->
 <!--                            <nav aria-label="Page navigation"-->
 <!--                                 th:if="${products.totalPages > 0}">-->
 <!--                                <ul class="pagination justify-content-center">-->

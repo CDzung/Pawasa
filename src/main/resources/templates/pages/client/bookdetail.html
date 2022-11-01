@@ -13,6 +13,7 @@
   <link rel="stylesheet" th:href="@{/css/bookdetail.css}">
   <link rel="icon" href="//cdn0.fahasa.com/media/favicon/default/favicon4.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="icon" href="/image/p.png" type="image/x-icon">
 </head>
 
 <body>
@@ -23,9 +24,8 @@
   <div class="col-main">
     <div class="container">
       <div class="container-inner">
-        <form action method="post" id="product_addtocart_form">
+        <form action="/user/cart/add" method="post" id="product_addtocart_form">
           <input type="hidden" name="id" th:value="${product.id}">
-          <input type="hidden" name="quantity" value="1">
           <div class="product-view all" th:object="${product}">
             <div class="product-essential">
               <!--Nửa bên hình ảnh sản phẩm-->
@@ -37,7 +37,7 @@
 
                   </div>
                   <div class="product_view_add_box">
-                    <button type="button" title="Thêm vào giỏ hàng" class="btn-cart-to-cart">
+                    <button type="submit" title="Thêm vào giỏ hàng" class="btn-cart-to-cart">
                       <span class="fhs_icon_cart"></span>
                       <span>Thêm vào giỏ hàng</span>
                     </button>
@@ -141,7 +141,7 @@
                           <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/ico_minus2x.png"
                                alt="" style="width:12px; height: auto;">
                         </a>
-                        <input type="text" name="qty" id="qty" maxvalue="999" minvalue="1"
+                        <input type="text" name="quantity" id="qty" maxvalue="999" minvalue="1"
                                value="1" onkeypress="" onblur="validateQty();" title="SL"
                                class="input-text-qty">
                         <a class="btn-add-qty" onclick="">

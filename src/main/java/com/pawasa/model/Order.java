@@ -3,6 +3,7 @@ package com.pawasa.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -23,10 +24,16 @@ public class Order {
     private Date orderDate;
 
     @Column(name = "total_price")
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "phone")
+    private String phoneNumber;
+
+    @Column(name = "name")
+    private String name;
 
     @ManyToMany(mappedBy = "orders")
     private Set<Product> products;
