@@ -174,7 +174,7 @@
                     </div>
                     <div class="list_books">
                         <div class="books-grid" th:if="${products}">
-                            <th:block th:each="book, iStat:${products}">
+                            <th:block th:each="book, iStat:${products.content}">
                                 <div class="book">
                                     <a th:href="@{/product(id=${book.id})}" th:title="${book.productName}">
                                         <img class="card-img img-book"

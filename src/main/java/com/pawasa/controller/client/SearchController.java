@@ -129,27 +129,27 @@ public class SearchController {
                     bookLayoutsArr[bookLayoutIDs.get()[i]] = true;
                 }
             }
-            //resultPage = productRepository.findAll(spe, pageable);
-            products = productRepository.findAll(spe);
+            resultPage = productRepository.findAll(spe, pageable);
+            //products = productRepository.findAll(spe);
         } else {
             //resultPage = productRepository.findAll(pageable);
             products = productRepository.findAll();
         }
-//        int totalPages = resultPage.getTotalPages();
-//        if (totalPages > 0) {
-//            int start = Math.max(1, currentPage - 2);
-//            int end = Math.min(currentPage + 2, totalPages);
-//            if(totalPages >5){
-//                if (end == totalPages) start = end - 4;
-//                else if (start == 1) end = start + 4;
-//            }
-//            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
-//                    .boxed()
-//                    .collect(Collectors.toList());
-//            model.addAttribute("pageNumbers", pageNumbers);
-//        }
-        //model.addAttribute("products", resultPage);
-        model.addAttribute("products", products);
+        int totalPages = resultPage.getTotalPages();
+        if (totalPages > 0) {
+            int start = Math.max(1, currentPage - 2);
+            int end = Math.min(currentPage + 2, totalPages);
+            if(totalPages >5){
+                if (end == totalPages) start = end - 4;
+                else if (start == 1) end = start + 4;
+            }
+            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("products", resultPage);
+        //model.addAttribute("products", products);
         model.addAttribute("pricesArr", pricesArr);
         model.addAttribute("bookLayoutsArr", bookLayoutsArr);
         model.addAttribute("langsArr", langsArr);
