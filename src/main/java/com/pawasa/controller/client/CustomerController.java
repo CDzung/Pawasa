@@ -96,12 +96,14 @@ public class CustomerController {
         try {
             session.removeAttribute("register_user");
             //set role for user
+            user.setFirstName(user.getEmail().split("@")[0]);
             user.setActive(true);
             user.setRole(roleRepository.findByRoleName("Customer"));
             //save cart
             Cart cart = new Cart();
             cart.setTotalPrice(BigDecimal.valueOf(0));
             user.setCart(cart);
+
             userService.addUser(user);
             cart.setUser(user);
             cartRepository.save(cart);
@@ -193,7 +195,7 @@ public class CustomerController {
         return "pages/client/login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login-failed")
     public String login(@Valid User user, BindingResult result, Model model) {
         if (result.hasFieldErrors("email") || result.hasFieldErrors("password")) {
             model.addAttribute("form", "login");
@@ -327,7 +329,7 @@ public class CustomerController {
     }
 
     @PostMapping("/user/cart/add")
-    public String addToCart(@RequestParam("id") String id, @RequestParam("quantity") String quantity, Principal principal, HttpServletRequest request) {
+    public String addToCart(@RequestParam(value = "type", defaultValue = "false") String type, @RequestParam("id") String id, @RequestParam("quantity") String quantity, Principal principal, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         try{
             User user = userRepository.findByEmail(principal.getName());
@@ -363,6 +365,9 @@ public class CustomerController {
                     cart.setTotalPrice(BigDecimal.valueOf(cart.getTotalPrice().doubleValue() + (cartDetail.getQuantity() - oldQuantity) * product.getDiscountPrice()));
                     cartRepository.save(cart);
                 }
+            }
+            if(type.equals("true")) {
+                return "redirect:/user/cart";
             }
             return "redirect:"+ referer;
         } catch (Exception e) {

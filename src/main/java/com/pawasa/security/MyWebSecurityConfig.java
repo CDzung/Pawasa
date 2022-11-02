@@ -55,6 +55,7 @@ public class MyWebSecurityConfig {
                 .usernameParameter("email")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/", true)
+                .failureForwardUrl("/login-failed")
                 .and()
                 .logout()
                 .logoutUrl("/perform_logout")

@@ -22,10 +22,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -155,7 +152,7 @@ public class BaseController {
                     "                                                    </div>\n" +
                     "                                                    <h2 class=\"product-name-no-ellipsis\"><a\n" +
                     "                                                            href=\"\\product?id="+ i.getId() + "\"\n" +
-                    "                                                            title=\"Hộp 20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh\">Hộp\n" + i.getProductName() +
+                    "                                                            title=\"Hộp 20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh\">\n" + i.getProductName() +
                     "                                                    </h2>\n" +
                     "                                                    <div class=\"price-label\">\n" +
                     "                                                        <p class=\"special-price\"><span class=\"price-label\">Special\n" +
@@ -206,8 +203,24 @@ public class BaseController {
     }
 
     @GetMapping("/product")
-    public String product(Model model, @RequestParam(name = "id") Long id) {
-        model.addAttribute("product", productRepository.findById(id).get());
+    public String product(Model model, @RequestParam(name = "id") long id) {
+        Product product = productRepository.findById(id);
+        List<Product> products = productRepository.findAllByCategory( product.getCategory());
+        products.remove(product);
+        if(products.size() < 5) {
+            products.addAll(products);
+        }
+        List<Category> categories = new ArrayList<>();
+        Category c = product.getCategory();
+        while (c.getId() != c.getParentCategory().getId()) {
+            categories.add(c);
+            c = c.getParentCategory();
+        }
+        categories.add(c);
+        Collections.reverse(categories);
+        model.addAttribute("product", product);
+        model.addAttribute("products", products.subList(0, 5));
+        model.addAttribute("categories", categories);
         return "pages/client/bookdetail";
     }
 

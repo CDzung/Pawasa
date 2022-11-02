@@ -146,8 +146,8 @@
                                 <div class="heading heading-custom">
                                     <div class="fhs_center_center" style="margin-bottom: 3px;">
                                         <div class="icon_cart_gray">
-                                            <div class="top_menu_unseen fhs_center_center" style="visibility: hidden;">
-                                                <span class="cartmini_qty"></span>
+                                            <div sec:authorize="isAuthenticated()" th:if="${user.cart.cartDetails.size() > 0}" class="top_menu_unseen fhs_center_center" style="visibility: visible;">
+                                                <span  th:text="${user.cart.cartDetails.size()}" style="visibility: visible;" class="cartmini_qty"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -169,7 +169,7 @@
                             <div class="fhs_top_account_button">
                                 <div class="icon_account_gray" style="margin-bottom:3px;"></div>
                                 <div sec:authorize="isAuthenticated()"
-                                     th:text="${#authentication.getName().split('@')[0]}"
+                                     th:text="${user.lastName + ' ' + user.firstName}"
                                      class="top_menu_label fhs_top_center fhs_nowrap_one" id="fhs_top_account_title">
                                 </div>
                                 <div sec:authorize="!isAuthenticated()"
