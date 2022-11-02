@@ -3,6 +3,10 @@ package com.pawasa.repository;
 import com.pawasa.model.Category;
 import com.pawasa.model.Product;
 import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -50,5 +54,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
     Page<Product> searchByCategory(Long categoryId, Pageable pageable);
 
     Page<Product> findAll(Specification<Product> var, Pageable pageable);
+
 
 }
