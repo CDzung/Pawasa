@@ -66,4 +66,28 @@ public class AdminController {
         userService.addUser(user);
         return "pages/admin/create_account";
     }
+
+    @GetMapping ("/admin/view-account")
+    public String view(Model model, @RequestParam(name="email", defaultValue = "") String email, @RequestParam(name="role-id", defaultValue = "0") String id) {
+        int roleId = Integer.parseInt(id);
+        List<User> users;
+        if(roleId==0) {
+            users = userRepository.findAllByEmail(email);
+        } else {
+            users = userRepository.findAllByEmailAndRoleId(email, roleId);
+        }
+        List<Role> roles = roleRepository.findAll();
+        roles.remove(roleRepository.findByRoleName("Admin"));
+        model.addAttribute("roles", roles);
+        model.addAttribute("users", users);
+        model.addAttribute("email", email);
+        model.addAttribute("id", roleId);
+        return "pages/admin/view_account";
+    }
+    @GetMapping("/admin/view-detail")
+    public String viewDetail(Model model, @RequestParam(name="id") long id ) {
+        User user = userRepository.findById(id);
+        model.addAttribute("user", user);
+        return "pages/admin/view_detail";
+    }
 }
