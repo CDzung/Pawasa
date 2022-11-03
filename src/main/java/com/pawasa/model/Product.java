@@ -76,6 +76,12 @@ public class Product {
     @Column(name = "available")
     private boolean available;
 
+    @Column(name = "rate_sum")
+    private int rateSum;
+
+    @Column(name = "rate_count")
+    private int rateCount;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Category category;
@@ -94,6 +100,15 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "order_id"))
     private Set<Order> orders;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "review",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users;
+
+    @OneToMany(mappedBy = "product")
+    private Set<Review> reviews;
 
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails;

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -45,6 +46,13 @@ public class BaseController {
     private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private  ReviewRepository reviewRepository;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
     @GetMapping("/")
     public String index() {
         return "pages/client/home";
@@ -203,11 +211,11 @@ public class BaseController {
     }
 
     @GetMapping("/product")
-    public String product(Model model, @RequestParam(name = "id") long id) {
+    public String product(Model model, @RequestParam(name = "id") long id, Principal principal) {
         Product product = productRepository.findById(id);
         List<Product> products = productRepository.findAllByCategory( product.getCategory());
         products.remove(product);
-        if(products.size() < 5) {
+        while (products.size() < 5 && products.size() > 0) {
             products.addAll(products);
         }
         List<Category> categories = new ArrayList<>();
@@ -219,8 +227,20 @@ public class BaseController {
         categories.add(c);
         Collections.reverse(categories);
         model.addAttribute("product", product);
-        model.addAttribute("products", products.subList(0, 5));
+        if(products.size() >= 5) {
+            model.addAttribute("products", products.subList(0, 5));
+        } else {
+            model.addAttribute("products", products);
+        }
         model.addAttribute("categories", categories);
+        if(principal != null) {
+            User user = userRepository.findByEmail(principal.getName());
+            Review review = reviewRepository.findByUserAndProduct(user, product);
+            model.addAttribute("review", review);
+        }
+
+        int rateCount = reviewRepository.countAllByProduct(product);
+        model.addAttribute("rateCount", rateCount);
         return "pages/client/bookdetail";
     }
 

@@ -77,6 +77,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Notification> notifications;
 
+    @ManyToMany(mappedBy = "users")
+    private Set<Product> products;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Review> reviews;
+
     public boolean isOTPRequired() {
         if (this.otp == null || this.otp.equals("")) {
             return false;

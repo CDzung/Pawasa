@@ -68,6 +68,8 @@ public class CustomerController {
 
     @Autowired
     private OrderStatusRepository orderStatusRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
     @GetMapping("/signup")
     public String register(Model model) {
         model.addAttribute("user", new User());
@@ -508,5 +510,27 @@ public class CustomerController {
 
 
         return "redirect:/";
+    }
+
+    @PostMapping("/user/rate")
+    public String rate(@RequestParam("rate_id") long id, @RequestParam("rate_star") int rate, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName());
+        Product product = productRepository.findById(id);
+        Review review = reviewRepository.findByUserAndProduct(user, product);
+        if(review == null) {
+            review = new Review();
+            review.setProduct(product);
+            review.setUser(user);
+            review.setRate(rate);
+            reviewRepository.save(review);
+            product.setRateCount(product.getRateCount() + 1);
+            product.setRateSum(product.getRateSum() + rate);
+        } else {
+            product.setRateSum(product.getRateSum() - review.getRate() + rate);
+            review.setRate(rate);
+            reviewRepository.save(review);
+        }
+        productRepository.save(product);
+        return "redirect:/product?id=" + id;
     }
 }

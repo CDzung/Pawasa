@@ -50,6 +50,7 @@
     <div class="col-main">
     <div class="container">
       <div class="container-inner">
+        <div class="youama-ajaxlogin-cover" style="display: none;"></div>
         <form action="/user/cart/add" method="post" id="product_addtocart_form">
           <input type="hidden" name="id" th:value="${product.id}">
           <input type="hidden" name="type" value="false">
@@ -108,18 +109,15 @@
                               <td>
                                 <a onclick="">
                                   <div class="rating-box">
-                                    <div class="rating" stype="width: 98%">
-                                      <!--Need rating stars-->
-
-                                    </div>
+                                    <div class="rating" th:if="${product.rateCount > 0}" th:style="${'width: ' + product.rateSum*1000/product.rateCount/50 + '%'}"></div>
+                                    <div class="rating" th:if="${product.rateCount == 0}" style="width: 0%"></div>
                                   </div>
                                 </a>
                               </td>
                               <td class="review-position">
                                 <p class="rating-links">
-                                  <a href=""
-                                     style="margin-left: 8px; color: orange;">(37
-                                    đánh giá)</a>
+                                  <a th:text="${product.rateCount + ' đánh giá'}" href="#"
+                                     style="margin-left: 8px; color: orange;"></a>
                                 </p>
                               </td>
                             </tr>
@@ -171,7 +169,7 @@
                         <input type="text" name="quantity" id="qty" maxvalue="999" minvalue="1"
                                value="1" th:attr="oninput=${'validateQty(this, ' + product.quantity + ')'}" title="SL"
                                class="input-text-qty">
-                        <a class="btn-add-qty" th:attr="onclick=${'subtractQty(' + product.quantity + ')'}">
+                        <a class="btn-add-qty" th:attr="onclick=${'addQty(' + product.quantity + ')'}">
                           <img src="https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/ico_plus2x.png"
                                style="width:12px; height:auto;">
                         </a>
@@ -243,9 +241,10 @@
                           <div class="fhs-rating-container">
                             <div class="ratings fhs-no-mobile-block">
                               <div class="rating-box">
-                                <div class="rating" style="width:0%;"></div>
+                                <div class="rating" th:if="${item.rateCount > 0}" th:style="${'width: ' + item.rateSum*1000/item.rateCount/50 + '%'}"></div>
+                                <div class="rating" th:if="${item.rateCount == 0}" style="width: 0%"></div>
                               </div>
-                              <div class="amount">(0)</div>
+                              <div class="amount" th:text="${'(' + item.rateCount + ')'}"></div>
                             </div>
                           </div>
                         </div>
@@ -495,19 +494,18 @@
                   <div>
                     <div>
                       <div>
-                        <div>4.9
+                        <div class="rate-product" th:text="${ (product.rateSum*10/ product.rateCount)}">
                           <span>/5</span>
                         </div>
                         <div>
                           <div class="rating-box">
-                            <div class="rating" style="width:98%;">
-
-                            </div>
+                            <div class="rating" th:if="${product.rateCount > 0}" th:style="${'width: ' + product.rateSum*1000/product.rateCount/50 + '%'}"></div>
+                            <div class="rating" th:if="${product.rateCount == 0}" style="width: 0%"></div>
                           </div>
                           <div class="clear"></div>
                         </div>
                         <!--Số lượng đánh giá của sản phẩm.-->
-                        <div>(37&nbsp;đánh giá)</div>
+                        <div th:text="${'(' + product.rateCount + ')'}"></div>
                       </div>
                     </div>
                     <div>
@@ -549,9 +547,9 @@
                     </div>
                   </div>
                   <div>
-                    <button id="btn_review_write" style="display:none;" title="Viết nhận xét của bạn" class="fhs_btn fhs_btn_write" onclick="prodComment.showReview();">
-                      <span class="fhs-icon-write" style="margin-right: 4px;"></span>
-                      <span>Viết đánh giá</span>
+                    <button sec:authorize="${isAuthenticated()}" id="btn_review_write" title="Viết nhận xét của bạn" class="fhs_btn fhs_btn_write" onclick="showReview()">
+
+                      <span>Đánh giá</span>
                     </button>
                     <p sec:authorize="${!isAuthenticated()}" class="review-nologged" id="review-form">
                       Chỉ có thành viên mới có thể nhận xét, vui lòng
@@ -563,75 +561,44 @@
 
                 </div>
               </div>
-              <div class="product-view-tab-content-review-comment">
-                <div class="product-view-tab-content-review-comment_sort review_comment_tabs_swiper_container swiper-container-horizontal">
-                  <ul class="fhs-tabs review_comment_tabs swiper-wrapper" style="transition-duration: 0ms; transform: translate3d(0px, 0px, 0px);">
-                    <li class="active" onclick="prodComment.sort_change(this, 'last-review')">
-                      <a href="">Mới nhất</a>
-                      <hr>
-                    </li>
-                    <li class="active" onclick="prodComment.sort_change(this, 'best-like')">
-                      <a href="">Yêu thích</a>
-                      <hr>
-                    </li>
-                  </ul>
-                </div>
-                <div class="comment-content">
-                  <ul class="comment_list">
-                    <li>
-                      <div>
-                        <div>Huyền</div>
-                        <div>04/09/2022</div>
-                      </div>
-                      <div>
-                        <div class="fhs_center_left">
-                          <div class="rating-box">
-                            <div class="rating" style="width:100%;"></div>
-                            <!--Need rating stars-->
-                          </div>
-                          <div class="clear"></div>
-                        </div>
-                        <div>Tác phẩm này đúng là kinh điển nhé mọi người, ai chưa đọc nên đọc, vì đọc rồi sẽ hối tiếc tại sao không biết nó sớm hơn. </div>
-                        <div class="fhs_center_left review_267086">
-                          <div class="review_like fhs_center_left fhs_mouse_point" style="margin-right:20px;" onclick="prodComment.reviewComment(267086,'like',0);">
-                            <span class="icon_review_like" style="margin-right:4px;"></span>
-                            <span class="review_like_txt">thích</span>
-                            <span class="review_like_count">(0)</span>
-                          </div>
-                          <div class="review_report fhs_center_left fhs_mouse_point" onclick="prodComment.reviewComment(267086,'ubuse');">
-                            <span class="icon_review_report" style="margin-right:4px;"></span>
-                            <span class="review_like_txt">báo cáo</span>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                <div class="toolbar toolbar-bottom">
-                  <div class="pager">
-                    <div class="pages" id="pagination">
-                      <ol>
-                        <li class="current">
-                          <a>1</a>
-                        </li>
-                        <li>
-                          <a>2</a>
-                        </li>
-                        <li>
-                          <a>3</a>
-                        </li>
-                        <li>
-                          <a>4</a>
-                        </li>
-                        <li tile="Next">
-                          <a onclick="prodComment.Page_change('next')">
-                            <i class="fa fa-chevron-right">
 
-                            </i>
-                          </a>
-                        </li>
-                      </ol>
+              <div id="popup_write_review" class="fhs_popup-default" style="width: 800px;height: 200px;display: none;">
+                <div class="fhs_popup-default-info-detail">
+                  <div class="fhs_popup-default-info-detail-title">
+                    <div class="fhs_popup-default-info-detail-title-text">
+                      <div class="fhs_popup-default-info-detail-title-left"></div>
+                      <div class="fhs_popup-default-info-detail-title-center">Đánh giá sản phẩm</div>
+                      <div class="fhs_popup-default-info-detail-title-right" onclick="closeReview();"><span class="icon_close_gray lg-close"></span></div>
                     </div>
+                  </div>
+                  <div class="fhs_popup-default-info-detail-content">
+                    <div class="product-view-tab-content-rating-review">
+
+                      <div class="rating_choice fhs_center_center">
+                        <span  onclick="rateStar(1)" class="rating_item rating_item_1 active" data="1"></span>
+                        <span th:if="${review == null || review.rate>1}" onclick="rateStar(2)" class="rating_item rating_item_2 active" data="2"></span>
+                        <span th:if="${review != null && review.rate<2}" onclick="rateStar(2)" class="rating_item rating_item_2 " data="2"></span>
+                        <span th:if="${review == null || review.rate>2}" onclick="rateStar(3)" class="rating_item rating_item_3 active" data="3"></span>
+                        <span th:if="${review != null && review.rate<3}" onclick="rateStar(3)" class="rating_item rating_item_3 " data="3"></span>
+                        <span th:if="${review == null || review.rate>3}" onclick="rateStar(4)" class="rating_item rating_item_4 active" data="4"></span>
+                        <span th:if="${review != null && review.rate<4}" onclick="rateStar(4)" class="rating_item rating_item_4" data="4"></span>
+                        <span th:if="${review == null || review.rate>4}" onclick="rateStar(5)" class="rating_item rating_item_5 active" data="5"></span>
+                        <span th:if="${review != null && review.rate<5}" onclick="rateStar(5)" class="rating_item rating_item_5" data="5"></span>
+                      </div>
+
+
+                    </div>
+                    <form action="/user/rate" method="post" id="rate-form">
+                      <input type="hidden" name="rate_id" th:value="${product.id}">
+                      <input type="hidden" name="rate_star" id="rate-star" th:value="${(review == null) ? 5 : review.rate}">
+
+                      <div class="fhs_center_right" style="padding: 0 8px;">
+
+                        <button type="submit" class="fhs_btn_default active btn_post_review">
+                          <span>Gửi nhận xét</span>
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -645,6 +612,14 @@
   <th:block layout:insert="~{fragments/client/footer}" />
   <th:block layout:insert="~{fragments/client/scriptTag}"/>
   <script>
+    let rates = document.getElementsByClassName('rate-product');
+    for(let i = 0; i < rates.length; i++){
+      let x = parseInt(rates[i].innerHTML);
+      rates[i].innerHTML = x/10;
+      if(rates[i].innerHTML.length > 3){
+        rates[i].innerHTML = rates[i].innerHTML.substring(0,3);
+      }
+    }
     function buy() {
       document.getElementsByName('type')[0].value = 'true';
       document.getElementById('product_addtocart_form').submit();
@@ -675,6 +650,26 @@
         if(parseInt(qty) > parseInt(quantity)) {
           obj.value = quantity;
         }
+    }
+
+    function closeReview() {
+      document.getElementById('popup_write_review').style.display = 'none';
+      document.getElementsByClassName('youama-ajaxlogin-cover')[0].style.display = 'none';
+    }
+
+    function showReview() {
+      document.getElementById('popup_write_review').style.display = 'block';
+      document.getElementsByClassName('youama-ajaxlogin-cover')[0].style.display = 'block';
+    }
+    function rateStar(star) {
+      for (let i = 1; i <= 5; i++) {
+        if (i <= star) {
+          document.getElementsByClassName('rating_item_' + i)[0].classList.add('active');
+        } else {
+          document.getElementsByClassName('rating_item_' + i)[0].classList.remove('active');
+        }
+      }
+      document.getElementById('rate-star').value = star;
     }
   </script>
 </body>
