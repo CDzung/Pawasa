@@ -99,6 +99,7 @@ public class CustomerController {
             session.removeAttribute("register_user");
             //set role for user
             user.setFirstName(user.getEmail().split("@")[0]);
+            user.setLastName("");
             user.setActive(true);
             user.setRole(roleRepository.findByRoleName("Customer"));
             //save cart

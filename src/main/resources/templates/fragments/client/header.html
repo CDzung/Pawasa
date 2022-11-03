@@ -146,8 +146,8 @@
                                 <div class="heading heading-custom">
                                     <div class="fhs_center_center" style="margin-bottom: 3px;">
                                         <div class="icon_cart_gray">
-                                            <div sec:authorize="isAuthenticated()" th:if="${user.cart.cartDetails.size() > 0}" class="top_menu_unseen fhs_center_center" style="visibility: visible;">
-                                                <span  th:text="${user.cart.cartDetails.size()}" style="visibility: visible;" class="cartmini_qty"></span>
+                                            <div sec:authorize="isAuthenticated()" th:if="${authen_user.cart.cartDetails.size() > 0}" class="top_menu_unseen fhs_center_center" style="visibility: visible;">
+                                                <span  th:text="${authen_user.cart.cartDetails.size()}" style="visibility: visible;" class="cartmini_qty"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -169,16 +169,16 @@
                             <div class="fhs_top_account_button">
                                 <div class="icon_account_gray" style="margin-bottom:3px;"></div>
                                 <div sec:authorize="isAuthenticated()"
-                                     th:text="${user.lastName + ' ' + user.firstName}"
+                                     th:text="${authen_user.firstName + ' ' + (authen_user.lastName == null ? '' : authen_user.lastName)}"
                                      class="top_menu_label fhs_top_center fhs_nowrap_one" id="fhs_top_account_title">
                                 </div>
-                                <div sec:authorize="!isAuthenticated()"
+                                <div th:if="${authen_user == null}"
                                      class="top_menu_label fhs_top_center fhs_nowrap_one" id="fhs_top_account_title">Tài
                                     khoản
                                 </div>
                             </div>
                         </a>
-                        <div sec:authorize="!isAuthenticated()"
+                        <div th:if="${authen_user == null}"
                              class="fhs_top_account_dropdown fhs_dropdown right guest"
                              style="display: none;">
                             <div>
@@ -202,7 +202,7 @@
                                     <div>
                                         <div class="fhs_center_left fhs_nowrap_one"
                                              style="font-size: 1.23em; color: #0D0E0F; font-weight: bold;max-width: 200px;height: 22px; text-transform: capitalize;">
-                                            <span th:text="${#authentication.getName().split('@')[0]}"></span>
+                                            <span th:text="${authen_user.firstName + ' ' + (authen_user.lastName == null ? '' : authen_user.lastName)}"></span>
                                         </div>
                                         <div class="fhs_center_left" style="height: 22px;">Thành viên Fahasa</div>
                                     </div>

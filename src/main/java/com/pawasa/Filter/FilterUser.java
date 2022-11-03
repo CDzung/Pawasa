@@ -44,12 +44,25 @@ public class FilterUser implements Filter {
             String email = auth.getName();
             User user = userRepository.findByEmail(email);
             notificationSet = user.getNotifications();
-            req.setAttribute("user", user);
+            req.setAttribute("authen_user", user);
         }
         else {
             notificationSet = new HashSet<>();
         }
         session.setAttribute("list_notification", notificationSet);
+
+        //set referer except login
+        String referer = req.getHeader("Referer");
+        if(referer == null || referer.contains("signup")) {
+            session.setAttribute("referer", "/");
+        }
+        else if (!referer.contains("login") && !referer.contains("css") && !referer.contains("/JS") && !referer.contains("/image")) {
+            session.setAttribute("referer", referer);
+        } else {
+            session.setAttribute("referer", session.getAttribute("referer"));
+        }
+
+
         chain.doFilter(request, response);
     }
 }

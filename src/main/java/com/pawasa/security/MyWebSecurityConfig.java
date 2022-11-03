@@ -54,11 +54,13 @@ public class MyWebSecurityConfig {
                 .loginPage("/login")
                 .usernameParameter("email")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/", true)
+//                .defaultSuccessUrl("/", true)
                 .failureForwardUrl("/login-failed")
+                .successHandler(new MyLoginSuccesHandler())
                 .and()
                 .logout()
                 .logoutUrl("/perform_logout")
+                .logoutSuccessHandler(new MyLogoutSuccessHandler())
                 .deleteCookies("JSESSIONID")
          ;
         return http.build();

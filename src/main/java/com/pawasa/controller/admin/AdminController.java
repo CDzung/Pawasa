@@ -33,7 +33,7 @@ public class AdminController {
     @Autowired
     private DefaultUserService userService;
 
-    @GetMapping("/admin/dashboard")
+    @GetMapping("/admin")
     public String index(Model model, Principal principal) {
         User user = userRepository.findByEmail(principal.getName());
         List<User> admins = userRepository.findAllByRole(roleRepository.findByRoleName("Admin"));
