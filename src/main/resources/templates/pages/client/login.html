@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
@@ -12,6 +13,7 @@
         <link rel="stylesheet" th:href="@{/css/login.css}">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"></script>
         <script src="https://code.jquery.com/jquery-latest.js"></script>
+        <link rel="icon" href="/image/p.png" type="image/x-icon">
     </head>
     <body>
         <section class="header" id="header">
@@ -30,7 +32,8 @@
                                         <li class="popup-login-tab-item popup-login-tab-register"><a th:href="@{/signup}">Đăng ký</a><hr></li>
                                     </ul>
                                     <div th:if="${form.contains('forgot')}" class="popup-change-title popup-login-title" style="">
-                                        Khôi phục mật khẩu	    </div>
+                                        Khôi phục mật khẩu
+                                    </div>
                                 </div>
                                 <div th:if="${form.equals('signup')}">
                                     <div class="popup-register-content" style="display: block;">

@@ -75,8 +75,8 @@ function showCategory(i) {
     });
 }
 
-function tabslider(i,j) {
-    if(j === true){
+function tabslider(i, j) {
+    if (j === true) {
         var current_tab = $("#categorytab-" + i + " .tabslider-tabs li:first-child");
         current_tab.addClass("active")
         var a = current_tab.attr("rel");
@@ -101,8 +101,7 @@ function tabslider(i,j) {
                 }
             }
         })
-    }
-    else{
+    } else {
         $("#categorytab-" + i + " .tabslider-tabs li").click(function (e) {
             var current_tab = $("#categorytab-" + i + " .tabslider-tabs li.active");
             console.log(current_tab)
@@ -138,25 +137,83 @@ function tabslider(i,j) {
         });
     }
 }
-function changepass(){
+
+function changepass() {
     var i = $(".fhs-edit-account-password-form").css('display');
     console.log(i)
-    if(i === "none"){
+    if (i === "none") {
         $(".fhs-edit-account-password-form").show();
-    }
-    else{
+    } else {
         $(".fhs-edit-account-password-form").hide();
     }
 }
-$.ready(showCategory(1))
-$.ready(tabslider("gia-noi-bat",true))
-$.ready(tabslider("mglnv",true))
 
-function checkLogin(i){
-    if(i != null){
-        window.location.href="/pawasa/Account/profile";
-    }
-    else {
-        window.location.href="/pawasa/login"
+$.ready(showCategory(1))
+$.ready(tabslider("gia-noi-bat", true))
+$.ready(tabslider("mglnv", true))
+
+function checkLogin(i) {
+    if (i != null) {
+        window.location.href = "/pawasa/Account/profile";
+    } else {
+        window.location.href = "/pawasa/login"
     }
 }
+
+function popup() {
+    if ($('#changeEmailform').css('display') === 'none') {
+        $('#changeEmailform').css('display', 'block')
+        $('#loader').css('display', 'block')
+    } else {
+        $('#changeEmailform').css('display', 'none')
+        $('#loader').css('display', 'none')
+    }
+}
+
+function changeEmailwithOTP() {
+    var email = $("#change_email").val().trim();
+    if (email.length == 0) {
+        $("#alert").html('Thông tin này không thể để trống');
+    } else {
+        $.ajax({
+            type: "GET",
+            url: "/user/account/otp",
+            data: "email=" + email,
+            success: function (data) {
+                if (data === 'Email existed!') {
+                    $("#alert").html(data);
+                } else {
+                    $("#alert").html("OTP đã được gửi");
+                    $("#change_email_otp").removeAttr("disabled")
+                    var count = 300;
+                    setInterval(function () {
+                        count--;
+                        if (count == 0 && $("#change_email_otp").val().trim().length == 0) {
+                            $("#change_email_otp").attr('disabled', 'disabled');
+                            $("#alert-otp").html("OTP đã hết hạn");
+                        }
+                        $("#change_email_otp").change(function () {
+                            var otp = $("#change_email_otp").val();
+                            if (otp == data) {
+                                $("#alert-otp").html("OTP hợp lệ");
+                                $("#confirm").css('border', '1px solid #C92127');
+                                $("#change_email_otp").attr('disabled', 'disabled');
+                                $("#confirm").removeAttr('disabled');
+                                $("#confirm").click(function () {
+                                    $("#email").val(email);
+                                    console.log(email)
+                                    popup();
+                                    return;
+                                })
+                            } else {
+                                $("#alert-otp").html("OTP không hợp lệ");
+                            }
+                        })
+                    }, 1000);
+                }
+            }
+
+        })
+    }
+}
+

@@ -336,7 +336,7 @@ public class CustomerController {
         String referer = request.getHeader("Referer");
         try{
             User user = userRepository.findByEmail(principal.getName());
-            Product product = productRepository.findById(Integer.parseInt(id));
+            Product product = productRepository.findById(Long.parseLong(id));
             Cart cart = user.getCart();
             CartDetail cartDetail = cartDetailRepository.findByCartAndProduct(cart, product);
             int oldQuantity = 0;

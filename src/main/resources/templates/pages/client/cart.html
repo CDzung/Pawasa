@@ -14,6 +14,7 @@
     <link rel="stylesheet" th:href="@{/css/cart.css}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"></script>
     <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <link rel="icon" href="/image/p.png" type="image/x-icon">
 </head>
 <body>
     <section class="header" id="header">
@@ -133,7 +134,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <form th:action="@{/user/cart/select-all}" method="post" id="form-select-all">
+                                        </form>
+                                        <form th:action="@{/user/cart/unselect-all}" method="post" id="form-unselect-all">
+                                        </form>
+                                        <form th:action="@{/user/cart/select}" method="post" id="form-select">
+                                            <input type="hidden" name="id" id="cart-detail-id">
+                                        </form>
+                                        <form action="/user/order/checkout" method="get" id="form-checkout">
 
+                                        </form>
                                         <form th:action="@{/user/cart/add}" method="post" id="form-cart">
                                             <input name="id" type="hidden" value="" id="update-id">
                                             <input name="quantity" type="hidden" value="" id="update-quantity">
@@ -142,7 +152,7 @@
                                                     <div>
                                                         <div class="header-cart-item" style="display: flex;">
                                                             <div class="checkbox-all-product ">
-                                                                <input class="checkbox-add-cart"  type="checkbox" id="checkbox-all-products" onclick="checkAllProducts(this)">
+                                                                <input class="checkbox-add-cart"  type="checkbox" id="checkbox-all-products" onclick="selectAll()" th:checked="${selectAll}">
                                                             </div>
                                                             <div><span>Chọn tất cả (<span th:text="${cart.getCartDetails().size()}" class="num-items-checkbox"></span> sản phẩm)</span></div>
                                                             <div>Số lượng</div>
@@ -153,7 +163,8 @@
                                                             <div th:each="item: ${cart.getCartDetails()}">
                                                                 <div class="item-product-cart">
                                                                     <div class="checked-product-cart">
-                                                                        <input type="checkbox" class="checkbox-add-cart" th:attr="onchange=${'changeTotalPrice(this, ' + item.product.getDiscountPrice()*item.quantity + ')'}" onclick="addCheckedProductToBuy(this)">
+                                                                        <input th:if="${item.isSelected()}" checked type="checkbox" class="checkbox-add-cart" th:attr="onclick=${'selectOne(' + item.id + ')'}">
+                                                                        <input th:if="${!item.isSelected()}" type="checkbox" class="checkbox-add-cart" th:attr="onclick=${'selectOne(' + item.id + ')'}">
                                                                     </div>
                                                                     <div class="img-product-cart"><a class="product-image" th:href="@{/product(id =${item.getProduct().getId()})}">
                                                                         <img th:src="${item.getProduct().getImage()}" width="120" height="120" th:alt="${item.getProduct().getProductName()}"></a>
@@ -190,7 +201,7 @@
                                                                             </div>
                                                                             <div class="cart-price-total">
                                                                             <span class="cart-price">
-                                                                                <span th:text="${item.getProduct().getFormattedPriceString(item.getProduct().getDiscountPrice() * item.getQuantity())}" class="price">60.000 đ</span>
+                                                                                <span th:text="${item.getProduct().getFormattedPriceString(item.getProduct().getDiscountPrice() * item.getQuantity()) + ' đ'}" class="price"></span>
                                                                             </span>
                                                                             </div>
                                                                         </div>
@@ -214,9 +225,9 @@
 
                                                             <div style="clear:both;"></div>
                                                             <div class="block-total-cart" style="">
-                                                                <div class="block-totals-cart-page"><div class="total-cart-page "><div class="title-cart-page-left">Thành tiền</div><div class="number-cart-page-right"><span class="price">0 đ</span></div></div><div class="border-product"></div><div class="total-cart-page title-final-total"><div class="title-cart-page-left">Tổng Số Tiền (gồm VAT)</div><div class="number-cart-page-right"><span class="price">0 đ</span></div></div></div>                                            <div class="checkout-type-button-cart" style="text-align: center;">
+                                                                <div class="block-totals-cart-page"><div class="total-cart-page "><div class="title-cart-page-left">Thành tiền</div><div class="number-cart-page-right"><span class="price" th:text="${cart.totalPrice}"></span></div></div><div class="border-product"></div><div class="total-cart-page title-final-total"><div class="title-cart-page-left">Tổng Số Tiền (gồm VAT)</div><div class="number-cart-page-right"><span class="price" th:text="${cart.totalPrice}"></span></div></div></div>                                            <div class="checkout-type-button-cart" style="text-align: center;">
                                                                 <div class="method-button-cart">
-                                                                    <button onclick="cart.goToCheckout(this)" type="button" title="Thanh toán" class="button btn-proceed-checkout btn-checkout btn-checkout-disable"><span><span>Thanh toán</span></span>
+                                                                    <button onclick="cart.goToCheckout(this)" type="button" title="Thanh toán" class="button btn-proceed-checkout btn-checkout"><span><span>Thanh toán</span></span>
                                                                     </button>
                                                                     <div class="retail-note"><a href="https://www.fahasa.com/chinh-sach-khach-si/" target="_blank">(Giảm giá trên web chỉ áp dụng cho bán lẻ)</a></div>
                                                                 </div>
@@ -372,11 +383,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     <script>
         let form = document.getElementById('form-cart');
+        let formSelectAll = document.getElementById('form-select-all');
+        let formUnSelectAll = document.getElementById('form-unselect-all');
+        let formSelect = document.getElementById('form-select');
         let inputId = document.getElementById('update-id');
         let inputQty = document.getElementById('update-quantity');
         let qty = document.getElementsByClassName('qty-carts');
         let checkBox = document.getElementsByClassName('checkbox-add-cart');
-        let totalPrice = document.getElementsByClassName('number-cart-page-right');
+         let totalPrice = document.getElementsByClassName('number-cart-page-right');
+         totalPrice[0].firstChild.innerHTML = parseFloat(totalPrice[0].firstChild.innerHTML).toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
+         totalPrice[1].innerHTML = totalPrice[0].innerHTML;
+
+         if(totalPrice[0].firstChild.innerHTML.charAt(0) == '0'){
+             document.getElementsByClassName('btn-checkout')[0].classList.add('btn-checkout-disable');
+         }
         for(let i = 0; i < qty.length; i++){
             //input event accept only number
             qty[i].addEventListener('input', function(e){
@@ -415,43 +435,24 @@
             inputQty.value = 1;
             form.submit();
         }
-
-
-        function checkAllProducts(obj) {
-            for(let i = 1; i < checkBox.length; i++){
-                if(checkBox[i].checked != obj.checked){
-                    checkBox[i].checked = obj.checked;
-                    checkBox[i].onchange();
-                }
-            }
-        }
-
-        function addCheckedProductToBuy(obj) {
-            if(obj.checked == false){
-                checkBox[0].checked = false;
-            }
-        }
-        let total = 0;
-        function changeTotalPrice(obj, price) {
-            if(obj.checked == true){
-                total += parseFloat(price);
-            } else
-                total -= parseFloat(price);
-            totalPrice[0].innerHTML = total.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
-            totalPrice[1].innerHTML = total.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
-            if(total>0) {
-                document.getElementsByClassName('btn-proceed-checkout')[0].classList.remove('btn-checkout-disable');
-            } else {
-                document.getElementsByClassName('btn-proceed-checkout')[0].classList.add('btn-checkout-disable');
-            }
-        }
-
         document.getElementsByClassName('btn-proceed-checkout')[0].addEventListener('click', function(e){
-            if(total == 0){
-                e.preventDefault();
+            if(totalPrice[0].firstChild.innerHTML.charAt(0) != '0'){
+                document.getElementById('form-checkout').submit();
             }
-
         });
+
+        function selectAll() {
+            if (checkBox[0].checked == true) {
+                formSelectAll.submit();
+            } else {
+                formUnSelectAll.submit();
+            }
+        }
+
+        function selectOne(id) {
+            document.getElementById('cart-detail-id').value = id;
+            formSelect.submit();
+        }
     </script>
 </body>
 </html>
