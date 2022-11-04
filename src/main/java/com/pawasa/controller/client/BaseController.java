@@ -19,13 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -48,25 +46,15 @@ public class BaseController {
     private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private  ReviewRepository reviewRepository;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
     @GetMapping("/")
-    public String index(HttpServletRequest request, HttpServletResponse response, Model model) {
-        Cookie[] cookies = request.getCookies();
-        User u = null;
-        for (Cookie i : cookies) {
-            if (i.getName().equals("email")) {
-                String value = i.getValue();
-                i.setMaxAge(0);
-                i = new Cookie("email", value);
-                i.setMaxAge(60 * 60 * 24 * 30);
-                response.addCookie(i);
-                u = userRepository.findByEmail(value);
-                model.addAttribute("user_login", u);
-                break;
-            }
-        }
-        Set<Category> list_category = new HashSet<>(categoryRepository.findParentCategory());
-        HttpSession session = request.getSession();
-        session.setAttribute("list_cate", list_category);
+    public String index() {
         return "pages/client/home";
     }
 
@@ -135,9 +123,8 @@ public class BaseController {
         } else if (id.equals("km")) {
             set = productRepository.findTopDiscountProduct();
         } else if (id.equals("kmnv")) {
-            set = productService.getProductsByCategory(2, productSet).stream().limit(10).collect(Collectors.toSet());
+            set = productService.getProductsByCategory(2, new HashSet<>(productRepository.findAll())).stream().limit(10).collect(Collectors.toSet());
         } else if (id.equals("mglnv")) {
-
             set = productService.getProductsByCategory(7, productSet).stream().limit(10).collect(Collectors.toSet());
         } else if (id.equals("topmanga")) {
             set = productService.getProductsByCategory(92, productSet).stream().limit(10).collect(Collectors.toSet());
@@ -173,7 +160,7 @@ public class BaseController {
                     "                                                    </div>\n" +
                     "                                                    <h2 class=\"product-name-no-ellipsis\"><a\n" +
                     "                                                            href=\"\\product?id="+ i.getId() + "\"\n" +
-                    "                                                            title=\"Hộp 20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh\">Hộp\n" + i.getProductName() +
+                    "                                                            title=\"Hộp 20 Bút Bi 0.5 mm Treeden - Thiên Long TL-079 - Mực Xanh\">\n" + i.getProductName() +
                     "                                                    </h2>\n" +
                     "                                                    <div class=\"price-label\">\n" +
                     "                                                        <p class=\"special-price\"><span class=\"price-label\">Special\n" +
@@ -224,8 +211,36 @@ public class BaseController {
     }
 
     @GetMapping("/product")
-    public String product(Model model, @RequestParam(name = "id") Long id) {
-        model.addAttribute("product", productRepository.findById(id).get());
+    public String product(Model model, @RequestParam(name = "id") long id, Principal principal) {
+        Product product = productRepository.findById(id);
+        List<Product> products = productRepository.findAllByCategory( product.getCategory());
+        products.remove(product);
+        while (products.size() < 5 && products.size() > 0) {
+            products.addAll(products);
+        }
+        List<Category> categories = new ArrayList<>();
+        Category c = product.getCategory();
+        while (c.getId() != c.getParentCategory().getId()) {
+            categories.add(c);
+            c = c.getParentCategory();
+        }
+        categories.add(c);
+        Collections.reverse(categories);
+        model.addAttribute("product", product);
+        if(products.size() >= 5) {
+            model.addAttribute("products", products.subList(0, 5));
+        } else {
+            model.addAttribute("products", products);
+        }
+        model.addAttribute("categories", categories);
+        if(principal != null) {
+            User user = userRepository.findByEmail(principal.getName());
+            Review review = reviewRepository.findByUserAndProduct(user, product);
+            model.addAttribute("review", review);
+        }
+
+        int rateCount = reviewRepository.countAllByProduct(product);
+        model.addAttribute("rateCount", rateCount);
         return "pages/client/bookdetail";
     }
 

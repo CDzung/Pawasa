@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Details</title>
+    <link rel="stylesheet" th:href="@{/css/shipper/style.css}"/>
+    <!-- Favicon -->
+    <link href="img/icons8-admin-settings-male-16.png" rel="icon"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="navbar-top">
+            <div class="profile">
+                <div class="info">
+                    <h2>Welcome back, </h2>
+                    <p class="text-muted"
+                       th:text="${authen_user.firstName + ' ' + (authen_user.lastName == null ? '' : authen_user.lastName)}"></p>
+                </div>
+            </div>
+            <div class="btn-close">
+                <span class="material-symbols-outlined"> close </span>
+            </div>
+        </div>
+
+        <div class="navbar-content">
+            <a th:href="@{/shipper}" class="active">
+                <span class="material-symbols-outlined"> grid_view </span>
+                <h3>Dashboard</h3>
+            </a>
+            <a th:href="@{/shipper/history}">
+                <span class="material-symbols-outlined"> grid_view </span>
+                <h3>History</h3>
+            </a>
+            <a href="/perform_logout" class="logout">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+    <main>
+        <h2>Detail of order <span th:text="${order.orderId}"></span></h2>
+        <table>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Seller Name</th>
+                <th>Seller Address</th>
+                <th>Seller Phone</th>
+            </tr>
+            <tbody th:each="i : ${order.products}">
+                <tr>
+                    <td th:text="${i.productName}"></td>
+                    <td th:text="${i.quantity}"></td>
+                    <th:block th:each="j : ${i.orderDetails}">
+                        <td th:if="${j.product.id == i.id}" th:text="${j.price}"></td>
+                    </th:block>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{${url}}" style="text-align: center;font-size: 200%">BACK</a>
+    </main>
+</div>
+</body>
+</html>

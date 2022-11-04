@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("userService")
-@Transactional
 public class DefaultUserService implements UserService {
 
     @Autowired
@@ -34,7 +33,7 @@ public class DefaultUserService implements UserService {
             throw new IllegalArgumentException("Password must contain at least one digit, one lowercase, one uppercase, one special character and must be at least 8 characters long.");
         }
         encodePassword(user);
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
     }
 
     @Override
