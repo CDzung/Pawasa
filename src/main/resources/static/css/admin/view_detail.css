@@ -172,10 +172,7 @@ main {
 }
 
 main .container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    max-height: 700px;
     max-width: 700px;
     width: 100%;
     border-radius: 6px;
@@ -207,6 +204,7 @@ dt {
 }
 
 dd {
+    min-height: 19px;
     float: right;
     width: 70%;
     border-bottom: 1px solid #8390A2;
@@ -232,4 +230,22 @@ dd {
     transition: all 0.3s linear;
     cursor: pointer;
 }
+ dt {
+     color: var(--main-color);
+ }
 
+ dd {
+     color: black;
+ }
+
+ main {
+     display: flex;
+     justify-content: center;
+ }
+
+ h2 {
+     color: var(--main-color) !important;
+ }
+ .error-msg {
+     font-size: 12px;
+ }

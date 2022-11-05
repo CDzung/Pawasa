@@ -165,10 +165,14 @@ header label span {
 }
 
 main {
+
     margin-top: 90px;
     padding: 2rem 1.5rem;
     color: #f1f5f9;
     min-height: calc(100vh - 90px);
+    display: flex;
+    justify-content: center;
+    min-height: 400px;
 }
 
 main .container {
@@ -316,4 +320,8 @@ form .buttons button , .backBtn{
 
 .error-msg {
     color: red;
+}
+
+h2, .title, label {
+    color: var(--main-color) !important;
 }

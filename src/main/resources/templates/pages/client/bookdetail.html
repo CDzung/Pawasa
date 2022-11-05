@@ -210,7 +210,7 @@
                     <div th:each="item: ${products}" class="fhs_tabslider3_li_items swiper-slide" style="width: 20% ;">
                       <div class="item-inner" style="position: relative">
                         <div class="label-pro-sale m-label-pro-sale">
-                          <span class="p-sale-label discount-l-fs">29%</span>
+                          <span class="p-sale-label discount-l-fs" th:text="${item.discount + '%'}"></span>
                         </div>
 
                         <div class="ma-box-content">

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,26 +46,62 @@ public class AdminController {
     }
 
     @GetMapping("/admin/create-account")
-    public String show(Model model) {
+    public String show(Model model, @RequestParam(name = "success", defaultValue = "false") boolean success) {
         User user = new User();
         model.addAttribute("user", user);
         List<Role> roles = roleRepository.findAll();
         roles.remove(roleRepository.findByRoleName("Admin"));
         roles.remove(roleRepository.findByRoleName("Customer"));
         model.addAttribute("roles", roles);
+        model.addAttribute("success", success);
         return "pages/admin/create_account";
     }
 
     @PostMapping("/admin/create-account")
-    public String create(User user, @RequestParam String role_id, @RequestParam(name = "date") String dob) throws ParseException {
+    public String create(Model model, @Valid User user, BindingResult result, @RequestParam String role_id, @RequestParam(name = "date") String dob) throws ParseException {
+        String firstName = user.getFirstName();
+        String lastName = user.getLastName();
+        String email = user.getEmail();
+        String phone = user.getPhoneNumber();
+        String address = user.getAddress();
+        Date dateOfBirth = null;
+        if (dob != null && !dob.isEmpty()) {
+            dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(dob);
+        }
+        boolean active = true;
+        boolean gender = user.isGender();
         Role role = roleRepository.findById(Long.parseLong(role_id));
-        Date date=new SimpleDateFormat("yyyy-MM-dd").parse(dob);
-        user.setDob(date);
+        if(firstName==null || firstName.isEmpty()) {
+            result.rejectValue("firstName", "firstName", "First Name is required.");
+        }
+        if(lastName==null || lastName.isEmpty()) {
+            result.rejectValue("firstName", "firstName", "Last Name is required.");
+        }
+        if(email != null && !email.isEmpty() && userRepository.findByEmail(email)!=null) {
+            result.rejectValue("email", "email", "Email already exists.");
+        }
+        if(phone == null || phone.isEmpty()) {
+            result.rejectValue("phoneNumber", "error.user", "Phone Number is required.");
+        }
+        if(address == null || address.isEmpty()) {
+            result.rejectValue("address", "error.user", "Address is required.");
+        }
+        if(result.hasFieldErrors("email") && result.hasFieldErrors("phoneNumber") && result.hasFieldErrors("address") && result.hasFieldErrors("firstName") && result.hasFieldErrors("lastName")) {
+            List<Role> roles = roleRepository.findAll();
+            roles.remove(roleRepository.findByRoleName("Admin"));
+            roles.remove(roleRepository.findByRoleName("Customer"));
+            model.addAttribute("roles", roles);
+            model.addAttribute("success", false);
+            return "pages/admin/create_account";
+        }
+        user.setDob(dateOfBirth);
+        user.setActive(active);
         user.setRole(role);
-        user.setPassword(role.getRoleName() + "123!");
-        user.setActive(true);
+        user.setPassword(userService.generatePassword());
+        System.out.println(user.getPassword());
         userService.addUser(user);
-        return "pages/admin/create_account";
+        model.addAttribute("success", "Account created successfully.");
+        return "redirect:/admin/create-account?success=true";
     }
 
     @GetMapping ("/admin/view-account")
@@ -73,6 +110,7 @@ public class AdminController {
         List<User> users;
         if(roleId==0) {
             users = userRepository.findAllByEmail(email);
+            users.removeAll(userRepository.findAllByRole(roleRepository.findByRoleName("Admin")));
         } else {
             users = userRepository.findAllByEmailAndRoleId(email, roleId);
         }
@@ -89,5 +127,13 @@ public class AdminController {
         User user = userRepository.findById(id);
         model.addAttribute("user", user);
         return "pages/admin/view_detail";
+    }
+
+    @GetMapping("/admin/activate")
+    public String activate(Model model, @RequestParam(name="id") long id ) {
+        User user = userRepository.findById(id);
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+        return "redirect:/admin/view-account";
     }
 }

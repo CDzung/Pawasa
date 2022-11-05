@@ -218,6 +218,7 @@ main {
 }
 
 .card-header {
+    color: #ccc;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -470,4 +471,8 @@ tr td:last-child {
     .cards {
         grid-template-columns: 100%;
     }
+}
+
+h2 {
+    color: var(--main-color) !important;
 }

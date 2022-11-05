@@ -20,7 +20,7 @@
     <div class="sidebar-menu">
         <ul>
             <li>
-                <a href="/admin/dashboard"><span class="las la-igloo"></span>
+                <a href="/admin"><span class="las la-igloo"></span>
                     <span>Dashboard</span></a>
             </li>
             <li>
@@ -50,7 +50,7 @@
 
 
         <div class="user-wrapper">
-            <img src="/image/ico_account_gray.png" width="40px" height="40px" alt="">
+            <img src="/image/ico_account_gray.png" width="24px" height="24px" alt="">
             <div>
                 <h4 th:text="${authen_user.firstName + ' ' + authen_user.lastName}">Dung Cao Quoc</h4>
                 <small th:text="${authen_user.role.roleName}"></small>
@@ -63,9 +63,6 @@
                 <div class="form first">
                     <div class="details personal">
                         <div class="container-header">
-                            <div>
-                                <span class="title">View Account</span>
-                            </div>
                             <form id="frm" action="/admin/view-account" method="get">
                                 <div class="search-wrapper">
                                     <span class="las la-search"></span>
@@ -73,7 +70,7 @@
                                 </div>
                                 <div class="dropdown-role" style="float: right">
                                     <select name="role-id" class="dropdown-box" onchange="changeRole()">
-                                        <option class="option" value="0">---All---</option>
+                                        <option class="option" value="0">All</option>
                                         <option th:each="role: ${roles}" th:if="${id == role.id}" selected th:text="${role.roleName}" class="option" th:value="${role.id}"></option>
                                         <option th:each="role: ${roles}" th:if="${!(id == role.id)}"  th:text="${role.roleName}" class="option" th:value="${role.id}"></option>
 
@@ -86,12 +83,12 @@
                         <table width="100%">
                             <thead>
                             <tr>
-                                <th>AccoundID</th>
+                                <th>UserID</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
-                                <th>Contact</th>
-                                <th>Active Status</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -100,8 +97,12 @@
                                 <td th:text="${item.firstName + ' ' + item.lastName}"></td>
                                 <td th:text="${item.email}"></td>
                                 <td th:text="${item.role.roleName}"></td>
-                                <td th:text="${item.phoneNumber}"></td>
-                                <td th:text="${item.active}"></td>
+                                <td th:text="${item.active ? 'Active' : 'Inactive'}"></td>
+                                <td>
+                                    <a th:href="@{/admin/view-detail(id=${item.id})}" class="btn btn-primary">View</a>
+                                    <a th:href="@{/admin/activate(id=${item.id})}" th:if="${item.active}" class="btn btn-success">Deactivate</a>
+                                    <a th:href="@{/admin/activate(id=${item.id})}" th:if="${!item.active}" class="btn btn-success">Activate</a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
