@@ -4,6 +4,7 @@ import com.pawasa.model.Role;
 import com.pawasa.model.User;
 import com.pawasa.repository.RoleRepository;
 import com.pawasa.repository.UserRepository;
+import com.pawasa.service.DefaultEmailService;
 import com.pawasa.service.DefaultUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Controller
 @Transactional
 public class AdminController {
 
+    @Autowired
+    private DefaultEmailService emailService;
     @Autowired
     private UserRepository userRepository;
 
@@ -97,9 +101,46 @@ public class AdminController {
         user.setDob(dateOfBirth);
         user.setActive(active);
         user.setRole(role);
-        user.setPassword(userService.generatePassword());
+        String password = userService.generatePassword();
+        user.setPassword(password);
         System.out.println(user.getPassword());
-        userService.addUser(user);
+        try{
+            userService.addUser(user);
+        } catch (Exception e) {
+            List<Role> roles = roleRepository.findAll();
+            roles.remove(roleRepository.findByRoleName("Admin"));
+            roles.remove(roleRepository.findByRoleName("Customer"));
+//            result.rejectValue("email", "email", "Email đã tồn tại");
+            model.addAttribute("roles", roles);
+            return "pages/admin/create_account";
+        }
+        //send password to mail
+        try {
+            String message = "<div style=\"font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2\">\n" +
+                    "  <div style=\"margin:50px auto;width:70%;padding:20px 0\">\n" +
+                    "    <div style=\"border-bottom:1px solid #eee\">\n" +
+                    "      <a href=\"\" style=\"font-size:1.4em;color: #C92127;text-decoration:none;font-weight:600\">Pawasa</a>\n" +
+                    "    </div>\n" +
+                    "    <p style=\"font-size:1.1em\">Hi,</p>\n" +
+                    "    <p>Hi s. Use the following password to login into the system.</p>\n" +
+                    "    <h2 style=\"background: #C92127;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;\">" +
+                    password +
+                    "</h2>\n" +
+                    "    <p style=\"font-size:0.9em;\">Regards,<br />Pawasa</p>\n" +
+                    "    <hr style=\"border:none;border-top:1px solid #eee\" />\n" +
+                    "    <div style=\"float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300\">\n" +
+                    "      <p>Pawasa Inc</p>\n" +
+                    "      <p>1600 Amphitheatre Parkway</p>\n" +
+                    "      <p>California</p>\n" +
+                    "    </div>\n" +
+                    "  </div>\n" +
+                    "</div>";
+
+            emailService.sendEmail(user.getEmail(), "Pawasa - Password", message);
+        } catch (Exception e) {
+
+        }
+
         model.addAttribute("success", "Account created successfully.");
         return "redirect:/admin/create-account?success=true";
     }
