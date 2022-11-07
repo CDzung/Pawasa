@@ -53,7 +53,7 @@ public class ManagerController {
             cal.setTime(i.getOrderDate());
             if (cal.get(Calendar.YEAR) == 2022) {
                 int month = cal.get(Calendar.MONTH) + 1;
-                if (numProductperMonth.containsKey(month)) {
+                if (!numProductperMonth.containsKey(month)) {
                     numProductperMonth.put(month, i.getTotalPrice());
                 } else {
                     numProductperMonth.put(month, BigDecimal.valueOf(numProductperMonth.get(month).doubleValue() + i.getTotalPrice().doubleValue()));

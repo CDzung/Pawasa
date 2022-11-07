@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -32,7 +33,8 @@
                                         <li class="popup-login-tab-item popup-login-tab-register"><a th:href="@{/signup}">Đăng ký</a><hr></li>
                                     </ul>
                                     <div th:if="${form.contains('forgot')}" class="popup-change-title popup-login-title" style="">
-                                        Khôi phục mật khẩu	    </div>
+                                        Khôi phục mật khẩu
+                                    </div>
                                 </div>
                                 <div th:if="${form.equals('signup')}">
                                     <div class="popup-register-content" style="display: block;">

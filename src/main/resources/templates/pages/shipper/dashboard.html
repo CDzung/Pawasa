@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Shipper Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/shipper/style.css}"/>
+    <!-- Favicon -->
+    <link href="img/icons8-admin-settings-male-16.png" rel="icon"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="navbar-top">
+            <div class="profile">
+                <div class="info">
+                    <h2>Welcome back, </h2>
+                    <p class="text-muted"
+                       th:text="${authen_user.firstName + ' ' + (authen_user.lastName == null ? '' : authen_user.lastName)}"></p>
+                </div>
+            </div>
+            <div class="btn-close">
+                <span class="material-symbols-outlined"> close </span>
+            </div>
+        </div>
+
+        <div class="navbar-content">
+            <a th:href="@{/shipper}" class="active">
+                <span class="material-symbols-outlined"> grid_view </span>
+                <h3>Dashboard</h3>
+            </a>
+            <a th:href="@{/shipper/history}">
+                <span class="material-symbols-outlined"> grid_view </span>
+                <h3>History</h3>
+            </a>
+            <a href="/perform_logout" class="logout">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+    <main>
+        <h1 style="margin-bottom: 2rem">Shipper Dashboard</h1>
+
+        <h2>General Information</h2>
+        <div class="insights">
+            <div class="insight sales">
+                                        <span class="material-symbols-outlined">
+                                            analytics
+                                        </span>
+                <div class="insight-content">
+                    <div class="insight-figure">
+                        <h3>Total Money Gained</h3>
+                        <p th:text="${sum}"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight products">
+                                        <span class="material-symbols-outlined">
+                                            inventory
+                                        </span>
+                <div class="insight-content">
+                    <div class="insight-figure">
+                        <h3>Total Shipped Orders</h3>
+                        <p th:text="${count}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- USER TABLE -->
+        <div class="recent-orders">
+            <h2>Manage Orders</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer Name</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th colspan="2">Action</th>
+                </tr>
+                </thead>
+                <tbody th:each="i : ${order_set}">
+                <tr>
+                    <td th:text="${i.orderId}"></td>
+                    <td th:text="${i.name}"></td>
+                    <td th:text="${i.phoneNumber}"></td>
+                    <td th:text="${i.address}"></td>
+                    <td th:text="${i.orderDate}">
+                    </td>
+                    <td class="status" th:text="${i.orderStatuses.size() == 2 ? 'Waitting' : 'Processing'}"></td>
+                    <td><a th:href="@{/shipper/detail(id=${i.orderId})}" class="success">See
+                        details</a></td>
+                    <td>
+                        <button type="button"
+                                th:onclick="'javascript:receiveOrder(\'' + ${i.orderId} +'\',\''+ ${i.orderStatuses.size()} + '\');'"
+                                class="success" th:value="${i.orderStatuses.size() == 2 ? 'Take' : 'Confirm'}"></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    const statuses = document.querySelectorAll('.status')
+    statuses.forEach(status => {
+        if (status.innerText === 'Completed') {
+            status.style.color = '#41f1b6'
+        } else if (status.innerText === 'Waiting') {
+            status.style.color = '#eaa636'
+        } else {
+            status.style.color = '#fc515f'
+        }
+    });
+
+    function receiveOrder(j, k) {
+        if (k === 1) {
+            var i = confirm('Do you want to receive Order?');
+            if (i === true) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/shipper/receiveOrder',
+                    data: 'id=' + j,
+                    success: function () {
+                        location.reload();
+                    }
+                })
+            }
+        } else {
+            var a = confirm("Shipped Successful??");
+            var k = 'Giao hàng thất bại';
+            if (a === true) {
+                k = 'Giao hàng thành công';
+            }
+            $.ajax({
+                type: 'GET',
+                url: '/shipper/completeOrder',
+                data: {
+                    id: j,
+                    message: k,
+                },
+                success: function () {
+                    location.reload();
+                }
+            })
+        }
+    }
+</script>
+</body>
+</html>
