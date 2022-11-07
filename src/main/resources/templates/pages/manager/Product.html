@@ -10,6 +10,54 @@
     <link rel="stylesheet"
           href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/manager.css}">
+    <style>
+        .paginaging {
+            padding: 0;
+            display: inline-block;
+            border: none;
+            border-radius: 5px;
+            line-height: 40px;
+            color: black;
+            cursor: pointer;
+            user-select: none;
+            height: 40px;
+            width: 40px;
+        }
+
+        .paginaging-add {
+            background: #C92127;
+        }
+
+        .paginaging:hover {
+            background-color: #ee9e3c;
+        }
+
+        .disHover {
+            pointer-events: none;
+        }
+
+        .active2 {
+            background-color: #c92127;
+            color: white;
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        .text-red {
+            color: #c92127;
+        }
+
+        .a-format-to-button {
+            background: #C92127;
+            padding: 12px;
+            color: white;
+            border-radius: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+    </style>
     <script th:src="@{/JS/main.js}"></script>
 </head>
 <body>
@@ -30,19 +78,22 @@
             </div>
         </form>
         <div class="user-wrapper">
+            <img src="/image/ico_account_gray.png" width="40px" height="40px" alt="">
             <div>
-                <h4 th:text="${#authentication.getName().split('@')[0]}"></h4>
+                <h4 th:text="${authen_user.firstName + ' ' + authen_user.lastName}">Dung Cao Quoc</h4>
+                <small th:text="${authen_user.role.roleName}"></small>
             </div>
         </div>
     </header>
     <main>
         <div>
-            <button type="button"><a th:href="@{/manager/product/Add}">Add New Product</a></button>
-            <form th:action="@{/manager/product}" style="padding: 20px" method="get">
+            <button type="button" style="border: none"><a class="a-format-to-button" th:href="@{/manager/product/Add}">Add
+                New Product</a></button>
+            <form th:action="@{/manager/product}" style="padding: 20px; display: flex; justify-content: right;" method="get">
                 <div>
                     <span style="color: black">Sort by</span>
-                    <select name="sort" onchange="this.form.submit()">
-                        <option value="1" th:selected="${sort == 1}? 'selected'">Name Ascending</option>
+                    <select name="sort" onchange="this.form.submit()" style="padding: 8px; border-radius: 8px;">
+                        <option style="padding: 4px" value="1" th:selected="${sort == 1}? 'selected'">Name Ascending</option>
                         <option value="2" th:selected="${sort == 2}? 'selected'">Name Descending</option>
                         <option value="3" th:selected="${sort == 3}? 'selected'">Price Ascending</option>
                         <option value="4" th:selected="${sort == 4}? 'selected'">Price Descending</option>
@@ -53,29 +104,40 @@
         <div th:if="${!list.isEmpty()}">
             <table>
                 <thead>
-                <tr style="color: green">
+                <tr class="text-red">
                     <th>STT</th>
                     <th>Product Name</th>
-                    <th colspan="2"></th>
+                    <th colspan="2">Action</th>
                 </tr>
                 </thead>
                 <tbody th:each="i : ${list}">
                 <tr>
-                    <td th:text="${iStat.index + 1 + 12 * (current_index - 1)}"></td>
+                    <td style="font-weight: bold;" th:text="${iStat.index + 1 + 12 * (current_index - 1)}"></td>
                     <td>
                         <div th:text="${i.productName}"></div>
                     </td>
-                    <td><a th:href="@{'/manager/product/Edit?id=' + ${i.id}}">Edit</a></td>
-                    <td><a th:href="@{'/manager/product/Delete?id=' + ${i.id}}">Delete</a></td>
+                    <td style="text-align: center;"><a class="a-format-to-button" th:href="@{'/manager/product/Edit?id=' + ${i.id}}">Edit</a></td>
+                    <td style="text-align: center;"><a class="a-format-to-button" th:href="@{'/manager/product/Delete?id=' + ${i.id}}">Delete</a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
             <div style="text-align: center;margin-top: 20px">
-                <button th:each="i : ${#numbers.sequence(1,index)}">
-                    <span><a class="paging-index" th:href="@{/manager/product/(pageIndex = ${i},sort=${sort != null}?${sort},
+                <ul>
+                    <li th:each="i : ${#numbers.sequence(1,index)}"
+                        class="paginaging"
+                        th:classappend="${i==current_index}?'paginaging-add'">
+                        <a th:href="@{/manager/product/(pageIndex = ${i},sort=${sort != null}?${sort},
                     search = ${search != null}?${search})}"
-                             th:style="${i == current_index}?'color : red'" th:text="${i}"></a></span>
-                </button>
+                           th:text="${i}"
+                           th:style="${i==current_index}?'color:white;padding: 8px;':'padding: 8px;'"></a>
+                    </li>
+                </ul>
+                <!--                <button th:each="i : ${#numbers.sequence(1,index)}">-->
+                <!--                    <span><a class="paging-index" th:href="@{/manager/product/(pageIndex = ${i},sort=${sort != null}?${sort},-->
+                <!--                    search = ${search != null}?${search})}"-->
+                <!--                             th:style="${i == current_index}?'color : red'" th:text="${i}"></a></span>-->
+                <!--                </button>-->
             </div>
 
         </div>
