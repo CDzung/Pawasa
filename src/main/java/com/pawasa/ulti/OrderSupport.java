@@ -15,7 +15,7 @@ public class OrderSupport {
             for (Order i : all) {
                 if (i.getOrderStatuses().size() == 1) {
                     for (OrderStatus o : i.getOrderStatuses()) {
-                        if (o.getOrderStatus().equals("Chờ xác nhận")) {
+                        if (o.getOrderStatus().trim().contains("Chờ xác nhận")) {
                             list_order.add(i);
                         }
                     }
@@ -23,9 +23,9 @@ public class OrderSupport {
             }
         } else if (status.equals("processing")) {
             for (Order i : all) {
-                if (i.getOrderStatuses().size() == 2) {
+                if (i.getOrderStatuses().size() == 3) {
                     for (OrderStatus o : i.getOrderStatuses()) {
-                        if (o.getOrderStatus().equals("Đang giao")) {
+                        if (o.getOrderStatus().equalsIgnoreCase("Đang giao hàng")) {
                             list_order.add(i);
                         }
                     }
@@ -33,9 +33,9 @@ public class OrderSupport {
             }
         } else if (status.equals("complete")) {
             for (Order i : all) {
-                if (i.getOrderStatuses().size() == 3) {
+                if (i.getOrderStatuses().size() == 4) {
                     for (OrderStatus o : i.getOrderStatuses()) {
-                        if (o.getOrderStatus().equals("Đã giao hàng")) {
+                        if (o.getOrderStatus().equalsIgnoreCase("Thành công")) {
                             list_order.add(i);
                         }
                     }
@@ -43,9 +43,9 @@ public class OrderSupport {
             }
         } else {
             for (Order i : all) {
-                if (i.getOrderStatuses().size() == 3) {
+                if (i.getOrderStatuses().size() == 2) {
                     for (OrderStatus o : i.getOrderStatuses()) {
-                        if (o.getOrderStatus().equals("Đã hủy")) {
+                        if (o.getOrderStatus().equalsIgnoreCase("Đã hủy")) {
                             list_order.add(i);
                         }
                     }

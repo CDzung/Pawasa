@@ -37,8 +37,7 @@ public class ShipperController {
             if ((i.getOrderStatuses().size() == 2) ||
                     (i.getOrderStatuses().size() == 3 && i.getShipper().equals(u))) {
                 for (OrderStatus j : i.getOrderStatuses()) {
-                    System.out.println(j.getOrderStatus());
-                    if (j.getOrderStatus().trim().equalsIgnoreCase("Đã xác nhận")) {
+                    if (j.getOrderStatus().trim().contains("Đã xác nhận")) {
                         list.add(i);
                     }
                 }

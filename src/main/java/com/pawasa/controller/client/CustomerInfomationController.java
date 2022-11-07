@@ -1,9 +1,6 @@
 package com.pawasa.controller.client;
 
-import com.pawasa.model.Notification;
-import com.pawasa.model.Order;
-import com.pawasa.model.OrderStatus;
-import com.pawasa.model.User;
+import com.pawasa.model.*;
 import com.pawasa.repository.*;
 import com.pawasa.service.EmailService;
 import com.pawasa.service.UserService;
@@ -47,7 +44,7 @@ public class CustomerInfomationController {
     private OrderStatusRepository orderStatusRepository;
 
     @GetMapping("/user/account/profile")
-    public String showProfile(Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String showProfile(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User user = userRepository.findByEmail(email);
@@ -75,19 +72,16 @@ public class CustomerInfomationController {
             @RequestParam(name = "change_password") Optional<String> check
             , HttpServletRequest request, HttpServletResponse response, Model model) {
         User user = userRepository.findById(id).get();
-        user.setFirstName(firstname);
-        user.setLastName(lastname);
-        user.setPhoneNumber(phone);
-        user.setEmail(email);
         String date_String = year + "-" + day + "-" + month;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
         try{
+            formatter.setLenient(false);
             Date date = formatter.parse(date_String);
             user.setDob(date);
         }
         catch (ParseException e) {
             model.addAttribute("error", "date wrong!");
-            return "pages/client/Profile";
+            return showProfile(model);
         }
         if(check.isPresent()){
             if (oldPass != null && BCrypt.checkpw(oldPass, user.getPassword())) {
@@ -95,11 +89,11 @@ public class CustomerInfomationController {
                     user.setPassword(BCrypt.hashpw(newPass, BCrypt.gensalt()));
                 } else {
                     model.addAttribute("error", "Password and Re-Password not match");
-                    return "pages/client/Profile";
+                    return showProfile(model);
                 }
             } else {
                 model.addAttribute("error", "Old Password is wrong!");
-                return "pages/client/Profile";
+                return showProfile(model);
             }
         }
         user.setRole(roleRepository.findByRoleName("Customer"));
@@ -108,19 +102,13 @@ public class CustomerInfomationController {
         } catch (Exception ex) {
 
         }
-        if (user.getDob() != null) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(user.getDob());
-            int day_1 = cal.get(Calendar.DAY_OF_MONTH);
-            int month_1 = cal.get(Calendar.MONTH);
-            int year_1 = cal.get(Calendar.YEAR);
-            model.addAttribute("day", day_1);
-            model.addAttribute("month", month_1 + 1);
-            model.addAttribute("year", year_1);
-        }
-        model.addAttribute("user", user);
+        user.setFirstName(firstname);
+        user.setLastName(lastname);
+        user.setPhoneNumber(phone);
+        user.setEmail(email);
+        user.setGender(gender.equalsIgnoreCase("female"));
         model.addAttribute("report", "Save successful!!");
-        return "pages/client/Profile";
+        return showProfile(model);
     }
 
     @GetMapping("/user/account/history")
@@ -208,8 +196,24 @@ public class CustomerInfomationController {
         Collections.sort(orderStatus,(o1, o2) -> {
             return (int)(o1.getId() - o2.getId());
         });
+        double sum = 0;
+        for(OrderDetail i : order.getOrderDetails()){
+            sum += i.getQuantity() * Math.floor(i.getPrice().doubleValue() * (100 - i.getDiscount()) / 100000) * 1000;
+        }
+        model.addAttribute("sum",Math.floor(sum/1000));
         model.addAttribute("last_status", orderStatus);
         model.addAttribute("order", order);
         return "pages/client/OrderDetail";
+    }
+
+    @GetMapping("/user/cancelOrder")
+    public void cancelOrder(@RequestParam(name = "id") Optional<Long> Order_id){
+        Long id = Order_id.get();
+        Order order = orderRepository.findById(id).get();
+        OrderStatus orderStatus = new OrderStatus();
+        orderStatus.setOrder(order);
+        orderStatus.setOrderStatus("Đã hủy");
+        orderStatus.setStatusDate(new Date());
+        orderStatusRepository.save(orderStatus);
     }
 }

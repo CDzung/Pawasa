@@ -89,7 +89,7 @@
                                     <div>
                                         <div class="order-view-status"
                                              style="background:#F3B4AF;color:#A90000;border-color:#F3B4AF;"
-                                             th:text="${last_status.get(0).orderStatus}">
+                                             th:text="${last_status.get(last_status.size() - 1).orderStatus}">
                                         </div>
                                         <div class="order-view-id"><span>Mã đơn hàng: </span><span
                                                 th:text="${order.orderId}"></span>
@@ -106,8 +106,8 @@
                                             <a th:href="@{/user/cart}"
                                                class="link-reorder order-view-buy-again-btn">Đặt hàng lại</a>
                                             <th:block th:each="o : ${order.orderStatuses}">
-                                                <a th:if="${o.orderStatus.trim().equals('Chờ xác nhận')}"
-                                                   th:onclick="|cancelOrder('${o.id}')|"
+                                                <a th:if="${o.orderStatus.trim().equals('Chờ xác nhận') && order.orderStatuses.size() == 1}"
+                                                   th:onclick="|cancelOrder('${order.orderId}')|"
                                                    class="order-view-review-btn" style="cursor: pointer">Cancel</a>
                                             </th:block>
                                         </div>
@@ -124,14 +124,14 @@
                                             <div class="order-box-info">
                                                 <address>
                                                     <th:block
-                                                            th:text="${order.user.firstName} + ' ' + ${order.user.lastName}">
+                                                            th:text="${order.name}">
                                                     </th:block>
                                                     <br>
                                                     <th:block
                                                             th:text="${order.address}">
                                                     </th:block>
                                                     <br>
-                                                    <th:block th:text="'Tel ' + ${order.user.phoneNumber}"></th:block>
+                                                    <th:block th:text="'Tel ' + ${order.phoneNumber}"></th:block>
                                                 </address>
                                             </div>
                                         </div>
@@ -208,7 +208,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="order-view-status-new-order" th:if="${last_status.get(last_status.size() - 1).orderStatus.equals('Đơn hàng bị hủy')}">
+                                        <div class="order-view-status-new-order" th:if="${last_status.get(last_status.size() - 1).orderStatus.equals('Đã hủy') || last_status.get(last_status.size() - 1).orderStatus.equals('Chờ xác nhận') }">
                                             <div class="order-view-icon-container">
                                                 <div style="height: 60px;width: 60px;align-self: center;">
                                                     <div class="order-view-icon-img"
@@ -258,7 +258,7 @@
                                                     <div><span>Đơn hàng:</span><span>103012956</span></div>
                                                     <div class="subOder-progress-bar"
                                                          style="background:#F3B4AF;color:#A90000;border-color:#F3B4AF;"
-                                                         th:text="${last_status.get(0).orderStatus}">
+                                                         th:text="${last_status.get(last_status.size() - 1).orderStatus}">
                                                     </div>
                                                     <div><span>Tổng tiền:</span><span><span
                                                             class="price"
@@ -344,12 +344,12 @@
                                                 <div>
 
                                                     <p class="order-totals-price"><span class="price"
-                                                                                        th:text="${#numbers.formatDecimal(order.totalPrice * 90 / 100,0,'COMMA',0,'POINT')}"></span>&nbsp;<span
+                                                                                        th:text="${#numbers.formatDecimal(sum * 1000 ,0,'COMMA',0,'POINT')}"></span>&nbsp;<span
                                                             class="sym-totals">đ</span></p>
 
 
                                                     <p class="order-totals-price"><span class="price"
-                                                                                        th:text="${#numbers.formatDecimal(order.totalPrice * 10 / 100,0,'COMMA',0,'POINT')}"></span>&nbsp;<span
+                                                                                        th:text="${#numbers.formatDecimal(30000,0,'COMMA',0,'POINT')}"></span>&nbsp;<span
                                                             class="sym-totals">đ</span></p>
 
                                                     <p class="order-totals-price"><span class="price"

@@ -126,6 +126,13 @@
                                             </ul>
                                         </li>
                                     </ul>
+                                    <ul class="messages" th:if="${error != null}">
+                                        <li class="success-msg">
+                                            <ul>
+                                                <li><span th:text="${error}"></span></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                     <form th:action="@{/user/account/profile}" method="post"
                                           id="form-account-info" autocomplete="off">
                                         <div>
@@ -191,14 +198,18 @@
                                                         <div>
                                                             <label class="fhs-radio" style="margin-top: 2px;">Nam <input
                                                                     type="radio" class="gender-radio"
-                                                                    name="gender-radio" th:checked="${user?.gender == true?'checked':''}"
+                                                                    name="gender-radio"
+                                                                    th:checked="${user?.gender == true?'checked':''}"
+                                                                    value="male"
                                                             >
                                                             </label>
                                                         </div>
                                                         <div>
                                                             <label class="fhs-radio" style="margin-top: 2px;">Nữ <input
                                                                     type="radio" class="gender-radio"
-                                                                    name="gender-radio" th:checked="${user?.gender == false?'checked':''}">
+                                                                    name="gender-radio"
+                                                                    th:checked="${user?.gender == false?'checked':''}"
+                                                                    value="female">
                                                             </label>
                                                         </div>
                                                         <div style="width: 42px;"></div>
@@ -216,24 +227,24 @@
                                                     <div class="fhs-input-group customer-dob">
                                                         <div class="account-input-bod">
                                                             <input id="day"
-                                                                    class="fhs_input_date_group_day account-input-birthday"
-                                                                    name="day" type="text" style="text-align: center;"
-                                                                    maxlength="2" placeholder="DD"
-                                                                    th:value="${day}" required>
+                                                                   class="fhs_input_date_group_day account-input-birthday"
+                                                                   name="day" type="text" style="text-align: center;"
+                                                                   maxlength="2" placeholder="DD"
+                                                                   th:value="${day}" required>
                                                         </div>
                                                         <div class="account-input-bod">
                                                             <input id="month"
-                                                                    class="fhs_input_date_group_month account-input-birthday"
-                                                                    name="month" type="text" style="text-align: center;"
-                                                                    maxlength="2" placeholder="MM"
-                                                                    th:value="${month}" required>
+                                                                   class="fhs_input_date_group_month account-input-birthday"
+                                                                   name="month" type="text" style="text-align: center;"
+                                                                   maxlength="2" placeholder="MM"
+                                                                   th:value="${month}" required>
                                                         </div>
                                                         <div class="account-input-bod">
                                                             <input id="year"
-                                                                    class="fhs_input_date_group_year account-input-birthday"
-                                                                    name="year" type="text" style="text-align: center;"
-                                                                    maxlength="4" placeholder="YYYY"
-                                                                    th:value="${year}" required>
+                                                                   class="fhs_input_date_group_year account-input-birthday"
+                                                                   name="year" type="text" style="text-align: center;"
+                                                                   maxlength="4" placeholder="YYYY"
+                                                                   th:value="${year}" required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -293,17 +304,11 @@
                                                     </div>
                                                     <div class="fhs-input-alert"></div>
                                                 </div>
-                                                <ul class="messages" th:if="${error != null}">
-                                                    <li class="success-msg">
-                                                        <ul>
-                                                            <li><span th:text="${error}"></span></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
                                             </div>
                                         </div>
                                         <div style="text-align: center;padding: 20px 0 10px 0;">
-                                            <button type="button" title="Lưu thay đổi" id="btn-save-account-info" onclick="this.form.submit()"
+                                            <button type="button" title="Lưu thay đổi" id="btn-save-account-info"
+                                                    onclick="this.form.submit()"
                                                     class="btn-save-confirm"><span><span>Lưu thay đổi</span></span>
                                             </button>
                                         </div>
