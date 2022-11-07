@@ -2,7 +2,6 @@ package com.pawasa.repository;
 
 import com.pawasa.model.Category;
 import com.pawasa.model.Product;
-import org.springframework.data.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long>,
-        JpaSpecificationExecutor<Product> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     Product findByProductName(String productName);
 
     Page<Product> findByProductNameLike(String productName,PageRequest pageRequest);
+
 
     @Query(value = "Select * from product order by product_id desc limit 10", nativeQuery = true)
     Set<Product> findTopNewProduct();
@@ -60,5 +58,4 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
     List<Product> findAllByAuthor(String author);
 
     List<Product> findAllByCategory(Category category);
-
 }

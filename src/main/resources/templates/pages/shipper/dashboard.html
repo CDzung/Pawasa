@@ -94,13 +94,13 @@
                     <td th:text="${i.address}"></td>
                     <td th:text="${i.orderDate}">
                     </td>
-                    <td class="status" th:text="${i.orderStatuses.size() == 1 ? 'Waitting' : 'Processing'}"></td>
+                    <td class="status" th:text="${i.orderStatuses.size() == 2 ? 'Waitting' : 'Processing'}"></td>
                     <td><a th:href="@{/shipper/detail(id=${i.orderId})}" class="success">See
                         details</a></td>
                     <td>
                         <button type="button"
                                 th:onclick="'javascript:receiveOrder(\'' + ${i.orderId} +'\',\''+ ${i.orderStatuses.size()} + '\');'"
-                                class="success" th:value="${i.orderStatuses.size() == 1 ? 'Take' : 'Confirm'}"></button>
+                                class="success" th:value="${i.orderStatuses.size() == 2 ? 'Take' : 'Confirm'}"></button>
                     </td>
                 </tr>
                 </tbody>

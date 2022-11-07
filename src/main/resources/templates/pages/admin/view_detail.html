@@ -9,6 +9,7 @@
     <link rel="stylesheet"
           href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/admin/view_detail.css}">
+    <link rel="icon" href="/image/p.png" type="image/x-icon">
 </head>
 <body>
 <input type="checkbox" id="nav-toggle">
@@ -20,19 +21,19 @@
     <div class="sidebar-menu">
         <ul>
             <li>
-                <a href=""><span class="las la-igloo"></span>
+                <a href="/admin"><span class="las la-igloo"></span>
                     <span>Dashboard</span></a>
             </li>
             <li>
-                <a href=""><span class="las la-users"></span>
+                <a href="/admin/create-account"><span class="las la-users"></span>
                     <span>Create Account</span></a>
             </li>
             <li>
-                <a href=""><span class="las la-user-circle"></span>
+                <a href="/admin/view-account"><span class="las la-user-circle"></span>
                     <span>View Accounts</span></a>
             </li>
             <li>
-                <a href=""><span class="las la-sign-out-alt"></span>
+                <a href="/perform_logout"><span class="las la-sign-out-alt"></span>
                     <span>Sign Out</span></a>
             </li>
         </ul>
@@ -50,10 +51,10 @@
 
 
         <div class="user-wrapper">
-            <img src="/Page/img/pexels-errin-casano-2356071.jpg" width="40px" height="40px" alt="">
+            <img src="/image/ico_account_gray.png" width="24px" height="24px" alt="">
             <div>
-                <h4></h4>
-                <small th:text=""></small>
+                <h4 th:text="${authen_user.firstName + ' ' + authen_user.lastName}">Dung Cao Quoc</h4>
+                <small th:text="${authen_user.role.roleName}"></small>
             </div>
         </div>
     </header>
@@ -61,15 +62,18 @@
     <main>
         <div class="container">
             <div class="details personal">
-                <div class="account-image">
-                    <img width="150px" height="150px" src="Page/img/pexels-errin-casano-2356071.jpg">
-                </div>
-
+<!--                <div class="account-image">-->
+<!--                    <img width="150px" height="150px" src="Page/img/pexels-errin-casano-2356071.jpg">-->
+<!--                </div>-->
+                <h2 style="text-align: center;">User Profile</h2>
                 <div class="account-info">
                     <dl>
                         <div class="info-row">
                             <dt>User ID</dt>
                             <dd th:text="${user.id}"></dd>
+                        </div><div class="info-row">
+                            <dt>User Role</dt>
+                            <dd th:text="${user.role.roleName}"></dd>
                         </div>
                         <div class="info-row">
                             <dt>First Name</dt>
@@ -91,15 +95,29 @@
                             <dt>Address</dt>
                             <dd th:text="${user.address}"></dd>
                         </div>
+                        <div class="info-row">
+                            <dt>Gender</dt>
+                            <dd th:text="${user.gender ? 'Male' : 'Female'}"></dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Date Of Birth</dt>
+                            <dd th:text="${user.dob}"></dd>
+                        </div>
+                        <div class="info-row">
+                            <dt>Status</dt>
+                            <dd th:text="${user.active ? 'Active' : 'Inactive'}"></dd>
+                        </div>
 
                     </dl>
                 </div>
 
                 <div class="btn-exit">
-                    <button class="nextBtn">
-                        <span class="btnText">Back</span>
-                        <i class="uil uil-navigator"></i>
-                    </button>
+                    <form action="/admin/view-account" method="get">
+                        <button type="submit" class="nextBtn">
+                            <span class="btnText">Back</span>
+                            <i class="uil uil-navigator"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

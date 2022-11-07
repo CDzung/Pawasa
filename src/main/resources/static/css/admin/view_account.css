@@ -249,10 +249,8 @@ main .container {
 }
 
 .list-accounts table {
-    width: 900px;
     border-collapse: collapse;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 th {
@@ -285,3 +283,31 @@ td {
     color: red;
 }
 
+main {
+    display: flex;
+    justify-content: center;
+}
+
+.details {
+    display: flex;
+    justify-content: space-around;
+}
+
+thead {
+    color: var(--main-color);
+}
+
+tbody {
+    color: #333;
+}
+
+td a {
+    padding: 4px 20px;
+    color: #fff;
+    background: var(--main-color);
+    border-radius: 4px;
+}
+
+h2 {
+    color: var(--main-color)!important;
+}

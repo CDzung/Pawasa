@@ -71,8 +71,12 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Cart cart;
 
+
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
+
+    @OneToMany(mappedBy = "shipper")
+    private Set<Order> shipperOrders;
 
     @OneToMany(mappedBy = "user")
     private Set<Notification> notifications;

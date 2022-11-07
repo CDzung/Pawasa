@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
@@ -9,6 +9,7 @@ DOCTYPE html>
     <link rel="stylesheet"
           href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" th:href="@{/css/admin/create_account.css}">
+    <link rel="icon" href="/image/p.png" type="image/x-icon">
 </head>
 <body>
 <input type="checkbox" id="nav-toggle">
@@ -20,7 +21,7 @@ DOCTYPE html>
     <div class="sidebar-menu">
         <ul>
             <li>
-                <a href="/admin/dashboard"><span class="las la-igloo"></span>
+                <a href="/admin"><span class="las la-igloo"></span>
                     <span>Dashboard</span></a>
             </li>
             <li>
@@ -50,10 +51,10 @@ DOCTYPE html>
 
 
         <div class="user-wrapper">
-            <img src="/Page/img/pexels-errin-casano-2356071.jpg" width="40px" height="40px" alt="">
+            <img src="/image/ico_account_gray.png" width="24px" height="24px" alt="">
             <div>
-                <!--        <h4>Dung Cao Quoc</h4>-->
-                <small th:text="${user.getRole().getRoleName()}"></small>
+                <h4 th:text="${authen_user.firstName + ' ' + authen_user.lastName}">Dung Cao Quoc</h4>
+                <small th:text="${authen_user.role.roleName}"></small>
             </div>
         </div>
     </header>
@@ -69,12 +70,17 @@ DOCTYPE html>
                             <div class="input-field">
                                 <label>First Name</label>
                                 <input th:field="*{firstName}" type="text" placeholder="Enter your first name" required>
-                                <div class="error-msg"></div>
+                                <div class="error-msg">
+                                    <p th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></p>
+
+                                </div>
                             </div>
                             <div class="input-field">
                                 <label>Last Name</label>
                                 <input th:field="*{lastName}" type="text" placeholder="Enter your last name" required>
-                                <div class="error-msg"></div>
+                                <div class="error-msg">
+                                    <p th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="input-field">
@@ -86,14 +92,27 @@ DOCTYPE html>
                             <div class="input-field">
                                 <label>Email</label>
                                 <input th:field="*{email}" type="email" placeholder="Enter your email" required>
-                                <div class="error-msg"></div>
+                                <div class="error-msg">
+                                    <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
+
+                                </div>
                             </div>
 
                             <div class="input-field">
                                 <label>Mobile Number</label>
-                                <input th:field="*{phoneNumber}" type="phone" placeholder="Enter mobile number"
+                                <input th:field="*{phoneNumber}" type="text" placeholder="Enter mobile number"
                                        required>
-                                <div class="error-msg"></div>
+                                <div class="error-msg">
+                                    <p th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></p>
+                                </div>
+                            </div>
+                            <div class="input-field">
+                                <label>Address</label>
+                                <input th:field="*{address}" type="text" placeholder="Enter address"
+                                       required>
+                                <div class="error-msg">
+                                    <p th:each="err : ${#fields.errors('address')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="input-field">
@@ -109,11 +128,12 @@ DOCTYPE html>
                             <div class="input-field">
                                 <label>Role</label>
                                 <select name="role_id" required>
-                                    <option disabled selected>Select Role</option>
+<!--                                    <option disabled selected>Select Role</option>-->
                                     <option th:each="role : ${roles}" th:value="${role.id}"
                                             th:text="${role.roleName}"></option>
                                 </select>
-                                <div class="error-msg"></div>
+                                <div class="error-msg">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -123,6 +143,7 @@ DOCTYPE html>
                             <span class="btnText">Submit</span>
                             <i class="uil uil-navigator"></i>
                         </button>
+                        <img th:if="${success}" src="/image/success.png">
                     </div>
                 </div>
             </form>

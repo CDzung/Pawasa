@@ -34,18 +34,18 @@ public class ShipperController {
         List<Order> set = orderRepository.findAll();
         List<Order> list = new ArrayList<>();
         for (Order i : set) {
-            if ((i.getOrderStatuses().size() == 1 && i.getUser() == null) ||
-                    (i.getOrderStatuses().size() == 2 && i.getShipper().equals(u))) {
+            if ((i.getOrderStatuses().size() == 2) ||
+                    (i.getOrderStatuses().size() == 3 && i.getShipper().equals(u))) {
                 for (OrderStatus j : i.getOrderStatuses()) {
-                    if (j.getOrderStatus().equals("Đã xác nhận")) {
+                    if (j.getOrderStatus().contains("Đã xác nhận")) {
                         list.add(i);
                     }
                 }
             }
         }
-        double sum = set.stream().filter(order -> order.getOrderStatuses().size() == 3 && order.getUser().equals(u))
+        double sum = set.stream().filter(order -> order.getOrderStatuses().size() == 4 && order.getUser().equals(u))
                 .map(order -> order.getTotalPrice().doubleValue()).reduce(0.0, (aDouble, aDouble2) -> aDouble + aDouble2);
-        double count = set.stream().filter(order -> order.getOrderStatuses().size() == 3 && order.getUser().equals(u)).count();
+        double count = set.stream().filter(order -> order.getOrderStatuses().size() == 4 && order.getUser().equals(u)).count();
         model.addAttribute("order_set", list);
         model.addAttribute("sum", sum);
         model.addAttribute("count", count);
@@ -60,7 +60,7 @@ public class ShipperController {
         Set<Order> set = orderRepository.findByShipper_Id(u.getId());
         List<Order> list = new ArrayList<>();
         for (Order i : set) {
-            if (i.getOrderStatuses().size() == 3) {
+            if (i.getOrderStatuses().size() == 4) {
                 list.add(i);
             }
         }
@@ -75,7 +75,7 @@ public class ShipperController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User u = userRepository.findByEmail(email);
-        order.setUser(u);
+        order.setShipper(u);
         orderRepository.save(order);
         OrderStatus orderStatus = new OrderStatus();
         orderStatus.setOrderStatus("Đơn hàng đang giao");

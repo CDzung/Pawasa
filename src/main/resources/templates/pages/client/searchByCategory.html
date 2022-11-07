@@ -237,46 +237,20 @@
                                 </div>
                             </th:block>
                         </div>
-                        <div th:if="${!products.hasContent()}">
-                            <h1 style="text-align: center">No Book Found</h1>
-                        </div>
                     </div>
-<!--                    <div class="pagination">-->
-<!--                        <th:block th:if="${category != null}">-->
-<!--                            <nav aria-label="Page navigation"-->
-<!--                                 th:if="${products.totalPages > 0}">-->
-<!--                                <ul class="pagination justify-content-center">-->
-<!--                                    <li th:class="${1 == products.number + 1} ? 'page-item active' : 'page-item'">-->
-<!--                                        <button class="paginaging">-->
-<!--                                            <i class="fa-solid fa-arrow-left"></i>-->
-<!--                                            <input class="send-page" type="text" name="page"-->
-<!--                                                   th:value="${products.number > 0?products.number:1}" hidden>-->
-<!--                                        </button>-->
-<!--                                    </li>-->
-
-<!--                                    <li class="page-item"-->
-<!--                                        th:each="pageNumber, iStat : ${pageNumbers}"-->
-<!--                                        th:if="${products.totalPages > 0}">-->
-<!--                                        <button class="paginaging"-->
-<!--                                                th:classappend="${pageNumber == products.number + 1 ? 'active2 disHover' : ''}">-->
-<!--                                            <span th:text="${pageNumber}"></span>-->
-<!--                                            <input class="send-page" type="text" name="page" th:value="${pageNumber}"-->
-<!--                                                   hidden>-->
-<!--                                        </button>-->
-<!--                                    </li>-->
-
-<!--                                    <li th:class="${products.totalPages == products.number + 1} ? 'page-item active' : 'page-item'">-->
-<!--                                        <button class="paginaging">-->
-<!--                                            <i class="fa-solid fa-arrow-right"></i>-->
-<!--                                            <input class="send-page" type="text" name="page"-->
-<!--                                                   th:value="${(products.number+1 >= products.totalPages)?products.totalPages:products.number+2}"-->
-<!--                                                   hidden>-->
-<!--                                        </button>-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </nav>-->
-<!--                        </th:block>-->
-<!--                    </div>-->
+                    <div style="text-align: center;font-size: 200%;margin-top: 4%" th:if="${products}">
+                        <ul>
+                            <li th:each="i : ${#numbers.sequence(1,endPage)}"
+                                class="paginaging"
+                                th:classappend="${i==cuPage}?'paginaging-add'">
+                                <a th:href="@{|${url}|(page=${i})}"
+                                   th:text="${i}" th:style="${i==cuPage}?'color:white'"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div th:if="${products.isEmpty()}">
+                        <h1 style="text-align: center">No Book Found</h1>
+                    </div>
                 </div>
             </div>
         </div>

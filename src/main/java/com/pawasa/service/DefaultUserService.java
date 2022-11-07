@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 @Service("userService")
 public class DefaultUserService implements UserService {
 
@@ -46,6 +48,25 @@ public class DefaultUserService implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public String generatePassword() {
+        String capitalCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String specialCharacters = "!@#$";
+        String numbers = "1234567890";
+        String combinedChars = capitalCaseLetters + lowerCaseLetters + specialCharacters + numbers;
+        Random random = new Random();
+        String password = "";
+        password += lowerCaseLetters.charAt(random.nextInt(lowerCaseLetters.length()));
+        password += capitalCaseLetters.charAt(random.nextInt(capitalCaseLetters.length()));
+        password += specialCharacters.charAt(random.nextInt(specialCharacters.length()));
+        password += numbers.charAt(random.nextInt(numbers.length()));
+        for(int i = 4; i< 10 ; i++) {
+            password += combinedChars.charAt(random.nextInt(combinedChars.length()));
+        }
+        return password;
+    }
+
     private void encodePassword(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
@@ -54,7 +75,5 @@ public class DefaultUserService implements UserService {
 
         return passwordEncoder.encode(password);
     }
-
-
 }
 
