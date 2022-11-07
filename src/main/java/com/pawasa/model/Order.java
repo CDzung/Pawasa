@@ -52,6 +52,10 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shipper_id", referencedColumnName = "user_id")
+    private User shipper;
+
     //equals method
     @Override
     public boolean equals(Object o) {

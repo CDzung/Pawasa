@@ -43,7 +43,7 @@ public class MyWebSecurityConfig {
 //                .hasAuthority("Seller")
                 .antMatchers("/manager/**")
                 .hasAuthority("Manager")
-                .antMatchers("/", "/product/**", "/loadProduct/**","/loadMenu/**", "/search/**", "/css/**", "/JS/**", "/image/**")
+                .antMatchers("/", "/product/**", "/loadProduct/**","/loadMenu/**", "/search/**", "/css/**", "/JS/**", "/image/**","/category")
                 .permitAll()
                 .antMatchers("/login*", "/signup/**", "/forgot-password/**", "/reset-password/**")
                 .permitAll()
