@@ -68,6 +68,8 @@ public class CustomerController {
 
     @Autowired
     private OrderStatusRepository orderStatusRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
     @GetMapping("/signup")
     public String register(Model model) {
         model.addAttribute("user", new User());
@@ -96,12 +98,15 @@ public class CustomerController {
         try {
             session.removeAttribute("register_user");
             //set role for user
+            user.setFirstName(user.getEmail().split("@")[0]);
+            user.setLastName("");
             user.setActive(true);
             user.setRole(roleRepository.findByRoleName("Customer"));
             //save cart
             Cart cart = new Cart();
             cart.setTotalPrice(BigDecimal.valueOf(0));
             user.setCart(cart);
+
             userService.addUser(user);
             cart.setUser(user);
             cartRepository.save(cart);
@@ -193,7 +198,7 @@ public class CustomerController {
         return "pages/client/login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login-failed")
     public String login(@Valid User user, BindingResult result, Model model) {
         if (result.hasFieldErrors("email") || result.hasFieldErrors("password")) {
             model.addAttribute("form", "login");
@@ -327,11 +332,11 @@ public class CustomerController {
     }
 
     @PostMapping("/user/cart/add")
-    public String addToCart(@RequestParam("id") String id, @RequestParam("quantity") String quantity, Principal principal, HttpServletRequest request) {
+    public String addToCart(@RequestParam(value = "type", defaultValue = "false") String type, @RequestParam("id") String id, @RequestParam("quantity") String quantity, Principal principal, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         try{
             User user = userRepository.findByEmail(principal.getName());
-            Product product = productRepository.findById(Integer.parseInt(id));
+            Product product = productRepository.findById(Long.parseLong(id));
             Cart cart = user.getCart();
             CartDetail cartDetail = cartDetailRepository.findByCartAndProduct(cart, product);
             int oldQuantity = 0;
@@ -363,6 +368,9 @@ public class CustomerController {
                     cart.setTotalPrice(BigDecimal.valueOf(cart.getTotalPrice().doubleValue() + (cartDetail.getQuantity() - oldQuantity) * product.getDiscountPrice()));
                     cartRepository.save(cart);
                 }
+            }
+            if(type.equals("true")) {
+                return "redirect:/user/cart";
             }
             return "redirect:"+ referer;
         } catch (Exception e) {
@@ -503,5 +511,34 @@ public class CustomerController {
 
 
         return "redirect:/";
+    }
+
+    @PostMapping("/user/rate")
+    public String rate(@RequestParam("rate_id") long id, @RequestParam("rate_star") int rate, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName());
+        Product product = productRepository.findById(id);
+        Review review = reviewRepository.findByUserAndProduct(user, product);
+        if(review == null) {
+            review = new Review();
+            review.setProduct(product);
+            review.setUser(user);
+            review.setRate(rate);
+            reviewRepository.save(review);
+            product.setRateCount(product.getRateCount() + 1);
+            product.setRateSum(product.getRateSum() + rate);
+        } else {
+            product.setRateSum(product.getRateSum() - review.getRate() + rate);
+            review.setRate(rate);
+            reviewRepository.save(review);
+        }
+        productRepository.save(product);
+        return "redirect:/product?id=" + id;
+    }
+
+    @GetMapping("/user/cancelOrder")
+    public void cancelOrder(@RequestParam("id") Optional<Long> id){
+        OrderStatus orderStatus = orderStatusRepository.findById(id.get()).get();
+        orderStatus.setOrderStatus("Đã hủy");
+        orderStatusRepository.save(orderStatus);
     }
 }

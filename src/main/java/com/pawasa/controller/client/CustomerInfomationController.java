@@ -7,6 +7,7 @@ import com.pawasa.model.User;
 import com.pawasa.repository.*;
 import com.pawasa.service.EmailService;
 import com.pawasa.service.UserService;
+import com.pawasa.ulti.OrderSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,7 +59,7 @@ public class CustomerInfomationController {
                 int month = cal.get(Calendar.MONTH);
                 int year = cal.get(Calendar.YEAR);
                 model.addAttribute("day", day);
-                model.addAttribute("month", month);
+                model.addAttribute("month", month + 1);
                 model.addAttribute("year", year);
             }
         }
@@ -81,16 +82,34 @@ public class CustomerInfomationController {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
         Date date = formatter.parse(date_String);
         user.setDob(date);
-        if (oldPass != null) {
+        if (oldPass != null && BCrypt.checkpw(oldPass, user.getPassword())) {
             if (newPass.equals(confirm)) {
                 user.setPassword(BCrypt.hashpw(newPass, BCrypt.gensalt()));
             } else {
                 model.addAttribute("error", "Password and Re-Password not match");
                 return "pages/client/Profile";
             }
+        } else {
+            model.addAttribute("error", "Old Password is wrong!");
+            return "pages/client/Profile";
         }
         user.setRole(roleRepository.findByRoleName("Customer"));
-        userService.addUser(user);
+        try {
+            userService.addUser(user);
+        } catch (Exception ex) {
+
+        }
+        if (user.getDob() != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(user.getDob());
+            int day_1 = cal.get(Calendar.DAY_OF_MONTH);
+            int month_1 = cal.get(Calendar.MONTH);
+            int year_1 = cal.get(Calendar.YEAR);
+            model.addAttribute("day", day_1);
+            model.addAttribute("month", month_1 + 1);
+            model.addAttribute("year", year_1);
+        }
+        model.addAttribute("user", user);
         model.addAttribute("report", "Save successful!!");
         return "pages/client/Profile";
     }
@@ -104,23 +123,13 @@ public class CustomerInfomationController {
         if (u == null) {
             return "redirect:/login";
         }
-        Set<Order> list_order;
-        int total = orderRepository.findByUser_Id(u.getId()).size();
-        int pending = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 1L).size();
-        int process = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 2L).size();
-        int complete = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 3L).size();
-        int cancel = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 4L).size();
-        if (status == null || status.equals("All")) {
-            list_order = orderRepository.findByUser_Id(u.getId());
-        } else if (status.equals("pending")) {
-            list_order = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 1L);
-        } else if (status.equals("processing")) {
-            list_order = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 2L);
-        } else if (status.equals("complete")) {
-            list_order = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 3L);
-        } else {
-            list_order = orderRepository.findByUser_IdAndOrderStatuses_Id(u.getId(), 4L);
-        }
+        Set<Order> all = orderRepository.findByUser_Id(u.getId());
+        Set<Order> list_order = OrderSupport.getOrderByStatus(all, status);
+        int total = OrderSupport.getOrderByStatus(all, "All").size();
+        int pending = OrderSupport.getOrderByStatus(all, "pending").size();
+        int process = OrderSupport.getOrderByStatus(all, "processing").size();
+        int complete = OrderSupport.getOrderByStatus(all, "complete").size();
+        int cancel = OrderSupport.getOrderByStatus(all, "cancel").size();
         model.addAttribute("list", list_order);
         model.addAttribute("total", total);
         model.addAttribute("pending", pending);

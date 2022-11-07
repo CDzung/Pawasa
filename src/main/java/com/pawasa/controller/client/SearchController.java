@@ -3,6 +3,7 @@ package com.pawasa.controller.client;
 import com.pawasa.model.Category;
 import com.pawasa.model.OrderDetail;
 import com.pawasa.model.Product;
+import com.pawasa.model.Product_;
 import com.pawasa.repository.CategoryRepository;
 import com.pawasa.repository.ProductRepository;
 import com.pawasa.service.ProductSpecification;
@@ -71,94 +72,90 @@ public class SearchController {
                                @RequestParam("book-layout") Optional<Integer[]> bookLayoutIDs,
                                @RequestParam("exists") Optional<Integer> quantity,
                                @RequestParam(value = "page") Optional<Integer> page,
-                               @RequestParam(value = "size") Optional<Integer> size) {
+                               @RequestParam(value = "size") Optional<Integer> size,
+                               @RequestParam(name = "Sortby") Optional<Integer> sort) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(12);
         int qty = quantity.orElse(1);
+        int srt = sort.orElse(1);
         boolean[] pricesArr = new boolean[6];
         boolean[] langsArr = new boolean[6];
         boolean[] bookLayoutsArr = new boolean[6];
         Arrays.fill(pricesArr, false);
         Arrays.fill(langsArr, false);
         Arrays.fill(bookLayoutsArr, false);
-
-        Page<Product> resultPage = null;
-        List<Product> products = new ArrayList<Product>();
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("productName"));
-
+        String url = "search?name=" + name + "&exists=" + qty + "&size=" + pageSize + "&Sortby=" + srt;
+        List<Product> products;
+        Specification<Product> spe = (root, query, criteriaBuilder) -> criteriaBuilder.isNotNull(root.get(Product_.PRODUCT_NAME));
+        spe = spe.and(ProductSpecification.qtyGreaterThan0(qty));
+        if (priceIDs.isPresent()) {
+            Specification<Product> priceSpe = Specification.where(ProductSpecification.priceInRange(priceIDs.get()[0]));
+            if (priceIDs.get().length > 1) {
+                for (int i = 1; i < priceIDs.get().length; i++) {
+                    priceSpe = priceSpe.or(ProductSpecification.priceInRange(priceIDs.get()[i]));
+                }
+            }
+            spe = spe.and(priceSpe);
+            for (int i = 0; i < priceIDs.get().length; i++) {
+                pricesArr[priceIDs.get()[i]] = true;
+                url += "&price=" + priceIDs.get()[i].toString();
+            }
+        }
+        if (languageIDs.isPresent()) {
+            Specification<Product> langSpe = Specification.where(ProductSpecification.hasLanguage(languageIDs.get()[0]));
+            if (languageIDs.get().length > 1) {
+                for (int i = 1; i < languageIDs.get().length; i++) {
+                    langSpe = langSpe.or(ProductSpecification.hasLanguage(languageIDs.get()[i]));
+                }
+            }
+            spe = spe.and(langSpe);
+            for (int i = 0; i < languageIDs.get().length; i++) {
+                langsArr[languageIDs.get()[i]] = true;
+                url += "&lang=" + languageIDs.get()[i].toString();
+            }
+        }
+        if (bookLayoutIDs.isPresent()) {
+            Specification<Product> bookLayoutSpe = Specification.where(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[0]));
+            if (bookLayoutIDs.get().length > 1) {
+                for (int i = 1; i < bookLayoutIDs.get().length; i++) {
+                    bookLayoutSpe = bookLayoutSpe.or(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[i]));
+                }
+            }
+            spe = spe.and(bookLayoutSpe);
+            for (int i = 0; i < bookLayoutIDs.get().length; i++) {
+                bookLayoutsArr[bookLayoutIDs.get()[i]] = true;
+                url += "&book-layout=" + bookLayoutIDs.get()[i].toString();
+            }
+        }
         if (StringUtils.hasText(name)) {
             Specification<Product> speName = Specification.where(ProductSpecification.startWith(name));
             speName = speName.or(ProductSpecification.endWith(name));
             speName = speName.or(ProductSpecification.hasPublisher(name));
             speName = speName.or(ProductSpecification.hasAuthor(name));
-            Specification<Product> spe = Specification.where(speName);
-            spe = spe.and(ProductSpecification.qtyGreaterThan0(qty));
-            if (priceIDs.isPresent()) {
-                Specification<Product> priceSpe = Specification.where(ProductSpecification.priceInRange(priceIDs.get()[0]));
-                if (priceIDs.get().length > 1) {
-                    for (int i = 1; i < priceIDs.get().length; i++) {
-                        priceSpe = priceSpe.or(ProductSpecification.priceInRange(priceIDs.get()[i]));
-                    }
-                }
-                spe = spe.and(priceSpe);
-                for (int i = 0; i < priceIDs.get().length; i++) {
-                    pricesArr[priceIDs.get()[i]] = true;
-                }
-            }
-            if (languageIDs.isPresent()) {
-                Specification<Product> langSpe = Specification.where(ProductSpecification.hasLanguage(languageIDs.get()[0]));
-                if (languageIDs.get().length > 1) {
-                    for (int i = 1; i < languageIDs.get().length; i++) {
-                        langSpe = langSpe.or(ProductSpecification.hasLanguage(languageIDs.get()[i]));
-                    }
-                }
-                spe = spe.and(langSpe);
-                for (int i = 0; i < languageIDs.get().length; i++) {
-                    langsArr[languageIDs.get()[i]] = true;
-                }
-            }
-            if (bookLayoutIDs.isPresent()) {
-                Specification<Product> bookLayoutSpe = Specification.where(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[0]));
-                if (bookLayoutIDs.get().length > 1) {
-                    for (int i = 1; i < bookLayoutIDs.get().length; i++) {
-                        bookLayoutSpe = bookLayoutSpe.or(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[i]));
-                    }
-                }
-                spe = spe.and(bookLayoutSpe);
-                for (int i = 0; i < bookLayoutIDs.get().length; i++) {
-                    bookLayoutsArr[bookLayoutIDs.get()[i]] = true;
-                }
-            }
-            resultPage = productRepository.findAll(spe, pageable);
-            //products = productRepository.findAll(spe);
+            spe = spe.and(speName);
+        }
+        products = productRepository.findAll(spe);
+        if (srt == 1) {
+            Collections.sort(products, (o1, o2) -> o1.getProductName().compareTo(o2.getProductName()));
+        } else if (srt == 2) {
+            Collections.sort(products, (o1, o2) -> (int) (o1.getPrice() - o2.getPrice()));
         } else {
-            //resultPage = productRepository.findAll(pageable);
-            products = productRepository.findAll();
+            Collections.sort(products, (o1, o2) -> (int) (o2.getPrice() - o1.getPrice()));
         }
-        int totalPages = resultPage.getTotalPages();
-        if (totalPages > 0) {
-            int start = Math.max(1, currentPage - 2);
-            int end = Math.min(currentPage + 2, totalPages);
-            if(totalPages >5){
-                if (end == totalPages) start = end - 4;
-                else if (start == 1) end = start + 4;
-            }
-            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-        model.addAttribute("products", resultPage);
-        //model.addAttribute("products", products);
+        List<Product> productList = products.stream().skip((currentPage - 1) * pageSize).limit(pageSize).toList();
+        model.addAttribute("products", productList);
         model.addAttribute("pricesArr", pricesArr);
         model.addAttribute("bookLayoutsArr", bookLayoutsArr);
         model.addAttribute("langsArr", langsArr);
         model.addAttribute("size", pageSize);
         model.addAttribute("exists", qty);
         model.addAttribute("name", name);
-
+        model.addAttribute("cuPage", currentPage);
+        model.addAttribute("url", url);
+        model.addAttribute("endPage", Math.ceil((double) products.size() / pageSize));
         return "/pages/client/searchByWord";
     }
+
     @GetMapping("category")
     public String searchByCategory(ModelMap model,
                                    @RequestParam(value = "id", required = false) Long categoryId,
@@ -167,98 +164,97 @@ public class SearchController {
                                    @RequestParam("book-layout") Optional<Integer[]> bookLayoutIDs,
                                    @RequestParam("exists") Optional<Integer> quantity,
                                    @RequestParam("page") Optional<Integer> page,
-                                   @RequestParam("size") Optional<Integer> size) {
+                                   @RequestParam("size") Optional<Integer> size,
+                                   @RequestParam(name = "Sortby") Optional<Integer> sort) {
+
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(12);
         int qty = quantity.orElse(1);
+        int srt = sort.orElse(1);
         boolean[] pricesArr = new boolean[6];
         boolean[] langsArr = new boolean[6];
         boolean[] bookLayoutsArr = new boolean[6];
         Arrays.fill(pricesArr, false);
         Arrays.fill(langsArr, false);
         Arrays.fill(bookLayoutsArr, false);
-
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize,Sort.unsorted());
-        Page<Product> resultPage = null;
-        List<Product> products = new ArrayList<>();
+        String url = "search?exists=" + qty + "&size=" + pageSize + "&Sortby=" + srt;
+        List<Product> products;
         Category category = productRepository.findByCategoryID(categoryId);
-
-        if (category != null) {
-            List<Long> idLst = new ArrayList<>();
-            List<Product> lst = productRepository.findAll();
-            for (int i = 0; i < lst.size(); i++) {
-                if (lst.get(i).getCategory().getId() == categoryId ||
-                        lst.get(i).getCategory().getParentCategory().getId() == categoryId ||
-                        lst.get(i).getCategory().getParentCategory().getParentCategory().getId() == categoryId) {
-                    idLst.add(lst.get(i).getId());
-                }
+        List<Category> list_cate = categoryRepository.findAll();
+        List<Long> idLst = new ArrayList<>();
+        List<Product> lst = productRepository.findAll();
+        for (int i = 0; i < lst.size(); i++) {
+            if (lst.get(i).getCategory().getId() == categoryId ||
+                    lst.get(i).getCategory().getParentCategory().getId() == categoryId ||
+                    lst.get(i).getCategory().getParentCategory().getParentCategory().getId() == categoryId) {
+                idLst.add(lst.get(i).getId());
             }
-            Specification<Product> spe = Specification.where(ProductSpecification.hasProductId(idLst));
-            spe = spe.and(ProductSpecification.qtyGreaterThan0(qty));
-            if (priceIDs.isPresent()) {
-                Specification<Product> priceSpe = Specification.where(ProductSpecification.priceInRange(priceIDs.get()[0]));
-                if (priceIDs.get().length > 1) {
-                    for (int i = 1; i < priceIDs.get().length; i++) {
-                        priceSpe = priceSpe.or(ProductSpecification.priceInRange(priceIDs.get()[i]));
-                    }
-                }
-                spe = spe.and(priceSpe);
-                for (int i = 0; i < priceIDs.get().length; i++) {
-                    pricesArr[priceIDs.get()[i]] = true;
-                }
-            }
-            if (languageIDs.isPresent()) {
-                Specification<Product> langSpe = Specification.where(ProductSpecification.hasLanguage(languageIDs.get()[0]));
-                if (languageIDs.get().length > 1) {
-                    for (int i = 1; i < languageIDs.get().length; i++) {
-                        langSpe = langSpe.or(ProductSpecification.hasLanguage(languageIDs.get()[i]));
-                    }
-                }
-                spe = spe.and(langSpe);
-                for (int i = 0; i < languageIDs.get().length; i++) {
-                    langsArr[languageIDs.get()[i]] = true;
-                }
-            }
-            if (bookLayoutIDs.isPresent()) {
-                Specification<Product> bookLayoutSpe = Specification.where(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[0]));
-                if (bookLayoutIDs.get().length > 1) {
-                    for (int i = 1; i < bookLayoutIDs.get().length; i++) {
-                        bookLayoutSpe = bookLayoutSpe.or(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[i]));
-                    }
-                }
-                spe = spe.and(bookLayoutSpe);
-                for (int i = 0; i < bookLayoutIDs.get().length; i++) {
-                    bookLayoutsArr[bookLayoutIDs.get()[i]] = true;
-                }
-            }
-            products = productRepository.findAll(spe);
-            //resultPage = productRepository.findAll(spe, pageable);
-            model.addAttribute("category", category);
-        } else {
-            //resultPage = productRepository.findAll(pageable);
-            products = productRepository.findAll();
         }
-//        int totalPages = resultPage.getTotalPages();
-//        if (totalPages > 0) {
-//            int start = Math.max(1, currentPage - 2);
-//            int end = Math.min(currentPage + 2, totalPages);
-//            if(totalPages >5){
-//                if (end == totalPages) start = end - 4;
-//                else if (start == 1) end = start + 4;
-//            }
-//            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
-//                    .boxed()
-//                    .collect(Collectors.toList());
-//            model.addAttribute("pageNumbers", pageNumbers);
-//        }
-        model.addAttribute("products", products);
-        //model.addAttribute("products", resultPage);
+        Specification<Product> spe = Specification.where(ProductSpecification.hasProductId(idLst));
+        spe = spe.and(ProductSpecification.qtyGreaterThan0(qty));
+        if (priceIDs.isPresent()) {
+            Specification<Product> priceSpe = Specification.where(ProductSpecification.priceInRange(priceIDs.get()[0]));
+            if (priceIDs.get().length > 1) {
+                for (int i = 1; i < priceIDs.get().length; i++) {
+                    priceSpe = priceSpe.or(ProductSpecification.priceInRange(priceIDs.get()[i]));
+
+                }
+            }
+            spe = spe.and(priceSpe);
+            for (int i = 0; i < priceIDs.get().length; i++) {
+                pricesArr[priceIDs.get()[i]] = true;
+                url += "&price=" + priceIDs.get()[i].toString();
+            }
+        }
+        if (languageIDs.isPresent()) {
+            Specification<Product> langSpe = Specification.where(ProductSpecification.hasLanguage(languageIDs.get()[0]));
+            if (languageIDs.get().length > 1) {
+                for (int i = 1; i < languageIDs.get().length; i++) {
+                    langSpe = langSpe.or(ProductSpecification.hasLanguage(languageIDs.get()[i]));
+                }
+            }
+            spe = spe.and(langSpe);
+            for (int i = 0; i < languageIDs.get().length; i++) {
+                langsArr[languageIDs.get()[i]] = true;
+                url += "&lang=" + languageIDs.get()[i].toString();
+            }
+        }
+        if (bookLayoutIDs.isPresent()) {
+            Specification<Product> bookLayoutSpe = Specification.where(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[0]));
+            if (bookLayoutIDs.get().length > 1) {
+                for (int i = 1; i < bookLayoutIDs.get().length; i++) {
+                    bookLayoutSpe = bookLayoutSpe.or(ProductSpecification.hasBookLayout(bookLayoutIDs.get()[i]));
+                }
+            }
+            spe = spe.and(bookLayoutSpe);
+            for (int i = 0; i < bookLayoutIDs.get().length; i++) {
+                bookLayoutsArr[bookLayoutIDs.get()[i]] = true;
+                url += "&book-layout=" + bookLayoutIDs.get()[i].toString();
+            }
+        }
+        products = productRepository.findAll(spe);
+        if (srt == 1) {
+            Collections.sort(products, (o1, o2) -> o1.getProductName().compareTo(o2.getProductName()));
+        } else if (srt == 2) {
+            Collections.sort(products, (o1, o2) -> (int) (o1.getPrice() - o2.getPrice()));
+        } else {
+            Collections.sort(products, (o1, o2) -> (int) (o2.getPrice() - o1.getPrice()));
+        }
+        List<Product> productList = products.stream().skip((currentPage - 1) * pageSize).limit(pageSize).toList();
+        model.addAttribute("list_cate",list_cate);
+        model.addAttribute("category", category);
+        model.addAttribute("products", productList);
         model.addAttribute("pricesArr", pricesArr);
+        model.addAttribute("priceID", priceIDs.orElse(null));
         model.addAttribute("bookLayoutsArr", bookLayoutsArr);
         model.addAttribute("langsArr", langsArr);
         model.addAttribute("size", pageSize);
         model.addAttribute("exists", qty);
-
+        model.addAttribute("bookLayoutId", bookLayoutIDs);
+        model.addAttribute("endPage", Math.ceil((double) products.size() / pageSize));
+        model.addAttribute("url", url);
+        model.addAttribute("cuPage", currentPage);
         return "/pages/client/searchByCategory";
     }
 }
+

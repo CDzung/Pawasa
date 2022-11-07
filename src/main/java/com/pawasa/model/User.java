@@ -61,6 +61,9 @@ public class User {
     @Column(name = "active")
     private boolean active;
 
+    @Column(name = "gender")
+    private boolean gender;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     private Role role;
@@ -73,6 +76,12 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Notification> notifications;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Product> products;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Review> reviews;
 
     public boolean isOTPRequired() {
         if (this.otp == null || this.otp.equals("")) {

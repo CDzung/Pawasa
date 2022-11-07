@@ -98,14 +98,20 @@
                                                 th:text="${order.orderDate}"></span>
                                         </div>
                                         <div class="order-view-total"><span>Tổng Tiền: </span><span><span class="price"
-                                                                                                          th:text="${order.totalPrice}"></span><span
+                                                                                                          th:text="${#numbers.formatDecimal(order.totalPrice,0,'COMMA',0,'POINT')}"></span><span
                                                 class="sym-totals">đ</span></span></div>
                                     </div>
                                     <div style="text-align:center;" class="order-view-buttons-color">
                                         <div class="order-view-buttons-color-child">
-                                            <a href="https://www.fahasa.com/sales/order/reorder/order_id/6143863/"
+                                            <a th:href="@{/user/cart}"
                                                class="link-reorder order-view-buy-again-btn">Đặt hàng lại</a>
+                                            <th:block th:each="o : ${order.orderStatuses}">
+                                                <a th:if="${o.orderStatus.trim().equals('Chờ xác nhận')}"
+                                                   th:onclick="|cancelOrder('${o.id}')|"
+                                                   class="order-view-review-btn" style="cursor: pointer">Cancel</a>
+                                            </th:block>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="order-info-border-block"></div>
@@ -119,7 +125,6 @@
                                                 <address>
                                                     <th:block
                                                             th:text="${order.user.firstName} + ' ' + ${order.user.lastName}">
-
                                                     </th:block>
                                                     <br>
                                                     <th:block
@@ -155,7 +160,7 @@
                                     </div>
                                     <div class="border-block-mobile"></div>
                                     <div class="order-view-status-container">
-                                        <div class="order-view-status-new-order">
+                                        <div class="order-view-status-new-order" th:if="${last_status.size() == 3}">
                                             <div class="order-view-icon-container">
                                                 <div style="height: 60px;width: 60px;align-self: center;">
                                                     <div class="order-view-icon-img"
@@ -167,7 +172,7 @@
                                             </div>
                                             <div class="order-view-progress-bar" style="background:#fa0001;"></div>
                                         </div>
-                                        <div class="order-view-status-new-order">
+                                        <div class="order-view-status-new-order" th:if="${last_status.size() > 1}">
                                             <div class="order-view-icon-container">
                                                 <div style="height: 60px;width: 60px;align-self: center;">
                                                     <div class="order-view-icon-img"
@@ -253,7 +258,9 @@
                                                         <div class="table-subOrder-cell" style="width:100px">Hình ảnh
                                                         </div>
                                                         <div class="table-subOrder-cell">Tên sản phẩm</div>
-                                                        <div class="table-subOrder-cell">Giá bán</div>
+                                                        <div class="table-subOrder-cell" style="flex-basis: 15%">Giá
+                                                            bán
+                                                        </div>
                                                         <div class="table-subOrder-cell">SL</div>
                                                         <div class="table-subOrder-cell">Thành tiền</div>
                                                     </div>
@@ -263,7 +270,7 @@
                                                      th:each="k : ${order.orderDetails}">
                                                     <div class="table-subOrder-row">
                                                         <div class="table-subOrder-cell table-subOrder-img-web">
-                                                            <img src="${k.product.image}"
+                                                            <img th:src="${k.product.image}"
                                                                  th:if="${k.product.image.startsWith('http')}">
                                                             <img th:src="@{'/image/' + ${product.image}}"
                                                                  th:unless="${k.product.image.startsWith('http')}">
@@ -275,11 +282,11 @@
                                                                    th:text="${k.product.productName}"></a>
                                                             </div>
                                                         </div>
-                                                        <div class="table-subOrder-cell">
+                                                        <div class="table-subOrder-cell" style="flex-basis: 15%">
                                                             <span>
 		    		    		    			<span class="cart-price"><div class="cart-orderHs-price"><div><span
                                                         class="price"
-                                                        th:text="${k.product.price * k.product.discount}"></span> đ</div>
+                                                        th:text="${#numbers.formatDecimal(k.product.price * (100 - k.product.discount) / 100,0,'COMMA',0,'POINT')}"></span> đ</div>
 				 								    <div><span class="orderHs-price-old"><span
                                                             class="price" th:text="${k.product.price}"></span> đ</span></div></div>
                                                     <!--</span>--></span></span>
@@ -291,7 +298,8 @@
                                                         <div class="table-subOrder-cell">
                                                             <span>
 		    		    		    			<span class="cart-price">
-		    						    <span class="price" th:text="${k.product.quantity * k.product.price * (100 - k.product.price) / 100}"></span> đ
+		    						    <span class="price"
+                                              th:text="${#numbers.formatDecimal(k.product.quantity * k.product.price * (100 - k.product.discount) / 100,0,'COMMA',0,'POINT')}"></span> đ
 		    		</span>
 
 		</span>
@@ -314,14 +322,17 @@
                                                 </div>
                                                 <div>
 
-                                                    <p class="order-totals-price"><span class="price" th:text="${order.totalPrice * 90 / 100}"></span>&nbsp;<span
+                                                    <p class="order-totals-price"><span class="price"
+                                                                                        th:text="${#numbers.formatDecimal(order.totalPrice * 90 / 100,0,'COMMA',0,'POINT')}"></span>&nbsp;<span
                                                             class="sym-totals">đ</span></p>
 
 
-                                                    <p class="order-totals-price"><span class="price" th:text="${order.totalPrice * 10 / 100}"></span>&nbsp;<span
+                                                    <p class="order-totals-price"><span class="price"
+                                                                                        th:text="${#numbers.formatDecimal(order.totalPrice * 10 / 100,0,'COMMA',0,'POINT')}"></span>&nbsp;<span
                                                             class="sym-totals">đ</span></p>
 
-                                                    <p class="order-totals-price"><span class="price" th:text="${order.totalPrice}"></span>&nbsp;<span
+                                                    <p class="order-totals-price"><span class="price"
+                                                                                        th:text="${#numbers.formatDecimal(order.totalPrice,0,'COMMA',0,'POINT')}"></span>&nbsp;<span
                                                             class="sym-totals">đ</span></p>
 
                                                 </div>
@@ -374,6 +385,13 @@
 
                                         }
 
+                                        function cancelOrder(j) {
+                                            var i = confirm("Do you want to cancel???");
+                                            if (i === true) {
+                                                window.location.href = "/user/cancelOrder?id=" + j;
+                                                location.reload();
+                                            }
+                                        }
                                     </script>
 
                                 </div>
