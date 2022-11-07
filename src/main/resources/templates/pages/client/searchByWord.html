@@ -137,7 +137,7 @@
                 </dl>
             </div>
             <div class="col-md-8 col-lg-8 right">
-                <h4 class="right_result_search">KET QUA TIM KIEM VOI: <span style="color: red" th:text="${name}"></span>
+                <h4 class="right_result_search">KẾT QUẢ TÌM KIẾM VỚI: <span style="color: red" th:text="${name}"></span>
                 </h4>
                 <div class="result-search-block">
                     <div class="right_filter">
@@ -202,10 +202,14 @@
                             </th:block>
                         </div>
                         <div style="text-align: center;font-size: 200%;margin-top: 4%" th:if="${products}">
-                            <th:block th:each="i : ${#numbers.sequence(1,endPage)}">
-                                <a th:href="@{|${url}|(page=${i})}"
-                                   th:text="${i}" th:style="${i==cuPage}?'color:red'"></a>
-                            </th:block>
+                            <ul>
+                                <li th:each="i : ${#numbers.sequence(1,endPage)}"
+                                    class="paginaging"
+                                th:classappend="${i==cuPage}?'paginaging-add'">
+                                    <a th:href="@{|${url}|(page=${i})}"
+                                       th:text="${i}" th:style="${i==cuPage}?'color:white'"></a>
+                                </li>
+                            </ul>
                         </div>
                         <div th:if="${products.isEmpty()}">
                             <h1 style="text-align: center">No Book Found</h1>
@@ -235,7 +239,6 @@
             .toLocaleString('da-DK');
         x[i].innerHTML = num;
     }
-
 </script>
 </body>
 </html>

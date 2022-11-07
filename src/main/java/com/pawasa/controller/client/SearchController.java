@@ -177,7 +177,7 @@ public class SearchController {
         Arrays.fill(pricesArr, false);
         Arrays.fill(langsArr, false);
         Arrays.fill(bookLayoutsArr, false);
-        String url = "search?exists=" + qty + "&size=" + pageSize + "&Sortby=" + srt;
+        String url = "category?id=" + categoryId + "&exists=" + qty + "&size=" + pageSize + "&Sortby=" + srt;
         List<Product> products;
         Category category = productRepository.findByCategoryID(categoryId);
         List<Category> list_cate = categoryRepository.findAll();
@@ -241,7 +241,7 @@ public class SearchController {
             Collections.sort(products, (o1, o2) -> (int) (o2.getPrice() - o1.getPrice()));
         }
         List<Product> productList = products.stream().skip((currentPage - 1) * pageSize).limit(pageSize).toList();
-        model.addAttribute("list_cate",list_cate);
+        model.addAttribute("list_cate", list_cate);
         model.addAttribute("category", category);
         model.addAttribute("products", productList);
         model.addAttribute("pricesArr", pricesArr);
