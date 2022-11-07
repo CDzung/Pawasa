@@ -1,10 +1,12 @@
 package com.pawasa.model;
 
+import com.pawasa.repository.OrderStatusRepository;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -69,5 +71,10 @@ public class Order {
     @Override
     public int hashCode() {
         return Objects.hash(orderId);
+    }
+
+    public String getRecentOrderStatus() {
+        List<OrderStatus> orderStatusList = orderStatuses.stream().sorted((o1, o2) -> o2.getId().compareTo(o1.getId())).toList();
+        return orderStatusList.get(0).getOrderStatus();
     }
 }

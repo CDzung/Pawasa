@@ -66,19 +66,30 @@
       <div class="form first">
         <div class="details personal">
           <div class="container-header">
-            <form id="frm" action="/admin/view-account" method="get">
-              <div class="search-wrapper">
-                <span class="las la-search"></span>
-                <input type="search"  placeholder="Search here">
-              </div>
-<!--              <div class="dropdown-role" style="float: right">-->
-<!--                <select name="role-id" class="dropdown-box" onchange="changeRole()">-->
-<!--                  <option class="option" value="0">All</option>-->
-<!--                  <option th:each="role: ${roles}" th:if="${id == role.id}" selected th:text="${role.roleName}" class="option" th:value="${role.id}"></option>-->
-<!--                  <option th:each="role: ${roles}" th:if="${!(id == role.id)}"  th:text="${role.roleName}" class="option" th:value="${role.id}"></option>-->
-
-<!--                </select>-->
+            <form id="frm" action="/seller/view-order" method="get">
+<!--              <div class="search-wrapper">-->
+<!--                <span class="las la-search"></span>-->
+<!--                <input type="search" name="name"  placeholder="Search here">-->
 <!--              </div>-->
+              <div class="dropdown-role" style="float: right">
+                <select name="status" class="dropdown-box" onchange="changeStatus()">
+                  <option class="option" value="">All</option>
+                  <option class="option" value="Chờ xác nhận" th:if="${status == 'Chờ xác nhận'}" selected>Chờ xác nhận</option>
+                  <option class="option" value="Chờ xác nhận">Chờ xác nhận</option>
+
+                  <option class="option" value="Đã xác nhận" th:if="${status == 'Đã xác nhận'}" selected>Đã xác nhận</option>
+                  <option class="option" value="Đã xác nhận">Đã xác nhận</option>
+
+                  <option class="option" value="Đang giao hàng" th:if="${status == 'Đang giao hàng'}" selected>Đang giao hàng</option>
+                  <option class="option" value="Đang giao hàng">Đang giao hàng</option>
+
+                  <option class="option" value="Thành công" th:if="${status == 'Thành công'}" selected>Thành công</option>
+                  <option class="option" value="Thành công">Thành công</option>
+
+                  <option class="option" value="Đã hủy" th:if="${status == 'Đã hủy'}" selected>Đã hủy</option>
+                  <option class="option" value="Đã hủy">Đã hủy</option>
+                </select>
+              </div>
             </form>
           </div>
         </div>
@@ -90,6 +101,7 @@
               <th>Customer</th>
               <th>Phone Number</th>
               <th>Address</th>
+              <th>Total Price</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -100,11 +112,12 @@
               <td th:text="${item.user.firstName + ' ' + item.user.lastName}"></td>
               <td th:text="${item.phoneNumber}"></td>
               <td th:text="${item.address}"></td>
-              <td>Chờ xác nhận</td>
+              <td th:text="${item.totalPrice + ' đ'}"></td>
+              <td th:text="${item.getRecentOrderStatus()}"></td>
               <td>
                 <a th:href="@{/seller/view-detail(id=${item.orderId})}" class="btn btn-primary">View</a>
-                <a th:href="@{/seller/accept-order(id=${item.orderId})}"  class="btn btn-success">Accept</a>
-                <a th:href="@{/seller/reject-order(id=${item.orderId})}"  class="btn btn-success">Reject</a>
+                <a th:if="${item.orderStatuses.size() == 1}" th:href="@{/seller/accept-order(id=${item.orderId})}"  class="btn btn-success">Accept</a>
+                <a th:if="${item.orderStatuses.size() == 1}" th:href="@{/seller/reject-order(id=${item.orderId})}"  class="btn btn-success">Reject</a>
               </td>
             </tr>
             </tbody>
@@ -115,5 +128,10 @@
   </main>
 </div>
 
+    <script>
+        function changeStatus() {
+        document.getElementById("frm").submit();
+        }
+    </script>
 </body>
 </html>

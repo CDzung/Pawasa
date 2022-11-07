@@ -154,9 +154,9 @@ $.ready(tabslider("mglnv", true))
 
 function checkLogin(i) {
     if (i != null) {
-        window.location.href = "/pawasa/Account/profile";
+        window.location.href = "/user/account/profile";
     } else {
-        window.location.href = "/pawasa/login"
+        window.location.href = "/login"
     }
 }
 

@@ -52,22 +52,17 @@ public class SellerController {
     }
 
     @GetMapping("/seller/view-order")
-    public String showOrders(Model model) {
+    public String showOrders(Model model, @RequestParam(value = "status", defaultValue = "") String status) {
         List<Order> orders = orderRepository.findAll();
         List<Order> finalOrders = new ArrayList<>();
         for(Order order: orders){
-            order.getOrderDate();
-            OrderStatus orderStatusPending = orderStatusRepository.findByOrderAndOrderStatus(order, "Chờ xác nhận");
-            if(orderStatusPending != null){
-                OrderStatus orderStatus1 = orderStatusRepository.findByOrderAndOrderStatus(order, "Đã xác nhận");
-                OrderStatus orderStatus2 = orderStatusRepository.findByOrderAndOrderStatus(order, "Đã hủy");
-                if(orderStatus1 == null && orderStatus2 == null){
-                    finalOrders.add(order);
-                }
+            if(order.getRecentOrderStatus().contains(status)){
+                finalOrders.add(order);
             }
         }
         finalOrders.sort((o1, o2) -> o2.getOrderDate().compareTo(o1.getOrderDate()));
         model.addAttribute("orders", finalOrders);
+        model.addAttribute("status", status);
         return "pages/seller/view-order";
     }
 
