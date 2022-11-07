@@ -225,7 +225,6 @@ main .container {
 .container form .fields{
     display: flex;
     align-items: center;
-    justify-content: space-between;
     flex-wrap: wrap;
     margin-top: 16px;
 }
@@ -234,6 +233,7 @@ form .fields .input-field{
     width: calc(100% / 3 - 15px);
     flex-direction: column;
     margin: 4px 0;
+    padding: 0 12px;
 }
 .input-field label{
     font-size: 12px;

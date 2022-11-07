@@ -241,6 +241,18 @@ public class BaseController {
 
         int rateCount = reviewRepository.countAllByProduct(product);
         model.addAttribute("rateCount", rateCount);
+
+        List<Review> reviews = reviewRepository.findAllByProduct(product);
+        int rate5 = reviews.stream().filter(review -> review.getRate() == 5).collect(Collectors.toList()).size();
+        int rate4 = reviews.stream().filter(review -> review.getRate() == 4).collect(Collectors.toList()).size();
+        int rate3 = reviews.stream().filter(review -> review.getRate() == 3).collect(Collectors.toList()).size();
+        int rate2 = reviews.stream().filter(review -> review.getRate() == 2).collect(Collectors.toList()).size();
+        int rate1 = reviews.stream().filter(review -> review.getRate() == 1).collect(Collectors.toList()).size();
+        model.addAttribute("rate5", rate5*100/Math.max(rateCount, 1));
+        model.addAttribute("rate4", rate4*100/Math.max(rateCount, 1));
+        model.addAttribute("rate3", rate3*100/Math.max(rateCount, 1));
+        model.addAttribute("rate2", rate2*100/Math.max(rateCount, 1));
+        model.addAttribute("rate1", rate1*100/Math.max(rateCount, 1));
         return "pages/client/bookdetail";
     }
 

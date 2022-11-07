@@ -40,7 +40,7 @@
           <div class="container-inner breadcrumbs">
             <ol class="breadcrumb">
               <li th:each="category: ${categories}">
-                <a href="#" th:text="${category.categoryName}"></a>
+                <a th:href="${'/category?id=' + category.id}" th:text="${category.categoryName}"></a>
                 <span th:if="${category != categories.get(categories.size()-1)}" > &nbsp;>&nbsp; </span>
               </li>
             </ol>
@@ -515,39 +515,39 @@
                     </div>
                     <div>
                       <div>
-                        <span>5 sao</span>
+                        <span style="width: 50px">5 sao</span>
                         <div class="review-rating">
-                          <div style="width: 97%;"></div>
+                          <div th:style="${'width: ' + rate5 + '%'}"></div>
                         </div>
-                        <span>97%</span>
+                        <span th:text="${rate5 + '%'}"></span>
                       </div>
                       <div>
-                        <span>4 sao</span>
+                        <span style="width: 50px">4 sao</span>
                         <div class="review-rating">
-                          <div style="width: 3%;"></div>
+                          <div th:style="${'width: ' + rate4 + '%'}"></div>
                         </div>
-                        <span>3%</span>
+                        <span th:text="${rate4 + '%'}"></span>
                       </div>
                       <div>
-                        <span>3 sao</span>
+                        <span style="width: 50px">3 sao</span>
                         <div class="review-rating">
-                          <div style="width: 0%;"></div>
+                          <div th:style="${'width: ' + rate3 + '%'}"></div>
                         </div>
-                        <span>0%</span>
+                        <span th:text="${rate3 + '%'}"></span>
                       </div>
                       <div>
-                        <span>2 sao</span>
+                        <span style="width: 50px">2 sao</span>
                         <div class="review-rating">
-                          <div style="width: 0%;"></div>
+                          <div th:style="${'width: ' + rate2 + '%'}"></div>
                         </div>
-                        <span>0%</span>
+                        <span th:text="${rate2 + '%'}"></span>
                       </div>
                       <div>
-                        <span>1 sao</span>
+                        <span style="width: 50px">1 sao</span>
                         <div class="review-rating">
-                          <div style="width: 0%;"></div>
+                          <div th:style="${'width: ' + rate1 + '%'}"></div>
                         </div>
-                        <span>0%</span>
+                        <span th:text="${rate1 + '%'}"></span>
                       </div>
                     </div>
                   </div>

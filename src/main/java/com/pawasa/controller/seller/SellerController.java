@@ -87,4 +87,11 @@ public class SellerController {
         orderStatusRepository.save(orderStatus);
         return "redirect:/seller/view-order";
     }
+
+    @GetMapping("/seller/view-detail")
+    public String viewDetail(Model model, @RequestParam long id) {
+        Order order = orderRepository.findById(id);
+        model.addAttribute("order", order);
+        return "pages/seller/view-detail";
+    }
 }
