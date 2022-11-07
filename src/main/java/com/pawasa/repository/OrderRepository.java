@@ -22,4 +22,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(value = "SELECT o FROM Order o WHERE o.orderStatuses.size = ?1")
     List<Order> findAllByOrderStatusesSize(int size);
 
+
 }

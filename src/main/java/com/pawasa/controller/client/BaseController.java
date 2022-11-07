@@ -83,7 +83,7 @@ public class BaseController {
                     "                                                        <div class=\"widget-inner\">\n" +
                     "                                                            <h3><span style=\"color: #333333;\"><strong><a\n" +
                     "                                                                    style=\"font-weight: bold; font-size: 13px;\"\n" +
-                    "                                                                    href=\"https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc.html\"><span\n" +
+                    "                                                                    href=\"category?id="+i.getId() + "\"><span\n" +
                     "                                                                    style=\"color: #333333;\">" + i.getCategoryName() +
                     "                                                                                </span></a></strong></span></h3>\n" +
                     "                                                            <ul class=\"nav-links\">");
@@ -93,13 +93,13 @@ public class BaseController {
                 if (count == 5) {
                     response.getWriter().print("<li style=\"color: #2489f4;\"><span\n" +
                             "                                                                        style=\"color: #2489f4;\"><a\n" +
-                            "                                                                        href=\"https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc.html\"><span\n" +
+                            "                                                                        href=\"search\"><span\n" +
                             "                                                                        style=\"color: #2489f4;\">Xem tất\n" +
                             "                                                                                cả</span></a></span></li>");
                     break;
                 }
                 response.getWriter().print("                                                                <li><a\n" +
-                        "                                                                        href=\"https://www.fahasa.com/sach-trong-nuoc/van-hoc-trong-nuoc/tieu-thuyet.html\">" +
+                        "                                                                        href=\"category?id="+a.getId() +"\">" +
                         a.getCategoryName() +
                         "                                                                    </a></li>");
             }
@@ -207,7 +207,7 @@ public class BaseController {
                 "    font-size: 14px;\n" +
                 "    font-weight: 700;\n" +
                 "    width: 210px;\n" +
-                "    height: 40px;    margin: 0 auto;\"   href=\"flashsale\">Xem Thêm</a>\n");
+                "    height: 40px;    margin: 0 auto;\"   href=\"search\">Xem Thêm</a>\n");
     }
 
     @GetMapping("/product")

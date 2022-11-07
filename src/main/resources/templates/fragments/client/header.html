@@ -20,7 +20,7 @@
                                     <li class="parent dropdown aligned-left"
                                         th:onmouseover="|showCategory(${cate.id})|"><span
                                             class="open-child hidden-md hidden-lg">(open)</span><a
-                                            href="#" class=""
+                                            th:href="@{category(id=${cate.id})}" class=""
                                             th:title="${cate.categoryName}" data-clickable="1"><i
                                             class="ico_sachtrongnuoc"></i><span class="menu-title"
                                                                                 th:text="${cate.categoryName}">
@@ -72,7 +72,7 @@
                         </div>
                         <div id="top-notification-menu-render">
                             <div class="top-notification-menu fhs_top_noti_dropdown fhs_dropdown "
-                                 style="display: none;" th:if="${session.list_notification.isEmpty()}">
+                                 style="display: none;" sec:authorize="!isAuthenticated()">
                                 <div style="padding:16px;border-bottom: 1px solid #F2F4F5; font-weight: bold;"
                                      class="fhs_center_space">
                                     <div class="fhs_center_left" style="font-size: 1.23em; color: #0D0E0F;">
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="top-notification-menu fhs_top_noti_dropdown fhs_dropdown "
-                                 style="display: none;" th:if="${!session.list_notification.isEmpty()}">
+                                 style="display: none;" sec:authorize="isAuthenticated()">
                                 <div style="padding:16px;border-bottom: 1px solid #F2F4F5; font-weight: bold;"
                                      class="fhs_center_space">
                                     <div class="fhs_center_left" style="font-size: 1.23em; color: #0D0E0F;">

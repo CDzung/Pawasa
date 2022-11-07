@@ -68,7 +68,7 @@
                     <td th:text="${i.address}"></td>
                     <td th:text="${i.orderDate}"></td>
                     <th:block th:each="j : ${i.orderStatuses}">
-                        <td class="status" th:if="${jStat.index == 2}" th:text="${j.orderStatus}"></td>
+                        <td class="status" th:if="${jStat.index == 3}" th:text="${j.orderStatus}"></td>
                     </th:block>
                     <td><a th:href="@{/shipper/detail(id=${i.orderId})}" class="success">See
                         details</a>
