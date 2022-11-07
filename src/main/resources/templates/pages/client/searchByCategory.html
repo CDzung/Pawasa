@@ -10,6 +10,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/hieu_search.css}">
+    <style>
+        .rating-box {
+            background: url(https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/ico_star_gray.svg) repeat-x;
+            background-size: 16px 16px;
+            margin: 0px 0px 0px 10px;
+            position: relative;
+            float: left;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 <section class="header" id="header">
@@ -23,17 +33,20 @@
             </li>
             <th:block th:if="${category.parentCategory.parentCategory.getId() != category.parentCategory.getId()}">
                 <li>
-                    <a th:href="@{/category(id=${category.parentCategory.parentCategory.getId()})}"><span th:text="${category.parentCategory.parentCategory.categoryName}"></span></a>
+                    <a th:href="@{/category(id=${category.parentCategory.parentCategory.getId()})}"><span
+                            th:text="${category.parentCategory.parentCategory.categoryName}"></span></a>
                 </li>
             </th:block>
             <th:block th:if="${category.parentCategory.getId() != category.parentCategory.getId()}">
                 <li>
-                    <a th:href="@{/category(id=${category.parentCategory.getId()})}"><span th:text="${category.parentCategory.categoryName}"></span></a>
+                    <a th:href="@{/category(id=${category.parentCategory.getId()})}"><span
+                            th:text="${category.parentCategory.categoryName}"></span></a>
                 </li>
             </th:block>
-                <li>
-                    <a th:href="@{/category(id=${category.getId()})}" class="colorText"><span th:text="${category.categoryName}"></span></a>
-                </li>
+            <li>
+                <a th:href="@{/category(id=${category.getId()})}" class="colorText"><span
+                        th:text="${category.categoryName}"></span></a>
+            </li>
         </ul>
     </div>
     <form>
@@ -184,9 +197,9 @@
                                     <select class="form-select" aria-label="Default select"
                                             name="sortBy" onchange="this.form.submit()">
                                         <option selected disabled>Sap xep theo</option>
-                                        <option value="productName">Tên sản phẩm</option>
-                                        <option value="">Giá tăng dần</option>
-                                        <option value="">Giá giảm dần</option>
+                                        <option value="1">Tên sản phẩm</option>
+                                        <option value="2">Giá tăng dần</option>
+                                        <option value="3">Giá giảm dần</option>
                                     </select>
                                 </div>
                             </li>
@@ -221,24 +234,23 @@
                                             <p class="hideText" th:text="${book.productName}"></p>
                                         </div>
                                         <div class="price">
-                                            <p class="sale-price currency" th:text="${book.getDiscountPrice()}">đ</p>
-                                            <p class="origin-price currency" th:text="${book.price}">đ</p>
+                                            <p class="sale-price currency" th:text="${book.getFormattedDiscountPrice()}">đ</p>
+                                            <p class="origin-price currency" th:text="${book.getFormattedPrice()}">đ</p>
                                         </div>
                                         <div class="rate">
-                                            <ul class="list-group list-group-horizontal">
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                            </ul>
+                                            <div class="rating-box">
+                                                <div class="rating" th:if="${book.rateCount > 0}"
+                                                     th:style="${'width: ' + book.rateSum*1000/book.rateCount/50 + '%'}"></div>
+                                                <div class="rating" th:if="${book.rateCount == 0}"
+                                                     style="width: 0%"></div>
+                                            </div>
                                         </div>
                                     </a>
                                 </div>
                             </th:block>
                         </div>
                     </div>
-                    <div style="text-align: center;font-size: 200%;margin-top: 4%" th:if="${products}">
+                    <div style="text-align: center;font-size: 200%;margin-top: 4%" th:if="${!products.isEmpty()}">
                         <ul>
                             <li th:each="i : ${#numbers.sequence(1,endPage)}"
                                 class="paginaging"

@@ -199,18 +199,34 @@
                                                             <label class="fhs-radio" style="margin-top: 2px;">Nam <input
                                                                     type="radio" class="gender-radio"
                                                                     name="gender-radio"
-                                                                    th:checked="${user?.gender == true?'checked':''}"
+                                                                    th:if="${user.gender}"
                                                                     value="male"
+                                                                    checked
                                                             >
+                                                                <input
+                                                                        type="radio" class="gender-radio"
+                                                                        name="gender-radio"
+                                                                        th:if="${!user.gender}"
+                                                                        value="male"
+
+                                                                >
                                                             </label>
+
                                                         </div>
                                                         <div>
                                                             <label class="fhs-radio" style="margin-top: 2px;">Nữ <input
                                                                     type="radio" class="gender-radio"
                                                                     name="gender-radio"
-                                                                    th:checked="${user?.gender == false?'checked':''}"
-                                                                    value="female">
+                                                                    th:if="${!user.gender}"
+                                                                    value="female"
+                                                                    checked>
+                                                                <input
+                                                                        type="radio" class="gender-radio"
+                                                                        name="gender-radio"
+                                                                        th:if="${user.gender}"
+                                                                        value="female">
                                                             </label>
+
                                                         </div>
                                                         <div style="width: 42px;"></div>
                                                         <div style="clear: both;"></div>

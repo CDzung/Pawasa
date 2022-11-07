@@ -106,7 +106,7 @@ public class CustomerInfomationController {
         user.setLastName(lastname);
         user.setPhoneNumber(phone);
         user.setEmail(email);
-        user.setGender(gender.equalsIgnoreCase("female"));
+        user.setGender(gender.equalsIgnoreCase("male"));
         model.addAttribute("report", "Save successful!!");
         return showProfile(model);
     }

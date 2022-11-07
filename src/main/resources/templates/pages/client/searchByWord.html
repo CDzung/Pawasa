@@ -185,17 +185,16 @@
                                             <p class="hideText" th:text="${book.productName}"></p>
                                         </div>
                                         <div class="price">
-                                            <p class="sale-price currency" th:text="${book.getDiscountPrice()}">đ</p>
-                                            <p class="origin-price currency" th:text="${book.price}">đ</p>
+                                            <p class="sale-price currency" th:text="${book.getFormattedDiscountPrice()}">đ</p>
+                                            <p class="origin-price currency" th:text="${book.getFormattedPrice()}">đ</p>
                                         </div>
                                         <div class="rate">
-                                            <ul class="list-group list-group-horizontal">
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                                <li><i class="fa-solid fa-star"></i></li>
-                                            </ul>
+                                            <div class="rating-box">
+                                                <div class="rating" th:if="${book.rateCount > 0}"
+                                                     th:style="${'width: ' + book.rateSum*1000/book.rateCount/50 + '%'}"></div>
+                                                <div class="rating" th:if="${book.rateCount == 0}"
+                                                     style="width: 0%"></div>
+                                            </div>
                                         </div>
                                     </a>
                                 </div>

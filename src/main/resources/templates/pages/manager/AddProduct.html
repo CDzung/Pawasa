@@ -174,27 +174,28 @@
         }
     }
     $(document).ready(function () {
-        var price = $('#p_price').val();
-        var number = $('#p_amount').val();
-        var year = $('#publisher_year').val();
-        var isbn = $('#isbn').val();
-        var regex = /^[0-9]{10}/;
-        var discount = $('#discount').val();
         $("#form").submit(function (e) {
-            if (!$.isNumeric(price) && price > 0) {
+            var price = parseInt($('#p_price').val(), 10);
+            console.log(price)
+            var number = $('#p_amount').val();
+            var year = $('#publisher_year').val();
+            var isbn = $('#isbn').val();
+            var regex = /^[0-9]{10}/;
+            var discount = $('#discount').val();
+            if (!Number.isInteger(price) || price < 0) {
                 alert('Price must be number and greater than 0!!');
                 e.preventDefault();
-            } else if (!$.isNumeric(number) && price > 0 && Math.floor(number) == number && number > 0) {
+            } else if (!$.isNumeric(number) || number < 0 || !Math.floor(number) == number) {
                 alert('amount must be number integer and greater than 0!!');
                 e.preventDefault();
-            } else if (!$.isNumeric(year) && year > 0 && Math.floor(year) == year && year > 0) {
+            } else if (!$.isNumeric(year) || year < 0 || !Math.floor(year) == year) {
                 alert('year must be number integer and greater than 0!!');
                 e.preventDefault();
             } else if (!regex.test(isbn)) {
                 alert('isbn wrong format!!');
                 e.preventDefault();
-            } else if (!$.isNumeric(discount) &&
-                discount >= 0 && discount <= 100) {
+            } else if (!$.isNumeric(discount) ||
+                discount < 0 || discount > 100) {
                 alert('discount must be number and greater than 0 and less than 100');
                 e.preventDefault();
             } else {
