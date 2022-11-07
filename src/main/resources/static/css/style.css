@@ -2433,3 +2433,12 @@ div.footer-static .container {
     padding-left: 25px;
     color: #ea7696;
 }
+
+.order-view-review-btn {
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid #C92127;
+    padding: 5px 20px;
+    margin-top: 10px;
+}

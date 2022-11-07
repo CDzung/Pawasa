@@ -36,14 +36,14 @@
                 </div>
                 <div class="fhs_center_left">
                     <div class="box search_box">
-                        <form id="search_mini_form_desktop">
+                        <form id="search_mini_form_desktop" th:action="@{search}">
                             <div class="search pull-left">
                                 <div class="form-search fhs_dropdown_hover_out">
                                     <input type="text" id="search_desktop" autocomplete="off"
-                                           placeholder="Tìm kiếm sản phẩm mong muốn...">
-                                    <span class="fhs_btn_default active button-search">
+                                           placeholder="Tìm kiếm sản phẩm mong muốn..." name="name">
+                                    <button style="width: 12%;position: absolute;padding: 0;border: 0;top: 21%;height: 50%;left: 87%;" class="fhs_btn_default active button-search">
                                         <span class="ico_search_white"></span>
-                                    </span>
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -111,23 +111,25 @@
                                         <span class="fhs_notification_unseen" style="margin-left:4px;"
                                               th:text="${session.list_notification.size()}"></span>
                                     </div>
-                                    <a href="/customer/notification" class="fhs_center_left"
+                                    <a th:href="@{/user/account/notify}" class="fhs_center_left"
                                        style="color: #2489F4; font-size: 1.1em;">Xem tất cả</a>
                                 </div>
                                 <div class="top-notification-loading fhs_center_center"
                                      style="padding: 16px; display: none;">
                                     <div class="ico_loading_cirle"></div>
                                 </div>
-                                <div class="top-notification-list fhs_scrollbar" style="display: block;" th:each="i : ${session.list_notification}">
+                                <div class="top-notification-list fhs_scrollbar" style="display: block;"
+                                     th:each="i : ${session.list_notification}">
                                     <a class="top-notification-item fhs_column_left fhs_mouse_point clear"
-                                            th:href="@{/user/account/notify}">
+                                       th:href="@{/user/account/notify}">
                                         <div class="fhs_top_stretch" style="width:100%;">
                                             <div class="fhs_top_left" style="margin-right:12px;">
                                                 <div class="ico_noti_bill"></div>
                                             </div>
                                             <div class="fhs_column_stretch"
                                                  style="width:calc(100% - 44px); text-align: left;">
-                                                <div class="fhs_top_left fhs_nowrap_one" style="font-weight:bold;" th:text="${i.title}">
+                                                <div class="fhs_top_left fhs_nowrap_one" style="font-weight:bold;"
+                                                     th:text="${i.title}">
                                                 </div>
                                                 <div class="fhs_top_left fhs_nowrap_two" th:text="${i.description}">
                                                 </div>
@@ -210,7 +212,7 @@
                                 <div class="icon_seemore_gray right" style="width:24px;height:24px;"></div>
                             </a></div>
                             <div style="border-top: 1px solid #F2F4F5;"><a class="fhs_center_left"
-                                                                           href="/sales/order/history/"><span
+                                                                           th:href="@{/user/account/history}"><span
                                     class="icon_bill_gray"
                                     style="margin-right:8px;"></span><span>Đơn hàng của tôi</span></a></div>
                             <div class="fhs_center_left fhs_mouse_point" style="border-top: 1px solid #F2F4F5;"><a

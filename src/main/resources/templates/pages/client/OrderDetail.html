@@ -105,7 +105,13 @@
                                         <div class="order-view-buttons-color-child">
                                             <a th:href="@{/user/cart}"
                                                class="link-reorder order-view-buy-again-btn">Đặt hàng lại</a>
+                                            <th:block th:each="o : ${order.orderStatuses}">
+                                                <a th:if="${o.orderStatus.trim().equals('Chờ xác nhận')}"
+                                                   th:onclick="|cancelOrder('${o.id}')|"
+                                                   class="order-view-review-btn" style="cursor: pointer">Cancel</a>
+                                            </th:block>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="order-info-border-block"></div>
@@ -379,6 +385,13 @@
 
                                         }
 
+                                        function cancelOrder(j) {
+                                            var i = confirm("Do you want to cancel???");
+                                            if (i === true) {
+                                                window.location.href = "/user/cancelOrder?id=" + j;
+                                                location.reload();
+                                            }
+                                        }
                                     </script>
 
                                 </div>

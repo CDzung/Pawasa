@@ -35,7 +35,7 @@ public class ShipperController {
         List<Order> list = new ArrayList<>();
         for (Order i : set) {
             if ((i.getOrderStatuses().size() == 1 && i.getUser() == null) ||
-                    (i.getOrderStatuses().size() == 2 && i.getUser().equals(u))) {
+                    (i.getOrderStatuses().size() == 2 && i.getShipper().equals(u))) {
                 for (OrderStatus j : i.getOrderStatuses()) {
                     if (j.getOrderStatus().equals("Đã xác nhận")) {
                         list.add(i);
@@ -57,7 +57,7 @@ public class ShipperController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User u = userRepository.findByEmail(email);
-        Set<Order> set = orderRepository.findByUser_Id(u.getId());
+        Set<Order> set = orderRepository.findByShipper_Id(u.getId());
         List<Order> list = new ArrayList<>();
         for (Order i : set) {
             if (i.getOrderStatuses().size() == 3) {

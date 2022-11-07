@@ -471,12 +471,6 @@
                                             <div class="table-order-cell">
                                                 <div class="table-order-cell-content table-order-cell-content-mobile">
                                                     <div class="order-history-id" th:text="${i.orderId}"></div>
-                                                    <th:block th:each="k : ${i.getOrderStatuses()}">
-                                                        <div class="order-history-status-mobile"
-                                                             style="background:#F3B4AF;color:#A90000;border-color:#F3B4AF;"
-                                                             th:text="${k.orderStatus}">
-                                                        </div>
-                                                    </th:block>
                                                 </div>
                                             </div>
                                             <div class="table-order-cell">
@@ -499,7 +493,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="table-order-cell hidden-max-width-992 ">Bị hủy</div>
+                                            <th:block th:each="k : ${i.getOrderStatuses()}">
+                                                <div class="table-order-cell hidden-max-width-992 " th:if="${kStat.index == (i.getOrderStatuses().size() - 1)}"
+                                                     th:text="${k.orderStatus}"></div>
+                                            </th:block>
                                             <div class="table-order-cell table-order-link-more hidden-max-width-992">
                                                 <a th:href="@{/user/account/detailOrder(id = ${i.orderId})}">Xem chi
                                                     tiết</a>

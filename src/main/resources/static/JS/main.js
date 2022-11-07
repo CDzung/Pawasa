@@ -217,3 +217,14 @@ function changeEmailwithOTP() {
     }
 }
 
+function submit(){
+    var day = $("#day").val();
+    var month = $("#month").val();
+    var year = $("#year").val();
+    var date = year + "-" + day + "-" + month;
+    var timestamp = Date.parse(date);
+    if(isNaN(timestamp) == false){
+        $("#report").html('Time not existed');
+    }
+}
+

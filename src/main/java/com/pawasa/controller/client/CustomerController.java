@@ -534,4 +534,11 @@ public class CustomerController {
         productRepository.save(product);
         return "redirect:/product?id=" + id;
     }
+
+    @GetMapping("/user/cancelOrder")
+    public void cancelOrder(@RequestParam("id") Optional<Long> id){
+        OrderStatus orderStatus = orderStatusRepository.findById(id.get()).get();
+        orderStatus.setOrderStatus("Đã hủy");
+        orderStatusRepository.save(orderStatus);
+    }
 }
