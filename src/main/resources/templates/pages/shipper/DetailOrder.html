@@ -50,9 +50,6 @@
                 <th>Product Name</th>
                 <th>Quantity</th>
                 <th>Price</th>
-                <th>Seller Name</th>
-                <th>Seller Address</th>
-                <th>Seller Phone</th>
             </tr>
             <tbody th:each="i : ${order.products}">
                 <tr>
@@ -61,13 +58,10 @@
                     <th:block th:each="j : ${i.orderDetails}">
                         <td th:if="${j.product.id == i.id}" th:text="${j.price}"></td>
                     </th:block>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                 </tr>
             </tbody>
         </table>
-        <a th:href="@{${url}}" style="text-align: center;font-size: 200%">BACK</a>
+        <button th:onclick="|window.location.href = '@{${url}}'|" style="width: 8%;padding: 1%;text-align: center;margin-left: 44%;">BACK</button>
     </main>
 </div>
 </body>

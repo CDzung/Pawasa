@@ -336,7 +336,7 @@ public class CustomerController {
         String referer = request.getHeader("Referer");
         try{
             User user = userRepository.findByEmail(principal.getName());
-            Product product = productRepository.findById(Long.parseLong(id));
+            Product product = productRepository.findById(Integer.parseInt(id));
             Cart cart = user.getCart();
             CartDetail cartDetail = cartDetailRepository.findByCartAndProduct(cart, product);
             int oldQuantity = 0;
@@ -533,12 +533,5 @@ public class CustomerController {
         }
         productRepository.save(product);
         return "redirect:/product?id=" + id;
-    }
-
-    @GetMapping("/user/cancelOrder")
-    public void cancelOrder(@RequestParam("id") Optional<Long> id){
-        OrderStatus orderStatus = orderStatusRepository.findById(id.get()).get();
-        orderStatus.setOrderStatus("Đã hủy");
-        orderStatusRepository.save(orderStatus);
     }
 }

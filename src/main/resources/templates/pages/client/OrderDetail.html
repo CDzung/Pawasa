@@ -160,41 +160,65 @@
                                     </div>
                                     <div class="border-block-mobile"></div>
                                     <div class="order-view-status-container">
-                                        <div class="order-view-status-new-order" th:if="${last_status.size() == 3}">
+                                        <th:block th:each="o : ${last_status}" th:if="${last_status.size() > 1}">
+                                            <th:block th:if="${last_status.get(last_status.size() - 1).orderStatus.equals('Giao hàng thành công')}">
+                                                <div class="order-view-status-new-order"
+                                                     th:if="${oStat.index > 0 && oStat.index < last_status.size() - 1}">
+                                                    <div class="order-view-icon-container">
+                                                        <div style="height: 60px;width: 60px;align-self: center;">
+                                                            <div class="order-view-icon-img"
+                                                                 style="background: url(https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/order/ico_donhangmoi_green.svg) no-repeat center;border-color:#29a72a;"></div>
+                                                        </div>
+                                                        <div class="order-view-icon-content"><p
+                                                                th:text="${o.orderStatus}"></p>
+                                                            <p th:text="${o.statusDate}"></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="order-view-progress-bar"
+                                                         style="background:#29a72a;"></div>
+                                                </div>
+                                            </th:block>
+                                            <th:block th:if="${!last_status.get(last_status.size() - 1).orderStatus.equals('Giao hàng thành công')}">
+                                                <div class="order-view-status-new-order"
+                                                     th:if="${oStat.index > 0 && oStat.index < last_status.size() - 1}">
+                                                    <div class="order-view-icon-container">
+                                                        <div style="height: 60px;width: 60px;align-self: center;">
+                                                            <div class="order-view-icon-img"
+                                                                 style="background: url(https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/order/ico_donhangmoi_red.svg) no-repeat center;border-color:#fa0001;"></div>
+                                                        </div>
+                                                        <div class="order-view-icon-content"><p
+                                                                th:text="${o.orderStatus}"></p>
+                                                            <p th:text="${o.statusDate}"></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="order-view-progress-bar"
+                                                         style="background:#fa0001;"></div>
+                                                </div>
+                                            </th:block>
+                                        </th:block>
+                                        <div class="order-view-status-new-order" th:if="${last_status.get(last_status.size() - 1).orderStatus.equals('Giao hàng thành công')}">
                                             <div class="order-view-icon-container">
                                                 <div style="height: 60px;width: 60px;align-self: center;">
                                                     <div class="order-view-icon-img"
-                                                         style="background: url(https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/order/ico_donhangmoi_red.svg) no-repeat center;border-color:#fa0001;"></div>
+                                                         style="background: url(https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/order/ico_hoantat_green.svg) no-repeat center;border-color:#29a72a;"></div>
                                                 </div>
-                                                <div class="order-view-icon-content"><p>Đơn hàng mới</p>
+                                                <div class="order-view-icon-content"><p
+                                                        th:text="${last_status.get(last_status.size() - 1).orderStatus}"></p>
                                                     <p th:text="${last_status.get(last_status.size() - 1).statusDate}"></p>
                                                 </div>
                                             </div>
-                                            <div class="order-view-progress-bar" style="background:#fa0001;"></div>
                                         </div>
-                                        <div class="order-view-status-new-order" th:if="${last_status.size() > 1}">
-                                            <div class="order-view-icon-container">
-                                                <div style="height: 60px;width: 60px;align-self: center;">
-                                                    <div class="order-view-icon-img"
-                                                         style="background: url(https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/order/ico_dangxuly_red.svg) no-repeat center;border-color:#fa0001;"></div>
-                                                </div>
-                                                <div class="order-view-icon-content"><p>Đang xử lý</p>
-                                                    <p th:text="${last_status.get(1).statusDate}"></p></div>
-                                            </div>
-                                            <div class="order-view-progress-bar" style="background:#fa0001;"></div>
-                                        </div>
-                                        <div class="order-view-status-new-order">
+                                        <div class="order-view-status-new-order" th:if="${last_status.get(last_status.size() - 1).orderStatus.equals('Đơn hàng bị hủy')}">
                                             <div class="order-view-icon-container">
                                                 <div style="height: 60px;width: 60px;align-self: center;">
                                                     <div class="order-view-icon-img"
                                                          style="background: url(https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/order/ico_huy_red.svg) no-repeat center;border-color:#fa0001;"></div>
                                                 </div>
                                                 <div class="order-view-icon-content"><p
-                                                        th:text="${last_status.get(0).orderStatus}"></p>
-                                                    <p th:text="${last_status.get(0).statusDate}"></p>
+                                                        th:text="${last_status.get(last_status.size() - 1).orderStatus}"></p>
+                                                    <p th:text="${last_status.get(last_status.size() - 1).statusDate}"></p>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
 
@@ -238,7 +262,7 @@
                                                     </div>
                                                     <div><span>Tổng tiền:</span><span><span
                                                             class="price"
-                                                            th:text="${order.totalPrice}"></span><span>đ</span></span>
+                                                            th:text="${#numbers.formatDecimal(order.totalPrice,0,'COMMA',0,'POINT')}"></span><span>đ</span></span>
                                                     </div>
                                                     <div class="order-subOrder-quantity">
                                                         <span>Số lượng:</span><span
@@ -299,10 +323,7 @@
                                                             <span>
 		    		    		    			<span class="cart-price">
 		    						    <span class="price"
-                                              th:text="${#numbers.formatDecimal(k.product.quantity * k.product.price * (100 - k.product.discount) / 100,0,'COMMA',0,'POINT')}"></span> đ
-		    		</span>
-
-		</span>
+                                              th:text="${#numbers.formatDecimal(k.quantity * k.product.price * (100 - k.product.discount) / 100,0,'COMMA',0,'POINT')}"></span> đ</span></span>
                                                         </div>
                                                     </div>
                                                 </div>

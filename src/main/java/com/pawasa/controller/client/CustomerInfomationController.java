@@ -71,8 +71,9 @@ public class CustomerInfomationController {
     public String updateProfile(@RequestParam(name = "id") Long id, @RequestParam(name = "lastname") String lastname, @RequestParam(name = "firstname") String firstname,
                                 @RequestParam(name = "telephone") String phone, @RequestParam(name = "email") String email, @RequestParam(name = "gender-radio") String gender,
                                 @RequestParam(name = "day") String day, @RequestParam(name = "month") String month, @RequestParam(name = "year") String year,
-                                @RequestParam(name = "current_password") String oldPass, @RequestParam(name = "password") String newPass, @RequestParam(name = "confirmation") String confirm
-            , HttpServletRequest request, HttpServletResponse response, Model model) throws ParseException {
+                                @RequestParam(name = "current_password") String oldPass, @RequestParam(name = "password") String newPass, @RequestParam(name = "confirmation") String confirm,
+            @RequestParam(name = "change_password") Optional<String> check
+            , HttpServletRequest request, HttpServletResponse response, Model model) {
         User user = userRepository.findById(id).get();
         user.setFirstName(firstname);
         user.setLastName(lastname);
@@ -80,18 +81,26 @@ public class CustomerInfomationController {
         user.setEmail(email);
         String date_String = year + "-" + day + "-" + month;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
-        Date date = formatter.parse(date_String);
-        user.setDob(date);
-        if (oldPass != null && BCrypt.checkpw(oldPass, user.getPassword())) {
-            if (newPass.equals(confirm)) {
-                user.setPassword(BCrypt.hashpw(newPass, BCrypt.gensalt()));
+        try{
+            Date date = formatter.parse(date_String);
+            user.setDob(date);
+        }
+        catch (ParseException e) {
+            model.addAttribute("error", "date wrong!");
+            return "pages/client/Profile";
+        }
+        if(check.isPresent()){
+            if (oldPass != null && BCrypt.checkpw(oldPass, user.getPassword())) {
+                if (newPass.equals(confirm)) {
+                    user.setPassword(BCrypt.hashpw(newPass, BCrypt.gensalt()));
+                } else {
+                    model.addAttribute("error", "Password and Re-Password not match");
+                    return "pages/client/Profile";
+                }
             } else {
-                model.addAttribute("error", "Password and Re-Password not match");
+                model.addAttribute("error", "Old Password is wrong!");
                 return "pages/client/Profile";
             }
-        } else {
-            model.addAttribute("error", "Old Password is wrong!");
-            return "pages/client/Profile";
         }
         user.setRole(roleRepository.findByRoleName("Customer"));
         try {
@@ -196,6 +205,9 @@ public class CustomerInfomationController {
         Long id = Order_id.get();
         Order order = orderRepository.findById(id).get();
         List<OrderStatus> orderStatus = orderStatusRepository.findByOrder_OrderIdOrderByIdDesc(id);
+        Collections.sort(orderStatus,(o1, o2) -> {
+            return (int)(o1.getId() - o2.getId());
+        });
         model.addAttribute("last_status", orderStatus);
         model.addAttribute("order", order);
         return "pages/client/OrderDetail";

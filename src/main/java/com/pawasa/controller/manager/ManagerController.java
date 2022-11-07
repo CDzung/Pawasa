@@ -53,7 +53,7 @@ public class ManagerController {
             cal.setTime(i.getOrderDate());
             if (cal.get(Calendar.YEAR) == 2022) {
                 int month = cal.get(Calendar.MONTH) + 1;
-                if (numProductperMonth.containsKey(month)) {
+                if (!numProductperMonth.containsKey(month)) {
                     numProductperMonth.put(month, i.getTotalPrice());
                 } else {
                     numProductperMonth.put(month, BigDecimal.valueOf(numProductperMonth.get(month).doubleValue() + i.getTotalPrice().doubleValue()));
@@ -126,7 +126,7 @@ public class ManagerController {
 
     @PostMapping("/manager/product/Edit")
     public String AddProduct(@RequestParam(name = "id") Optional<Long> id,
-                             @RequestParam(name = "category") Optional<Long> categoryId,
+                             @RequestParam(name = "category",defaultValue = "0") Optional<Long> categoryId,
                              @RequestParam(name = "name") Optional<String> productName,
                              @RequestParam(name = "price") Optional<Double> price,
                              @RequestParam(name = "quantity") Optional<Integer> quantity,
@@ -136,6 +136,8 @@ public class ManagerController {
                              @RequestParam(name = "publisher_year") Optional<String> publisher_year,
                              @RequestParam(name = "attrLanguage") Optional<String> attrLanguage,
                              @RequestParam(name = "attrLayout") Optional<String> attrLayout,
+                             @RequestParam("isbn") Optional<String> isbn,
+                             @RequestParam("discount") Optional<Integer> discount,
                              @RequestParam("file") MultipartFile file
     ) {
         Product p;
@@ -154,6 +156,8 @@ public class ManagerController {
         p.setPublishYear(publisher_year.get());
         p.setLanguage(attrLanguage.get());
         p.setBookLayout(attrLayout.get());
+        p.setIsbn(isbn.get());
+        p.setDiscount(discount.get());
         p.setImage(file.getOriginalFilename());
         p.setAvailable(true);
         defaultProductService.addProduct(p);

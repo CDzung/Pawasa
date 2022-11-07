@@ -19,7 +19,7 @@ public class MyConfig {
     public FilterRegistrationBean<FilterUser> HomeFilter(){
         FilterRegistrationBean<FilterUser> filterUserFilterRegistrationBean = new FilterRegistrationBean<>();
         filterUserFilterRegistrationBean.setFilter(filterUser);
-        filterUserFilterRegistrationBean.addUrlPatterns("*");
+        filterUserFilterRegistrationBean.addUrlPatterns("/*");
         return filterUserFilterRegistrationBean;
     }
     @Bean

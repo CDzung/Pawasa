@@ -83,7 +83,8 @@
                     <th>Address</th>
                     <th>Order Date</th>
                     <th>Status</th>
-                    <th colspan="2">Action</th>
+                    <th>View</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody th:each="i : ${order_set}">
@@ -94,13 +95,14 @@
                     <td th:text="${i.address}"></td>
                     <td th:text="${i.orderDate}">
                     </td>
-                    <td class="status" th:text="${i.orderStatuses.size() == 1 ? 'Waitting' : 'Processing'}"></td>
+                    <td class="status" th:text="${i.orderStatuses.size() == 2 ? 'Waitting' : 'Processing'}"></td>
                     <td><a th:href="@{/shipper/detail(id=${i.orderId})}" class="success">See
                         details</a></td>
                     <td>
-                        <button type="button"
-                                th:onclick="'javascript:receiveOrder(\'' + ${i.orderId} +'\',\''+ ${i.orderStatuses.size()} + '\');'"
-                                class="success" th:value="${i.orderStatuses.size() == 1 ? 'Take' : 'Confirm'}"></button>
+                        <button type="button" th:onclick="'javascript:receiveOrder(\'' + ${i.orderId} +'\',\''+ ${i.orderStatuses.size()} + '\');'"
+                                class="success" value="Take" th:if="${i.orderStatuses.size() == 2 }">Take</button>
+                        <button type="button" th:onclick="'javascript:receiveOrder(\'' + ${i.orderId} +'\',\''+ ${i.orderStatuses.size()} + '\');'"
+                                class="success" value="Confirm" th:unless="${i.orderStatuses.size() == 2 }">Confirm</button>
                     </td>
                 </tr>
                 </tbody>
@@ -122,35 +124,17 @@
     });
 
     function receiveOrder(j, k) {
-        if (k === 1) {
+        if (k == 2) {
             var i = confirm('Do you want to receive Order?');
             if (i === true) {
-                $.ajax({
-                    type: 'GET',
-                    url: '/shipper/receiveOrder',
-                    data: 'id=' + j,
-                    success: function () {
-                        location.reload();
-                    }
-                })
+                window.location.href = '/shipper/receiveOrder?id=' + j;
             }
         } else {
             var a = confirm("Shipped Successful??");
-            var k = 'Giao hàng thất bại';
             if (a === true) {
                 k = 'Giao hàng thành công';
+                window.location.href = '/shipper/completeOrder?id=' + j + '&message=' + k;
             }
-            $.ajax({
-                type: 'GET',
-                url: '/shipper/completeOrder',
-                data: {
-                    id: j,
-                    message: k,
-                },
-                success: function () {
-                    location.reload();
-                }
-            })
         }
     }
 </script>

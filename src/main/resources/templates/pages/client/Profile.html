@@ -127,7 +127,7 @@
                                         </li>
                                     </ul>
                                     <form th:action="@{/user/account/profile}" method="post"
-                                          id="form-account-info" autocomplete="off" onsubmit="submit()">
+                                          id="form-account-info" autocomplete="off">
                                         <div>
                                             <input type="hidden" name="id" th:value="${user?.id}">
                                             <div class="fhs-input-box fhs-input-group-horizontal-account">
@@ -137,7 +137,7 @@
                                                         <input class="fhs-textbox" type="text" placeholder="Nhập họ"
                                                                id="lastname" name="lastname"
                                                                th:value="${user?.lastName}"
-                                                               maxlength="200">
+                                                               maxlength="200" required>
                                                         <span class="fhs-input-icon fhs-textbox-alert"></span>
                                                     </div>
                                                 </div>
@@ -150,7 +150,7 @@
                                                         <input class="fhs-textbox" type="text" placeholder="Nhập tên"
                                                                id="firstname" name="firstname"
                                                                th:value="${user?.firstName}"
-                                                               maxlength="200">
+                                                               maxlength="200" required>
                                                         <span class="fhs-input-icon fhs-textbox-alert"></span>
                                                     </div>
                                                 </div>
@@ -163,7 +163,7 @@
                                                     <div class="fhs-input-group">
                                                         <input class="fhs-textbox" type="text" id="telephone"
                                                                name="telephone" maxlength="11" minlength="10"
-                                                               th:value="${user?.phoneNumber}">
+                                                               th:value="${user?.phoneNumber}" required>
                                                     </div>
                                                 </div>
                                                 <div class="fhs-input-alert"></div>
@@ -219,21 +219,21 @@
                                                                     class="fhs_input_date_group_day account-input-birthday"
                                                                     name="day" type="text" style="text-align: center;"
                                                                     maxlength="2" placeholder="DD"
-                                                                    th:value="${day}">
+                                                                    th:value="${day}" required>
                                                         </div>
                                                         <div class="account-input-bod">
                                                             <input id="month"
                                                                     class="fhs_input_date_group_month account-input-birthday"
                                                                     name="month" type="text" style="text-align: center;"
                                                                     maxlength="2" placeholder="MM"
-                                                                    th:value="${month}">
+                                                                    th:value="${month}" required>
                                                         </div>
                                                         <div class="account-input-bod">
                                                             <input id="year"
                                                                     class="fhs_input_date_group_year account-input-birthday"
                                                                     name="year" type="text" style="text-align: center;"
                                                                     maxlength="4" placeholder="YYYY"
-                                                                    th:value="${year}">
+                                                                    th:value="${year}" required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -247,6 +247,7 @@
                                                                                                     id="change_password"
                                                                                                     onclick="changepass()"
                                                                                                     title="Đổi mật khẩu"
+                                                                                                    value="1"
                                                                                                     style="margin-top: -11px; margin-right: 11px;">
                                                     </label>
                                                 </div>
@@ -302,7 +303,7 @@
                                             </div>
                                         </div>
                                         <div style="text-align: center;padding: 20px 0 10px 0;">
-                                            <button type="submit" title="Lưu thay đổi" id="btn-save-account-info"
+                                            <button type="button" title="Lưu thay đổi" id="btn-save-account-info" onclick="this.form.submit()"
                                                     class="btn-save-confirm"><span><span>Lưu thay đổi</span></span>
                                             </button>
                                         </div>

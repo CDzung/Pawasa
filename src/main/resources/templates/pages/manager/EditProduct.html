@@ -40,7 +40,8 @@
                                 <div class="form-group col-6">
                                     <label for="category">Danh mục sản phẩm</label> <select class="form-control"
                                                                                             id="category"
-                                                                                            name="category">
+                                                                                            name="category"
+                                                                                            required>
                                     <th:block th:each="c : ${list_category}">
                                         <option th:value="${c.id}" th:text="${c.categoryName}"
                                                 th:selected="${c.id == product?.id}? 'selected'">
@@ -51,7 +52,7 @@
                                 <div class="form-group col-6">
                                     <label for="p_name">Tên sản phẩm</label> <input type="text" class="form-control"
                                                                                     id="p_name" name="name" required
-                                                                                    th:value="${product?.productName}" >
+                                                                                    th:value="${product?.productName}">
                                 </div>
 
 
@@ -100,7 +101,8 @@
                                 <div class="form-group col-6">
                                     <label for="attr_language">Ngôn ngữ</label> <select class="form-control"
                                                                                         id="attr_language"
-                                                                                        name="attrLanguage">
+                                                                                        name="attrLanguage"
+                                                                                        required>
                                     <option value="Tiếng Việt" th:selected="${product?.language} == 'Tiếng Việt'">
                                         Tiếng
                                         Việt
@@ -122,7 +124,8 @@
                                 <div class="form-group col-6">
                                     <label for="attr_layout">Hình thức</label> <select class="form-control"
                                                                                        id="attr_layout"
-                                                                                       name="attrLayout">
+                                                                                       name="attrLayout"
+                                                                                       required>
                                     <option value="Bìa Mềm" th:selected="${product?.bookLayout} == 'Bìa Mềm'">
                                         Bìa Mềm
                                     </option>
@@ -133,10 +136,25 @@
                                 </select>
                                 </div>
                                 <div class="form-group col-6">
+                                    <label for="isbn">ISBN</label> <input type="text" class="form-control"
+                                                                          id="isbn"
+                                                                          name="isbn"
+                                                                          th:value="${product.isbn}"
+                                                                          required>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="discount">Discount</label> <input type="text" class="form-control"
+                                                                                  id="discount"
+                                                                                  name="discount"
+                                                                                  th:value="${product.discount}"
+                                                                                  required>
+                                </div>
+                                <div class="form-group col-6">
                                     <img th:src="${product.image}" th:if="${product?.image.startsWith('http')}"
                                          width="100" height="100" alt="none" id="image"
                                     />
-                                    <img th:src="@{'/image/' + ${product.image}}" th:unless="${product?.image.startsWith('http')}"
+                                    <img th:src="@{'/image/' + ${product.image}}"
+                                         th:unless="${product?.image.startsWith('http')}"
                                          width="100" height="100" alt="none" id="image"
                                     />
                                     <input type="file" class="form-control-file" id="p_imageUrl" name="file" required>
@@ -148,7 +166,9 @@
                                           th:text="${product?.description}"></textarea>
                             </div>
                             <div class="form-group col-12 text-center">
-                                <button type="button" class="btn btn-success btn-sm" onclick="window.location.href='/manager/product'">Quay về</button>
+                                <button type="button" class="btn btn-success btn-sm"
+                                        onclick="window.location.href='/manager/product'">Quay về
+                                </button>
                                 <button type="submit" class="btn btn-success btn-sm">Lưu</button>
                             </div>
                         </form>
@@ -160,7 +180,7 @@
     </div>
 </div>
 <script>
-    document.getElementById("p_imageUrl").onchange = function (evt){
+    document.getElementById("p_imageUrl").onchange = function (evt) {
         var tgt = evt.target || window.event.srcElement,
             files = tgt.files;
         if (FileReader && files && files.length) {
@@ -171,6 +191,35 @@
             fr.readAsDataURL(files[0]);
         }
     }
+    $(document).ready(function () {
+        var price = $('#p_price').val();
+        var number = $('#p_amount').val();
+        var year = $('#publisher_year').val();
+        var isbn = $('#isbn').val();
+        var regex = /^[0-9]{10}/;
+        var discount = $('#discount').val();
+        $("#form").submit(function (e) {
+            if (!$.isNumeric(price) && price > 0) {
+                alert('Price must be number and greater than 0!!');
+                e.preventDefault();
+            } else if (!$.isNumeric(number) && price > 0 && Math.floor(number) == number && number > 0) {
+                alert('amount must be number integer and greater than 0!!');
+                e.preventDefault();
+            } else if (!$.isNumeric(year) && year > 0 && Math.floor(year) == year && year > 0) {
+                alert('year must be number integer and greater than 0!!');
+                e.preventDefault();
+            } else if (!regex.test(isbn)) {
+                alert('isbn wrong format!!');
+                e.preventDefault();
+            } else if (!$.isNumeric(discount) &&
+                discount >= 0 && discount <= 100) {
+                alert('discount must be number and greater than 0 and less than 100');
+                e.preventDefault();
+            } else {
+
+            }
+        });
+    });
 </script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>

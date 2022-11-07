@@ -34,18 +34,19 @@ public class ShipperController {
         List<Order> set = orderRepository.findAll();
         List<Order> list = new ArrayList<>();
         for (Order i : set) {
-            if ((i.getOrderStatuses().size() == 1 && i.getUser() == null) ||
-                    (i.getOrderStatuses().size() == 2 && i.getShipper().equals(u))) {
+            if ((i.getOrderStatuses().size() == 2) ||
+                    (i.getOrderStatuses().size() == 3 && i.getShipper().equals(u))) {
                 for (OrderStatus j : i.getOrderStatuses()) {
-                    if (j.getOrderStatus().equals("Đã xác nhận")) {
+                    System.out.println(j.getOrderStatus());
+                    if (j.getOrderStatus().trim().equalsIgnoreCase("Đã xác nhận")) {
                         list.add(i);
                     }
                 }
             }
         }
-        double sum = set.stream().filter(order -> order.getOrderStatuses().size() == 3 && order.getUser().equals(u))
+        double sum = set.stream().filter(order -> order.getOrderStatuses().size() == 4 && order.getUser().equals(u))
                 .map(order -> order.getTotalPrice().doubleValue()).reduce(0.0, (aDouble, aDouble2) -> aDouble + aDouble2);
-        double count = set.stream().filter(order -> order.getOrderStatuses().size() == 3 && order.getUser().equals(u)).count();
+        double count = set.stream().filter(order -> order.getOrderStatuses().size() == 4 && order.getUser().equals(u)).count();
         model.addAttribute("order_set", list);
         model.addAttribute("sum", sum);
         model.addAttribute("count", count);
@@ -60,7 +61,7 @@ public class ShipperController {
         Set<Order> set = orderRepository.findByShipper_Id(u.getId());
         List<Order> list = new ArrayList<>();
         for (Order i : set) {
-            if (i.getOrderStatuses().size() == 3) {
+            if (i.getOrderStatuses().size() == 4) {
                 list.add(i);
             }
         }
@@ -69,23 +70,24 @@ public class ShipperController {
     }
 
     @GetMapping("/shipper/receiveOrder")
-    public void receiveOrder(@RequestParam(name = "id") Optional<Long> id) {
+    public String receiveOrder(@RequestParam(name = "id") Optional<Long> id) {
         Long Orderid = id.get();
         Order order = orderRepository.findById(Orderid).get();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User u = userRepository.findByEmail(email);
-        order.setUser(u);
+        order.setShipper(u);
         orderRepository.save(order);
         OrderStatus orderStatus = new OrderStatus();
         orderStatus.setOrderStatus("Đơn hàng đang giao");
         orderStatus.setOrder(order);
         orderStatus.setStatusDate(new Date());
         orderStatusService.addOrderStatus(orderStatus);
+        return "redirect:/shipper";
     }
 
     @GetMapping("/shipper/completeOrder")
-    public void completeOrder(@RequestParam(name = "id") Optional<Long> id, @RequestParam(name = "message") Optional<String> message) {
+    public String completeOrder(@RequestParam(name = "id") Optional<Long> id, @RequestParam(name = "message") Optional<String> message) {
         Long Orderid = id.get();
         Order order = orderRepository.findById(Orderid).get();
         OrderStatus orderStatus = new OrderStatus();
@@ -93,6 +95,7 @@ public class ShipperController {
         orderStatus.setOrder(order);
         orderStatus.setStatusDate(new Date());
         orderStatusService.addOrderStatus(orderStatus);
+        return "redirect:/shipper";
     }
 
     @GetMapping("/shipper/detail")
