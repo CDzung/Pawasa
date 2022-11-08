@@ -165,7 +165,7 @@ public class SearchController {
                                    @RequestParam("exists") Optional<Integer> quantity,
                                    @RequestParam("page") Optional<Integer> page,
                                    @RequestParam("size") Optional<Integer> size,
-                                   @RequestParam(name = "Sortby") Optional<Integer> sort) {
+                                   @RequestParam(name = "sortBy") Optional<Integer> sort) {
 
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(12);
@@ -180,7 +180,6 @@ public class SearchController {
         String url = "category?id=" + categoryId + "&exists=" + qty + "&size=" + pageSize + "&Sortby=" + srt;
         List<Product> products;
         Category category = productRepository.findByCategoryID(categoryId);
-        List<Category> list_cate = categoryRepository.findAll();
         List<Long> idLst = new ArrayList<>();
         List<Product> lst = productRepository.findAll();
         for (int i = 0; i < lst.size(); i++) {
@@ -241,7 +240,6 @@ public class SearchController {
             Collections.sort(products, (o1, o2) -> (int) (o2.getPrice() - o1.getPrice()));
         }
         List<Product> productList = products.stream().skip((currentPage - 1) * pageSize).limit(pageSize).toList();
-        model.addAttribute("list_cate", list_cate);
         model.addAttribute("category", category);
         model.addAttribute("products", productList);
         model.addAttribute("pricesArr", pricesArr);
