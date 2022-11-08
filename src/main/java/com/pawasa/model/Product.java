@@ -56,11 +56,11 @@ public class Product {
     @Column(name = "author")
     private String author;
 
-    @NotEmpty
+
     @Column(name = "publisher")
     private String publisher;
 
-    @NotEmpty
+
     @Column(name = "publish_year")
     private String publishYear;
 

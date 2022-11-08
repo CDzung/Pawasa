@@ -110,7 +110,7 @@ public class CustomerController {
             notification.setDescription("Hãy bắt đầu cuộc hành trình thú vị của bạn tại nơi đây");
             notification.setTitle("Chào mừng bạn đến với Pawasa");
             notification.setDate(new Date());
-            notificationRepository.save(notification);
+
             //save cart
             Cart cart = new Cart();
             cart.setTotalPrice(BigDecimal.valueOf(0));
@@ -119,6 +119,7 @@ public class CustomerController {
             userService.addUser(user);
             cart.setUser(user);
             cartRepository.save(cart);
+            notificationRepository.save(notification);
         } catch (Exception e) {
         }
         return "redirect:/login";
@@ -519,7 +520,7 @@ public class CustomerController {
         }
 
 
-        return "redirect:/";
+        return "redirect:/user/account/history";
     }
 
     @PostMapping("/user/rate")

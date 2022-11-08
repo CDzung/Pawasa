@@ -138,7 +138,8 @@ public class ManagerController {
                              @RequestParam(name = "attrLayout") Optional<String> attrLayout,
                              @RequestParam("isbn") Optional<String> isbn,
                              @RequestParam("discount") Optional<Integer> discount,
-                             @RequestParam("file") MultipartFile file
+                             @RequestParam("file") MultipartFile file,
+                             @RequestParam("description") Optional<String> description
     ) {
         Product p;
         if (!id.isPresent()) {
@@ -158,8 +159,10 @@ public class ManagerController {
         p.setBookLayout(attrLayout.get());
         p.setIsbn(isbn.get());
         p.setDiscount(discount.get());
-        p.setImage(file.getOriginalFilename());
+        p.setImage("/image/"+file.getOriginalFilename());
         p.setAvailable(true);
+        p.setPublisher(publisher.get());
+        p.setDescription(description.get());
         defaultProductService.addProduct(p);
         return "redirect:/manager/product";
     }
