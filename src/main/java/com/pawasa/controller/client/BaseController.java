@@ -136,6 +136,8 @@ public class BaseController {
         response.getWriter().print("<ul class=\"bxslider\">\n" +
                 "<li class=\"item items-sl-width\">");
         for (Product i : set) {
+            int rate = i.getRateSum()/Math.max(i.getRateCount(),1);
+            int ratePercent = rate*100/5;
             Set<OrderDetail> orderDetails = i.getOrderDetails();
             int sum = 0;
             for (OrderDetail a : orderDetails) {
@@ -174,9 +176,9 @@ public class BaseController {
                     "                                                    <div class=\"fhs-rating-container\" style=\"height:20px\">\n" +
                     "                                                        <div class=\"ratings fhs-no-mobile-block\">\n" +
                     "                                                            <div class=\"rating-box\">\n" +
-                    "                                                                <div class=\"rating\"></div>\n" +
+                    "                                                                <div class=\"rating\" style=\"width: " + ratePercent + "%" + "\"></div>\n" +
                     "                                                            </div>\n" +
-                    "                                                            <div class=\"amount\">(0)</div>\n" +
+                    "                                                            <div class=\"amount\">(" + i.getRateCount() + ")</div>\n" +
                     "                                                        </div>\n" +
                     "                                                    </div>\n" +
                     "                                                </div>\n" +
@@ -185,8 +187,7 @@ public class BaseController {
                     "                                                         role=\"progressbar\"\n" +
                     "                                                         aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"" + sum + "\"\n" +
                     "                                                         style=\"width: 0%;\"></div>\n" +
-                    "                                                    <div class=\"text-progress-bar\"><span class=\"298231-bar\">Đã bán\n" +
-                    "                                                        0</span></div>\n" +
+                    "                                                    <div class=\"text-progress-bar\"></div>\n" +
                     "                                                </div>\n" +
                     "                                            </div>");
         }

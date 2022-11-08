@@ -54,8 +54,8 @@
             <tbody th:each="i : ${order.products}">
                 <tr>
                     <td th:text="${i.productName}"></td>
-                    <td th:text="${i.quantity}"></td>
                     <th:block th:each="j : ${i.orderDetails}">
+                        <td th:if="${j.product.id == i.id}" th:text="${j.quantity}"></td>
                         <td th:if="${j.product.id == i.id}" th:text="${j.price}"></td>
                     </th:block>
                 </tr>

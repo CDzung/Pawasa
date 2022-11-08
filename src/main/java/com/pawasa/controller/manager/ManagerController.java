@@ -138,7 +138,8 @@ public class ManagerController {
                              @RequestParam(name = "attrLayout") Optional<String> attrLayout,
                              @RequestParam("isbn") Optional<String> isbn,
                              @RequestParam("discount") Optional<Integer> discount,
-                             @RequestParam("file") MultipartFile file,Model model
+                             @RequestParam("file") MultipartFile file,
+                             @RequestParam("description") Optional<String> description, Model model
     ) {
         Product p;
         if (!id.isPresent()) {

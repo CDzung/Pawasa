@@ -105,12 +105,6 @@ public class CustomerController {
             user.setLastName("");
             user.setActive(true);
             user.setRole(roleRepository.findByRoleName("Customer"));
-            Notification notification = new Notification();
-            notification.setUser(user);
-            notification.setDescription("Hãy bắt đầu cuộc hành trình thú vị của bạn tại nơi đây");
-            notification.setTitle("Chào mừng bạn đến với Pawasa");
-            notification.setDate(new Date());
-            notificationRepository.save(notification);
             //save cart
             Cart cart = new Cart();
             cart.setTotalPrice(BigDecimal.valueOf(0));

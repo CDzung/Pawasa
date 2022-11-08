@@ -152,7 +152,7 @@ public class SearchController {
         model.addAttribute("name", name);
         model.addAttribute("cuPage", currentPage);
         model.addAttribute("url", url);
-        model.addAttribute("endPage", Math.ceil((double) products.size() / pageSize));
+        model.addAttribute("endPage", products.size() % pageSize == 0 ? products.size() / pageSize : products.size() / pageSize + 1);
         return "/pages/client/searchByWord";
     }
 
@@ -249,7 +249,7 @@ public class SearchController {
         model.addAttribute("size", pageSize);
         model.addAttribute("exists", qty);
         model.addAttribute("bookLayoutId", bookLayoutIDs);
-        model.addAttribute("endPage", Math.ceil((double) products.size() / pageSize));
+        model.addAttribute("endPage", products.size() % pageSize == 0 ? products.size() / pageSize : products.size() / pageSize + 1);
         model.addAttribute("url", url);
         model.addAttribute("cuPage", currentPage);
         return "/pages/client/searchByCategory";
