@@ -208,7 +208,7 @@ public class BaseController {
                 "    font-size: 14px;\n" +
                 "    font-weight: 700;\n" +
                 "    width: 210px;\n" +
-                "    height: 40px;    margin: 0 auto;\"   href=\"search\">Xem Thêm</a>\n");
+                "    height: 40px;    margin: 0 auto;\"   href=\"search?name=\">Xem Thêm</a>\n");
     }
 
     @GetMapping("/product")

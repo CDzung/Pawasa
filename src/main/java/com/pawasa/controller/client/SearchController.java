@@ -39,7 +39,7 @@ public class SearchController {
                        @RequestParam(value = "page") Optional<Integer> page,
                        @RequestParam(value = "size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(12);
+        int pageSize = size.orElse(24);
 
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("productName"));
 
@@ -75,7 +75,7 @@ public class SearchController {
                                @RequestParam(value = "size") Optional<Integer> size,
                                @RequestParam(name = "Sortby") Optional<Integer> sort) {
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(12);
+        int pageSize = size.orElse(24);
         int qty = quantity.orElse(1);
         int srt = sort.orElse(1);
         boolean[] pricesArr = new boolean[6];
@@ -168,7 +168,7 @@ public class SearchController {
                                    @RequestParam(name = "sortBy") Optional<Integer> sort) {
 
         int currentPage = page.orElse(1);
-        int pageSize = size.orElse(12);
+        int pageSize = size.orElse(24);
         int qty = quantity.orElse(1);
         int srt = sort.orElse(1);
         boolean[] pricesArr = new boolean[6];
