@@ -1,8 +1,10 @@
 package com.pawasa.controller.shipper;
 
+import com.pawasa.model.Notification;
 import com.pawasa.model.Order;
 import com.pawasa.model.OrderStatus;
 import com.pawasa.model.User;
+import com.pawasa.repository.NotificationRepository;
 import com.pawasa.repository.OrderRepository;
 import com.pawasa.repository.UserRepository;
 import com.pawasa.service.OrderStatusService;
@@ -26,6 +28,9 @@ public class ShipperController {
     @Autowired
     private OrderStatusService orderStatusService;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     @GetMapping("/shipper")
     public String getDashBoard(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -43,9 +48,9 @@ public class ShipperController {
                 }
             }
         }
-        double sum = set.stream().filter(order -> order.getOrderStatuses().size() == 4 && order.getUser().equals(u))
+        double sum = set.stream().filter(order -> order.getOrderStatuses().size() == 4 && order.getShipper().equals(u))
                 .map(order -> order.getTotalPrice().doubleValue()).reduce(0.0, (aDouble, aDouble2) -> aDouble + aDouble2);
-        double count = set.stream().filter(order -> order.getOrderStatuses().size() == 4 && order.getUser().equals(u)).count();
+        double count = set.stream().filter(order -> order.getOrderStatuses().size() == 4 && order.getShipper().equals(u)).count();
         model.addAttribute("order_set", list);
         model.addAttribute("sum", sum);
         model.addAttribute("count", count);
@@ -82,6 +87,15 @@ public class ShipperController {
         orderStatus.setOrder(order);
         orderStatus.setStatusDate(new Date());
         orderStatusService.addOrderStatus(orderStatus);
+
+        //add notification
+        Notification notification = new Notification();
+        notification.setUser(u);
+        notification.setTitle("Đơn hàng #" + order.getOrderId()+ " đang được giao");
+        notification.setDescription("Đơn hàng #" + order.getOrderId()+ " đang được giao");
+        notification.setDate(new Date());
+        notificationRepository.save(notification);
+
         return "redirect:/shipper";
     }
 
@@ -94,6 +108,14 @@ public class ShipperController {
         orderStatus.setOrder(order);
         orderStatus.setStatusDate(new Date());
         orderStatusService.addOrderStatus(orderStatus);
+
+        //add notification
+        Notification notification = new Notification();
+        notification.setUser(order.getUser());
+        notification.setTitle("Đơn hàng #" + order.getOrderId()+ " đã được giao");
+        notification.setDescription("Đơn hàng #" + order.getOrderId()+ " đã được giao");
+        notification.setDate(new Date());
+        notificationRepository.save(notification);
         return "redirect:/shipper";
     }
 

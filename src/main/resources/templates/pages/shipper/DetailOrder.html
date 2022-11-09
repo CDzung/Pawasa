@@ -49,15 +49,15 @@
             <tr>
                 <th>Product Name</th>
                 <th>Quantity</th>
-                <th>Price</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
             </tr>
-            <tbody th:each="i : ${order.products}">
+            <tbody th:each="i : ${order.orderDetails}">
                 <tr>
-                    <td th:text="${i.productName}"></td>
+                    <td th:text="${i.product.productName}"></td>
                     <td th:text="${i.quantity}"></td>
-                    <th:block th:each="j : ${i.orderDetails}">
-                        <td th:if="${j.product.id == i.id}" th:text="${j.price}"></td>
-                    </th:block>
+                    <td th:text="${i.price  + ' đ'}"></td>
+                    <td th:text="${i.price*i.quantity + ' đ'}"></td>
                 </tr>
             </tbody>
         </table>

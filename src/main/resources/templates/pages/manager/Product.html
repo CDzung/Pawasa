@@ -56,7 +56,7 @@
                 <tr style="color: green">
                     <th>STT</th>
                     <th>Product Name</th>
-                    <th colspan="2"></th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody th:each="i : ${list}">
@@ -66,7 +66,8 @@
                         <div th:text="${i.productName}"></div>
                     </td>
                     <td><a th:href="@{'/manager/product/Edit?id=' + ${i.id}}">Edit</a></td>
-                    <td><a th:href="@{'/manager/product/Delete?id=' + ${i.id}}">Delete</a></td>
+<!--                    <td th:if="${i.available}"><a  th:href="@{'/manager/product/Delete?id=' + ${i.id}}">Delete</a></td>-->
+<!--                    <td th:if="${!i.available}"><a  th:href="@{'/manager/product/Delete?id=' + ${i.id}}">Activate</a></td>-->
                 </tr>
                 </tbody>
             </table>
