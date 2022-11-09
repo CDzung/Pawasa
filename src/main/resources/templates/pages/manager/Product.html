@@ -37,7 +37,11 @@
     </header>
     <main>
         <div>
-            <button type="button"><a th:href="@{/manager/product/Add}">Add New Product</a></button>
+            <button style="    padding: 8px 8px;
+    background: var(--main-color);
+    border: none;
+    color: white;
+    border-radius: 6px;" type="button"><a style="color: white" th:href="@{/manager/product/Add}">Add New Product</a></button>
             <form th:action="@{/manager/product}" style="padding: 20px" method="get">
                 <div>
                     <span style="color: black">Sort by</span>
@@ -53,7 +57,7 @@
         <div th:if="${!list.isEmpty()}">
             <table>
                 <thead>
-                <tr style="color: green">
+                <tr style="color: var(--main-color)">
                     <th>STT</th>
                     <th>Product Name</th>
                     <th>Action</th>

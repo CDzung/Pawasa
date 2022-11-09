@@ -200,7 +200,7 @@
                                 </div>
                             </th:block>
                         </div>
-                        <div style="text-align: center;font-size: 200%;margin-top: 4%" th:if="${products}">
+                        <div style="text-align: center;font-size: 200%;margin-top: 4%" th:if="${!products.isEmpty()}">
                             <ul>
                                 <li th:each="i : ${#numbers.sequence(1,endPage)}"
                                     class="paginaging"
@@ -209,6 +209,7 @@
                                        th:text="${i}" th:style="${i==cuPage}?'color:white'"></a>
                                 </li>
                             </ul>
+                            <div id="top_pagger" class="pagger"></div>
                         </div>
                         <div th:if="${products.isEmpty()}">
                             <h1 style="text-align: center">No Book Found</h1>
@@ -238,6 +239,8 @@
             .toLocaleString('da-DK');
         x[i].innerHTML = num;
     }
+
+
 </script>
 </body>
 </html>
