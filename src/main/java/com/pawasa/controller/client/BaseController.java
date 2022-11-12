@@ -136,6 +136,7 @@ public class BaseController {
         response.getWriter().print("<ul class=\"bxslider\">\n" +
                 "<li class=\"item items-sl-width\">");
         for (Product i : set) {
+            if(!i.isAvailable()) continue;
             int rate = i.getRateSum()/Math.max(i.getRateCount(),1);
             int ratePercent = rate*100/5;
             Set<OrderDetail> orderDetails = i.getOrderDetails();

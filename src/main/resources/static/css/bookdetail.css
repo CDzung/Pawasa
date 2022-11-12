@@ -1581,3 +1581,14 @@ ves-breadcrumbs .breadcrumb {
 .comment_list .rating-box, .ratings-desktop .rating-box {
     width: 70px;
 }
+
+.fhs_icon_cart {
+    padding-left: 10px;
+    background: url("https://cdn0.fahasa.com/skin/frontend/ma_vanese/fahasa/images/icon-cart.svg") no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 24px;
+    width: 22px;
+}

@@ -207,7 +207,7 @@ public class CustomerInfomationController {
     }
 
     @GetMapping("/user/cancelOrder")
-    public void cancelOrder(@RequestParam(name = "id") Optional<Long> Order_id){
+    public String cancelOrder(@RequestParam(name = "id") Optional<Long> Order_id){
         Long id = Order_id.get();
         Order order = orderRepository.findById(id).get();
         OrderStatus orderStatus = new OrderStatus();
@@ -215,5 +215,6 @@ public class CustomerInfomationController {
         orderStatus.setOrderStatus("Đã hủy");
         orderStatus.setStatusDate(new Date());
         orderStatusRepository.save(orderStatus);
+        return "redirect:/user/account/detailOrder?id="+id.longValue();
     }
 }

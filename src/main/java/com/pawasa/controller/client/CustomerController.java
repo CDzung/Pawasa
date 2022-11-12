@@ -507,6 +507,12 @@ public class CustomerController {
         Set<CartDetail> cartDetails = cart.getCartDetails();
         for (CartDetail cartDetail : cartDetails.stream().toList()) {
             if(!cartDetail.isSelected()) continue;
+
+            //update product quantity
+            Product product = cartDetail.getProduct();
+            product.setQuantity(Math.max(0, product.getQuantity() - cartDetail.getQuantity()));
+            productRepository.save(product);
+
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrder(order);
             orderDetail.setProduct(cartDetail.getProduct());
@@ -517,8 +523,18 @@ public class CustomerController {
             cartDetail.setCart(null);
             cartDetail.setProduct(null);
             cartDetailRepository.delete(cartDetail);
+
+
         }
 
+
+        // add notification
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setTitle("Đơn hàng #" + order.getOrderId() + " đã được tạo");
+        notification.setDescription("Đơn hàng #" + order.getOrderId() + " đã được tạo");
+        notification.setDate(new Date());
+        notificationRepository.save(notification);
 
         return "redirect:/user/account/history";
     }

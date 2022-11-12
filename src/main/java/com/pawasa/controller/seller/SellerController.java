@@ -1,7 +1,9 @@
 package com.pawasa.controller.seller;
 
+import com.pawasa.model.Notification;
 import com.pawasa.model.Order;
 import com.pawasa.model.OrderStatus;
+import com.pawasa.repository.NotificationRepository;
 import com.pawasa.repository.OrderRepository;
 import com.pawasa.repository.OrderStatusRepository;
 import com.pawasa.repository.UserRepository;
@@ -29,6 +31,9 @@ public class SellerController {
 
     @Autowired
     private OrderStatusRepository orderStatusRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @GetMapping("/seller")
     public String showSellerPage(Model model) {
@@ -74,6 +79,14 @@ public class SellerController {
         orderStatus.setOrderStatus("Đã xác nhận");
         orderStatus.setStatusDate(new Date());
         orderStatusRepository.save(orderStatus);
+
+        //add notification
+        Notification notification = new Notification();
+        notification.setUser(order.getUser());
+        notification.setTitle("Đơn hàng #" + order.getOrderId() +  " đã được xác nhận");
+        notification.setDescription("Đơn hàng #" + order.getOrderId() +  " đã được xác nhận");
+        notification.setDate(new Date());
+        notificationRepository.save(notification);
         return "redirect:/seller/view-order";
     }
 
@@ -85,6 +98,14 @@ public class SellerController {
         orderStatus.setOrderStatus("Đã hủy");
         orderStatus.setStatusDate(new Date());
         orderStatusRepository.save(orderStatus);
+
+        //add notification
+        Notification notification = new Notification();
+        notification.setUser(order.getUser());
+        notification.setTitle("Đơn hàng #" + order.getOrderId() +  " đã bị hủy");
+        notification.setDescription("Đơn hàng #" + order.getOrderId() +  " đã bị hủy");
+        notification.setDate(new Date());
+        notificationRepository.save(notification);
         return "redirect:/seller/view-order";
     }
 

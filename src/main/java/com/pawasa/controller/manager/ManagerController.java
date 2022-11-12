@@ -136,10 +136,10 @@ public class ManagerController {
                              @RequestParam(name = "publisher_year") Optional<String> publisher_year,
                              @RequestParam(name = "attrLanguage") Optional<String> attrLanguage,
                              @RequestParam(name = "attrLayout") Optional<String> attrLayout,
-                             @RequestParam("isbn") Optional<String> isbn,
+                             @RequestParam(name = "isbn") Optional<String> isbn,
                              @RequestParam("discount") Optional<Integer> discount,
                              @RequestParam("file") MultipartFile file,
-                             @RequestParam("description") Optional<String> description
+                             @RequestParam(name = "description") Optional<String> description
     ) {
         Product p;
         if (!id.isPresent()) {
@@ -147,6 +147,8 @@ public class ManagerController {
         } else {
             p = productRepository.findById(id.get()).get();
         }
+
+
         storageService.store(file);
         p.setCategory(categoryRepository.findCategoryById(categoryId.get()));
         p.setProductName(productName.get());
@@ -168,9 +170,9 @@ public class ManagerController {
     }
 
     @GetMapping("/manager/product/Delete")
-    public String DeleteProduct(@RequestParam(name = "id") Long id, Model model) {
-        Product p = productRepository.findById(id).get();
-        p.setAvailable(false);
+    public String DeleteProduct(@RequestParam(name = "id") long id, Model model) {
+        Product p = productRepository.findById(id);
+        p.setAvailable(!p.isAvailable());
         productRepository.save(p);
         return "redirect:/manager/product";
     }

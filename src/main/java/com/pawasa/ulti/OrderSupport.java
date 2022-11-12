@@ -35,7 +35,7 @@ public class OrderSupport {
             for (Order i : all) {
                 if (i.getOrderStatuses().size() == 4) {
                     for (OrderStatus o : i.getOrderStatuses()) {
-                        if (o.getOrderStatus().equalsIgnoreCase("Thành công")) {
+                        if (o.getOrderStatus().equalsIgnoreCase("Giao hàng thành công")) {
                             list_order.add(i);
                         }
                     }
